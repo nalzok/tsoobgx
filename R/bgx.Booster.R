@@ -6,15 +6,15 @@ bgx.Booster.handle <- function(params = list(), cachelist = list(), modelfile = 
     stop("cachelist must be a list of bgx.DMatrix objects")
   }
 
-  handle <- .Call(tsooBGXerCreate_R, cachelist)
+  handle <- .Call(retsooBGXCreate_R, cachelist)
   if (!is.null(modelfile)) {
     if (typeof(modelfile) == "character") {
-      .Call(tsooBGXerLoadModel_R, handle, modelfile[1])
+      .Call(retsooBGXLoadModel_R, handle, modelfile[1])
     } else if (typeof(modelfile) == "raw") {
-      .Call(tsooBGXerLoadModelFromRaw_R, handle, modelfile)
+      .Call(retsooBGXLoadModelFromRaw_R, handle, modelfile)
     } else if (inherits(modelfile, "bgx.Booster")) {
       bst <- bgx.Booster.complete(modelfile, saveraw = TRUE)
-      .Call(tsooBGXerLoadModelFromRaw_R, handle, bst$raw)
+      .Call(retsooBGXLoadModelFromRaw_R, handle, bst$raw)
     } else {
       stop("modelfile must be either character filename, or raw booster dump, or bgx.Booster object")
     }
@@ -305,7 +305,7 @@ predict.bgx.Booster <- function(object, newdata, missing = NA, outputmargin = FA
   option <- 0L + 1L * as.logical(outputmargin) + 2L * as.logical(predleaf) + 4L * as.logical(predcontrib) +
     8L * as.logical(approxcontrib) + 16L * as.logical(predinteraction)
 
-  ret <- .Call(tsooBGXerPredict_R, object$handle, newdata, option[1], as.integer(ntreelimit))
+  ret <- .Call(retsooBGXPredict_R, object$handle, newdata, option[1], as.integer(ntreelimit))
 
   n_ret <- length(ret)
   n_row <- nrow(newdata)
@@ -434,7 +434,7 @@ predict.bgx.Booster.handle <- function(object, ...) {
 bgx.attr <- function(object, name) {
   if (is.null(name) || nchar(as.character(name[1])) == 0) stop("invalid attribute name")
   handle <- bgx.get.handle(object)
-  .Call(tsooBGXerGetAttr_R, handle, as.character(name[1]))
+  .Call(retsooBGXGetAttr_R, handle, as.character(name[1]))
 }
 
 #' @rdname bgx.attr
@@ -451,7 +451,7 @@ bgx.attr <- function(object, name) {
       value <- as.character(value[1])
     }
   }
-  .Call(tsooBGXerSetAttr_R, handle, as.character(name[1]), value)
+  .Call(retsooBGXSetAttr_R, handle, as.character(name[1]), value)
   if (is(object, 'bgx.Booster') && !is.null(object$raw)) {
     object$raw <- bgx.save.raw(object$handle)
   }
@@ -462,10 +462,10 @@ bgx.attr <- function(object, name) {
 #' @export
 bgx.attributes <- function(object) {
   handle <- bgx.get.handle(object)
-  attr_names <- .Call(tsooBGXerGetAttrNames_R, handle)
+  attr_names <- .Call(retsooBGXGetAttrNames_R, handle)
   if (is.null(attr_names)) return(NULL)
   res <- lapply(attr_names, function(x) {
-    .Call(tsooBGXerGetAttr_R, handle, x)
+    .Call(retsooBGXGetAttr_R, handle, x)
   })
   names(res) <- attr_names
   res
@@ -490,7 +490,7 @@ bgx.attributes <- function(object) {
   })
   handle <- bgx.get.handle(object)
   for (i in seq_along(a)) {
-    .Call(tsooBGXerSetAttr_R, handle, names(a[i]), a[[i]])
+    .Call(retsooBGXSetAttr_R, handle, names(a[i]), a[[i]])
   }
   if (is(object, 'bgx.Booster') && !is.null(object$raw)) {
     object$raw <- bgx.save.raw(object$handle)
@@ -531,7 +531,7 @@ bgx.attributes <- function(object) {
   p <- lapply(p, function(x) as.character(x)[1])
   handle <- bgx.get.handle(object)
   for (i in seq_along(p)) {
-    .Call(tsooBGXerSetParam_R, handle, names(p[i]), p[[i]])
+    .Call(retsooBGXSetParam_R, handle, names(p[i]), p[[i]])
   }
   if (is(object, 'bgx.Booster') && !is.null(object$raw)) {
     object$raw <- bgx.save.raw(object$handle)

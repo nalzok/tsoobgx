@@ -19,5 +19,5 @@
 #' @export
 bgx.save.raw <- function(model) {
   model <- bgx.get.handle(model)
-  .Call(tsooBGXerModelToRaw_R, model)
+  .Call(retsooBGXModelToRaw_R, model)
 }

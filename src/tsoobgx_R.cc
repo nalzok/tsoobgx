@@ -217,11 +217,11 @@ SEXP XGDMatrixNumCol_R(SEXP handle) {
 // functions related to booster
 void _BoosterFinalizer(SEXP ext) {
   if (R_ExternalPtrAddr(ext) == NULL) return;
-  CHECK_CALL(tsooBGXerFree(R_ExternalPtrAddr(ext)));
+  CHECK_CALL(retsooBGXFree(R_ExternalPtrAddr(ext)));
   R_ClearExternalPtr(ext);
 }
 
-SEXP tsooBGXerCreate_R(SEXP dmats) {
+SEXP retsooBGXCreate_R(SEXP dmats) {
   SEXP ret;
   R_API_BEGIN();
   int len = length(dmats);
@@ -230,7 +230,7 @@ SEXP tsooBGXerCreate_R(SEXP dmats) {
     dvec.push_back(R_ExternalPtrAddr(VECTOR_ELT(dmats, i)));
   }
   BoosterHandle handle;
-  CHECK_CALL(tsooBGXerCreate(BeginPtr(dvec), dvec.size(), &handle));
+  CHECK_CALL(retsooBGXCreate(BeginPtr(dvec), dvec.size(), &handle));
   ret = PROTECT(R_MakeExternalPtr(handle, R_NilValue, R_NilValue));
   R_RegisterCFinalizerEx(ret, _BoosterFinalizer, TRUE);
   R_API_END();
@@ -238,25 +238,25 @@ SEXP tsooBGXerCreate_R(SEXP dmats) {
   return ret;
 }
 
-SEXP tsooBGXerSetParam_R(SEXP handle, SEXP name, SEXP val) {
+SEXP retsooBGXSetParam_R(SEXP handle, SEXP name, SEXP val) {
   R_API_BEGIN();
-  CHECK_CALL(tsooBGXerSetParam(R_ExternalPtrAddr(handle),
+  CHECK_CALL(retsooBGXSetParam(R_ExternalPtrAddr(handle),
                                CHAR(asChar(name)),
                                CHAR(asChar(val))));
   R_API_END();
   return R_NilValue;
 }
 
-SEXP tsooBGXerUpdateOneIter_R(SEXP handle, SEXP iter, SEXP dtrain) {
+SEXP retsooBGXUpdateOneIter_R(SEXP handle, SEXP iter, SEXP dtrain) {
   R_API_BEGIN();
-  CHECK_CALL(tsooBGXerUpdateOneIter(R_ExternalPtrAddr(handle),
+  CHECK_CALL(retsooBGXUpdateOneIter(R_ExternalPtrAddr(handle),
                                   asInteger(iter),
                                   R_ExternalPtrAddr(dtrain)));
   R_API_END();
   return R_NilValue;
 }
 
-SEXP tsooBGXerBoostOneIter_R(SEXP handle, SEXP dtrain, SEXP grad, SEXP hess) {
+SEXP retsooBGXBoostOneIter_R(SEXP handle, SEXP dtrain, SEXP grad, SEXP hess) {
   R_API_BEGIN();
   CHECK_EQ(length(grad), length(hess))
       << "gradient and hess must have same length";
@@ -267,7 +267,7 @@ SEXP tsooBGXerBoostOneIter_R(SEXP handle, SEXP dtrain, SEXP grad, SEXP hess) {
     tgrad[j] = REAL(grad)[j];
     thess[j] = REAL(hess)[j];
   }
-  CHECK_CALL(tsooBGXerBoostOneIter(R_ExternalPtrAddr(handle),
+  CHECK_CALL(retsooBGXBoostOneIter(R_ExternalPtrAddr(handle),
                                  R_ExternalPtrAddr(dtrain),
                                  BeginPtr(tgrad), BeginPtr(thess),
                                  len));
@@ -275,7 +275,7 @@ SEXP tsooBGXerBoostOneIter_R(SEXP handle, SEXP dtrain, SEXP grad, SEXP hess) {
   return R_NilValue;
 }
 
-SEXP tsooBGXerEvalOneIter_R(SEXP handle, SEXP iter, SEXP dmats, SEXP evnames) {
+SEXP retsooBGXEvalOneIter_R(SEXP handle, SEXP iter, SEXP dmats, SEXP evnames) {
   const char *ret;
   R_API_BEGIN();
   CHECK_EQ(length(dmats), length(evnames))
@@ -291,7 +291,7 @@ SEXP tsooBGXerEvalOneIter_R(SEXP handle, SEXP iter, SEXP dmats, SEXP evnames) {
   for (int i = 0; i < len; ++i) {
     vec_sptr.push_back(vec_names[i].c_str());
   }
-  CHECK_CALL(tsooBGXerEvalOneIter(R_ExternalPtrAddr(handle),
+  CHECK_CALL(retsooBGXEvalOneIter(R_ExternalPtrAddr(handle),
                                 asInteger(iter),
                                 BeginPtr(vec_dmats),
                                 BeginPtr(vec_sptr),
@@ -300,12 +300,12 @@ SEXP tsooBGXerEvalOneIter_R(SEXP handle, SEXP iter, SEXP dmats, SEXP evnames) {
   return mkString(ret);
 }
 
-SEXP tsooBGXerPredict_R(SEXP handle, SEXP dmat, SEXP option_mask, SEXP ntree_limit) {
+SEXP retsooBGXPredict_R(SEXP handle, SEXP dmat, SEXP option_mask, SEXP ntree_limit) {
   SEXP ret;
   R_API_BEGIN();
   bst_ulong olen;
   const float *res;
-  CHECK_CALL(tsooBGXerPredict(R_ExternalPtrAddr(handle),
+  CHECK_CALL(retsooBGXPredict(R_ExternalPtrAddr(handle),
                             R_ExternalPtrAddr(dmat),
                             asInteger(option_mask),
                             asInteger(ntree_limit),
@@ -319,35 +319,35 @@ SEXP tsooBGXerPredict_R(SEXP handle, SEXP dmat, SEXP option_mask, SEXP ntree_lim
   return ret;
 }
 
-SEXP tsooBGXerLoadModel_R(SEXP handle, SEXP fname) {
+SEXP retsooBGXLoadModel_R(SEXP handle, SEXP fname) {
   R_API_BEGIN();
-  CHECK_CALL(tsooBGXerLoadModel(R_ExternalPtrAddr(handle), CHAR(asChar(fname))));
+  CHECK_CALL(retsooBGXLoadModel(R_ExternalPtrAddr(handle), CHAR(asChar(fname))));
   R_API_END();
   return R_NilValue;
 }
 
-SEXP tsooBGXerSaveModel_R(SEXP handle, SEXP fname) {
+SEXP retsooBGXSaveModel_R(SEXP handle, SEXP fname) {
   R_API_BEGIN();
-  CHECK_CALL(tsooBGXerSaveModel(R_ExternalPtrAddr(handle), CHAR(asChar(fname))));
+  CHECK_CALL(retsooBGXSaveModel(R_ExternalPtrAddr(handle), CHAR(asChar(fname))));
   R_API_END();
   return R_NilValue;
 }
 
-SEXP tsooBGXerLoadModelFromRaw_R(SEXP handle, SEXP raw) {
+SEXP retsooBGXLoadModelFromRaw_R(SEXP handle, SEXP raw) {
   R_API_BEGIN();
-  CHECK_CALL(tsooBGXerLoadModelFromBuffer(R_ExternalPtrAddr(handle),
+  CHECK_CALL(retsooBGXLoadModelFromBuffer(R_ExternalPtrAddr(handle),
                                           RAW(raw),
                                           length(raw)));
   R_API_END();
   return R_NilValue;
 }
 
-SEXP tsooBGXerModelToRaw_R(SEXP handle) {
+SEXP retsooBGXModelToRaw_R(SEXP handle) {
   SEXP ret;
   R_API_BEGIN();
   bst_ulong olen;
   const char *raw;
-  CHECK_CALL(tsooBGXerGetModelRaw(R_ExternalPtrAddr(handle), &olen, &raw));
+  CHECK_CALL(retsooBGXGetModelRaw(R_ExternalPtrAddr(handle), &olen, &raw));
   ret = PROTECT(allocVector(RAWSXP, olen));
   if (olen != 0) {
     memcpy(RAW(ret), raw, olen);
@@ -357,13 +357,13 @@ SEXP tsooBGXerModelToRaw_R(SEXP handle) {
   return ret;
 }
 
-SEXP tsooBGXerDumpModel_R(SEXP handle, SEXP fmap, SEXP with_stats, SEXP dump_format) {
+SEXP retsooBGXDumpModel_R(SEXP handle, SEXP fmap, SEXP with_stats, SEXP dump_format) {
   SEXP out;
   R_API_BEGIN();
   bst_ulong olen;
   const char **res;
   const char *fmt = CHAR(asChar(dump_format));
-  CHECK_CALL(tsooBGXerDumpModelEx(R_ExternalPtrAddr(handle),
+  CHECK_CALL(retsooBGXDumpModelEx(R_ExternalPtrAddr(handle),
                                 CHAR(asChar(fmap)),
                                 asInteger(with_stats),
                                 fmt,
@@ -394,12 +394,12 @@ SEXP tsooBGXerDumpModel_R(SEXP handle, SEXP fmap, SEXP with_stats, SEXP dump_for
   return out;
 }
 
-SEXP tsooBGXerGetAttr_R(SEXP handle, SEXP name) {
+SEXP retsooBGXGetAttr_R(SEXP handle, SEXP name) {
   SEXP out;
   R_API_BEGIN();
   int success;
   const char *val;
-  CHECK_CALL(tsooBGXerGetAttr(R_ExternalPtrAddr(handle),
+  CHECK_CALL(retsooBGXGetAttr(R_ExternalPtrAddr(handle),
                               CHAR(asChar(name)),
                               &val,
                               &success));
@@ -414,21 +414,21 @@ SEXP tsooBGXerGetAttr_R(SEXP handle, SEXP name) {
   return out;
 }
 
-SEXP tsooBGXerSetAttr_R(SEXP handle, SEXP name, SEXP val) {
+SEXP retsooBGXSetAttr_R(SEXP handle, SEXP name, SEXP val) {
   R_API_BEGIN();
   const char *v = isNull(val) ? nullptr : CHAR(asChar(val));
-  CHECK_CALL(tsooBGXerSetAttr(R_ExternalPtrAddr(handle),
+  CHECK_CALL(retsooBGXSetAttr(R_ExternalPtrAddr(handle),
                               CHAR(asChar(name)), v));
   R_API_END();
   return R_NilValue;
 }
 
-SEXP tsooBGXerGetAttrNames_R(SEXP handle) {
+SEXP retsooBGXGetAttrNames_R(SEXP handle) {
   SEXP out;
   R_API_BEGIN();
   bst_ulong len;
   const char **res;
-  CHECK_CALL(tsooBGXerGetAttrNames(R_ExternalPtrAddr(handle),
+  CHECK_CALL(retsooBGXGetAttrNames(R_ExternalPtrAddr(handle),
                                    &len, &res));
   if (len > 0) {
     out = PROTECT(allocVector(STRSXP, len));

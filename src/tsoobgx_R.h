@@ -101,7 +101,7 @@ BGX_DLL SEXP XGDMatrixNumCol_R(SEXP handle);
  * \brief create tsoobgx learner
  * \param dmats a list of dmatrix handles that will be cached
  */
-BGX_DLL SEXP tsooBGXerCreate_R(SEXP dmats);
+BGX_DLL SEXP retsooBGXCreate_R(SEXP dmats);
 
 /*!
  * \brief set parameters
@@ -110,7 +110,7 @@ BGX_DLL SEXP tsooBGXerCreate_R(SEXP dmats);
  * \param val value of parameter
  * \return R_NilValue
  */
-BGX_DLL SEXP tsooBGXerSetParam_R(SEXP handle, SEXP name, SEXP val);
+BGX_DLL SEXP retsooBGXSetParam_R(SEXP handle, SEXP name, SEXP val);
 
 /*!
  * \brief update the model in one round using dtrain
@@ -119,7 +119,7 @@ BGX_DLL SEXP tsooBGXerSetParam_R(SEXP handle, SEXP name, SEXP val);
  * \param dtrain training data
  * \return R_NilValue
  */
-BGX_DLL SEXP tsooBGXerUpdateOneIter_R(SEXP ext, SEXP iter, SEXP dtrain);
+BGX_DLL SEXP retsooBGXUpdateOneIter_R(SEXP ext, SEXP iter, SEXP dtrain);
 
 /*!
  * \brief update the model, by directly specify gradient and second order gradient,
@@ -130,7 +130,7 @@ BGX_DLL SEXP tsooBGXerUpdateOneIter_R(SEXP ext, SEXP iter, SEXP dtrain);
  * \param hess second order gradient statistics
  * \return R_NilValue
  */
-BGX_DLL SEXP tsooBGXerBoostOneIter_R(SEXP handle, SEXP dtrain, SEXP grad, SEXP hess);
+BGX_DLL SEXP retsooBGXBoostOneIter_R(SEXP handle, SEXP dtrain, SEXP grad, SEXP hess);
 
 /*!
  * \brief get evaluation statistics for tsoobgx
@@ -140,7 +140,7 @@ BGX_DLL SEXP tsooBGXerBoostOneIter_R(SEXP handle, SEXP dtrain, SEXP grad, SEXP h
  * \param evname name of evaluation
  * \return the string containing evaluation stats
  */
-BGX_DLL SEXP tsooBGXerEvalOneIter_R(SEXP handle, SEXP iter, SEXP dmats, SEXP evnames);
+BGX_DLL SEXP retsooBGXEvalOneIter_R(SEXP handle, SEXP iter, SEXP dmats, SEXP evnames);
 
 /*!
  * \brief make prediction based on dmat
@@ -149,14 +149,14 @@ BGX_DLL SEXP tsooBGXerEvalOneIter_R(SEXP handle, SEXP iter, SEXP dmats, SEXP evn
  * \param option_mask output_margin:1 predict_leaf:2
  * \param ntree_limit limit number of trees used in prediction
  */
-BGX_DLL SEXP tsooBGXerPredict_R(SEXP handle, SEXP dmat, SEXP option_mask, SEXP ntree_limit);
+BGX_DLL SEXP retsooBGXPredict_R(SEXP handle, SEXP dmat, SEXP option_mask, SEXP ntree_limit);
 /*!
  * \brief load model from existing file
  * \param handle handle
  * \param fname file name
  * \return R_NilValue
  */
-BGX_DLL SEXP tsooBGXerLoadModel_R(SEXP handle, SEXP fname);
+BGX_DLL SEXP retsooBGXLoadModel_R(SEXP handle, SEXP fname);
 
 /*!
  * \brief save model into existing file
@@ -164,21 +164,21 @@ BGX_DLL SEXP tsooBGXerLoadModel_R(SEXP handle, SEXP fname);
  * \param fname file name
  * \return R_NilValue
  */
-BGX_DLL SEXP tsooBGXerSaveModel_R(SEXP handle, SEXP fname);
+BGX_DLL SEXP retsooBGXSaveModel_R(SEXP handle, SEXP fname);
 
 /*!
  * \brief load model from raw array
  * \param handle handle
  * \return R_NilValue
  */
-BGX_DLL SEXP tsooBGXerLoadModelFromRaw_R(SEXP handle, SEXP raw);
+BGX_DLL SEXP retsooBGXLoadModelFromRaw_R(SEXP handle, SEXP raw);
 
 /*!
  * \brief save model into R's raw array
  * \param handle handle
  * \return raw array
    */
-BGX_DLL SEXP tsooBGXerModelToRaw_R(SEXP handle);
+BGX_DLL SEXP retsooBGXModelToRaw_R(SEXP handle);
 
 /*!
  * \brief dump model into a string
@@ -187,7 +187,7 @@ BGX_DLL SEXP tsooBGXerModelToRaw_R(SEXP handle);
  * \param with_stats whether dump statistics of splits
  * \param dump_format the format to dump the model in
  */
-BGX_DLL SEXP tsooBGXerDumpModel_R(SEXP handle, SEXP fmap, SEXP with_stats, SEXP dump_format);
+BGX_DLL SEXP retsooBGXDumpModel_R(SEXP handle, SEXP fmap, SEXP with_stats, SEXP dump_format);
 
 /*!
  * \brief get learner attribute value
@@ -195,7 +195,7 @@ BGX_DLL SEXP tsooBGXerDumpModel_R(SEXP handle, SEXP fmap, SEXP with_stats, SEXP 
  * \param name  attribute name
  * \return character containing attribute value
  */
-BGX_DLL SEXP tsooBGXerGetAttr_R(SEXP handle, SEXP name);
+BGX_DLL SEXP retsooBGXGetAttr_R(SEXP handle, SEXP name);
 
 /*!
  * \brief set learner attribute value
@@ -204,12 +204,12 @@ BGX_DLL SEXP tsooBGXerGetAttr_R(SEXP handle, SEXP name);
  * \param val attribute value; NULL value would delete an attribute
  * \return R_NilValue
  */
-BGX_DLL SEXP tsooBGXerSetAttr_R(SEXP handle, SEXP name, SEXP val);
+BGX_DLL SEXP retsooBGXSetAttr_R(SEXP handle, SEXP name, SEXP val);
 
 /*!
  * \brief get the names of learner attributes
  * \return string vector containing attribute names
  */
-BGX_DLL SEXP tsooBGXerGetAttrNames_R(SEXP handle);
+BGX_DLL SEXP retsooBGXGetAttrNames_R(SEXP handle);
 
 #endif  // TSOOBGX_WRAPPER_R_H_ // NOLINT(*)

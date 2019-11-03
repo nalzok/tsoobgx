@@ -52,7 +52,7 @@ bgx.dump <- function(model, fname = NULL, fmap = "", with_stats=FALSE,
     stop("fmap: argument must be a character string (when provided)")
   
   model <- bgx.Booster.complete(model)
-  model_dump <- .Call(tsooBGXerDumpModel_R, model$handle, NVL(fmap, "")[1], as.integer(with_stats),
+  model_dump <- .Call(retsooBGXDumpModel_R, model$handle, NVL(fmap, "")[1], as.integer(with_stats),
                       as.character(dump_format))
 
   if (is.null(fname)) 

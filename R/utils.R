@@ -143,11 +143,11 @@ bgx.iter.update <- function(booster_handle, dtrain, iter, obj = NULL) {
   }
 
   if (is.null(obj)) {
-    .Call(tsooBGXerUpdateOneIter_R, booster_handle, as.integer(iter), dtrain)
+    .Call(retsooBGXUpdateOneIter_R, booster_handle, as.integer(iter), dtrain)
   } else {
     pred <- predict(booster_handle, dtrain)
     gpair <- obj(pred, dtrain)
-    .Call(tsooBGXerBoostOneIter_R, booster_handle, dtrain, gpair$grad, gpair$hess)
+    .Call(retsooBGXBoostOneIter_R, booster_handle, dtrain, gpair$grad, gpair$hess)
   }
   return(TRUE)
 }
@@ -165,7 +165,7 @@ bgx.iter.eval <- function(booster_handle, watchlist, iter, feval = NULL) {
 
   evnames <- names(watchlist)
   if (is.null(feval)) {
-    msg <- .Call(tsooBGXerEvalOneIter_R, booster_handle, as.integer(iter), watchlist, as.list(evnames))
+    msg <- .Call(retsooBGXEvalOneIter_R, booster_handle, as.integer(iter), watchlist, as.list(evnames))
     msg <- stri_split_regex(msg, '(\\s+|:|\\s+)')[[1]][-1]
     res <- as.numeric(msg[c(FALSE,TRUE)]) # even indices are the values
     names(res) <- msg[c(TRUE,FALSE)]      # odds are the names

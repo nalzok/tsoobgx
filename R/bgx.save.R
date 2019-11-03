@@ -38,6 +38,6 @@ bgx.save <- function(model, fname) {
          if (inherits(model, "bgx.DMatrix")) " Use bgx.DMatrix.save to save an bgx.DMatrix object." else "")
   }
   model <- bgx.Booster.complete(model, saveraw = FALSE)
-  .Call(tsooBGXerSaveModel_R, model$handle, fname[1])
+  .Call(retsooBGXSaveModel_R, model$handle, fname[1])
   return(TRUE)
 }

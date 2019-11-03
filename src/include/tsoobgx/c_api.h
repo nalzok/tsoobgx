@@ -317,7 +317,7 @@ BGX_DLL int XGDMatrixNumCol(DMatrixHandle handle,
  * \param out handle to the result booster
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerCreate(const DMatrixHandle dmats[],
+BGX_DLL int retsooBGXCreate(const DMatrixHandle dmats[],
                             bst_ulong len,
                             BoosterHandle *out);
 /*!
@@ -325,7 +325,7 @@ BGX_DLL int tsooBGXerCreate(const DMatrixHandle dmats[],
  * \param handle handle to be freed
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerFree(BoosterHandle handle);
+BGX_DLL int retsooBGXFree(BoosterHandle handle);
 
 /*!
  * \brief set parameters
@@ -334,7 +334,7 @@ BGX_DLL int tsooBGXerFree(BoosterHandle handle);
  * \param value value of parameter
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerSetParam(BoosterHandle handle,
+BGX_DLL int retsooBGXSetParam(BoosterHandle handle,
                               const char *name,
                               const char *value);
 
@@ -345,7 +345,7 @@ BGX_DLL int tsooBGXerSetParam(BoosterHandle handle,
  * \param dtrain training data
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerUpdateOneIter(BoosterHandle handle,
+BGX_DLL int retsooBGXUpdateOneIter(BoosterHandle handle,
                                    int iter,
                                    DMatrixHandle dtrain);
 /*!
@@ -358,7 +358,7 @@ BGX_DLL int tsooBGXerUpdateOneIter(BoosterHandle handle,
  * \param len length of grad/hess array
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerBoostOneIter(BoosterHandle handle,
+BGX_DLL int retsooBGXBoostOneIter(BoosterHandle handle,
                                   DMatrixHandle dtrain,
                                   float *grad,
                                   float *hess,
@@ -373,7 +373,7 @@ BGX_DLL int tsooBGXerBoostOneIter(BoosterHandle handle,
  * \param out_result the string containing evaluation statistics
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerEvalOneIter(BoosterHandle handle,
+BGX_DLL int retsooBGXEvalOneIter(BoosterHandle handle,
                                  int iter,
                                  DMatrixHandle dmats[],
                                  const char *evnames[],
@@ -394,7 +394,7 @@ BGX_DLL int tsooBGXerEvalOneIter(BoosterHandle handle,
  * \param out_result used to set a pointer to array
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerPredict(BoosterHandle handle,
+BGX_DLL int retsooBGXPredict(BoosterHandle handle,
                              DMatrixHandle dmat,
                              int option_mask,
                              unsigned ntree_limit,
@@ -407,7 +407,7 @@ BGX_DLL int tsooBGXerPredict(BoosterHandle handle,
  * \param fname file name
 * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerLoadModel(BoosterHandle handle,
+BGX_DLL int retsooBGXLoadModel(BoosterHandle handle,
                                const char *fname);
 /*!
  * \brief save model into existing file
@@ -415,7 +415,7 @@ BGX_DLL int tsooBGXerLoadModel(BoosterHandle handle,
  * \param fname file name
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerSaveModel(BoosterHandle handle,
+BGX_DLL int retsooBGXSaveModel(BoosterHandle handle,
                                const char *fname);
 /*!
  * \brief load model from in memory buffer
@@ -424,7 +424,7 @@ BGX_DLL int tsooBGXerSaveModel(BoosterHandle handle,
  * \param len the length of the buffer
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerLoadModelFromBuffer(BoosterHandle handle,
+BGX_DLL int retsooBGXLoadModelFromBuffer(BoosterHandle handle,
                                          const void *buf,
                                          bst_ulong len);
 /*!
@@ -435,7 +435,7 @@ BGX_DLL int tsooBGXerLoadModelFromBuffer(BoosterHandle handle,
  * \param out_dptr the argument to hold the output data pointer
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerGetModelRaw(BoosterHandle handle,
+BGX_DLL int retsooBGXGetModelRaw(BoosterHandle handle,
                                  bst_ulong *out_len,
                                  const char **out_dptr);
 /*!
@@ -447,7 +447,7 @@ BGX_DLL int tsooBGXerGetModelRaw(BoosterHandle handle,
  * \param out_dump_array pointer to hold representing dump of each model
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerDumpModel(BoosterHandle handle,
+BGX_DLL int retsooBGXDumpModel(BoosterHandle handle,
                                const char *fmap,
                                int with_stats,
                                bst_ulong *out_len,
@@ -463,7 +463,7 @@ BGX_DLL int tsooBGXerDumpModel(BoosterHandle handle,
  * \param out_dump_array pointer to hold representing dump of each model
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerDumpModelEx(BoosterHandle handle,
+BGX_DLL int retsooBGXDumpModelEx(BoosterHandle handle,
                                  const char *fmap,
                                  int with_stats,
                                  const char *format,
@@ -481,7 +481,7 @@ BGX_DLL int tsooBGXerDumpModelEx(BoosterHandle handle,
  * \param out_models pointer to hold representing dump of each model
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerDumpModelWithFeatures(BoosterHandle handle,
+BGX_DLL int retsooBGXDumpModelWithFeatures(BoosterHandle handle,
                                            int fnum,
                                            const char **fname,
                                            const char **ftype,
@@ -501,7 +501,7 @@ BGX_DLL int tsooBGXerDumpModelWithFeatures(BoosterHandle handle,
  * \param out_models pointer to hold representing dump of each model
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerDumpModelExWithFeatures(BoosterHandle handle,
+BGX_DLL int retsooBGXDumpModelExWithFeatures(BoosterHandle handle,
                                              int fnum,
                                              const char **fname,
                                              const char **ftype,
@@ -518,7 +518,7 @@ BGX_DLL int tsooBGXerDumpModelExWithFeatures(BoosterHandle handle,
  * \param success Whether the result is contained in out.
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerGetAttr(BoosterHandle handle,
+BGX_DLL int retsooBGXGetAttr(BoosterHandle handle,
                              const char* key,
                              const char** out,
                              int *success);
@@ -531,7 +531,7 @@ BGX_DLL int tsooBGXerGetAttr(BoosterHandle handle,
  *              If nullptr, the attribute would be deleted.
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerSetAttr(BoosterHandle handle,
+BGX_DLL int retsooBGXSetAttr(BoosterHandle handle,
                              const char* key,
                              const char* value);
 /*!
@@ -541,7 +541,7 @@ BGX_DLL int tsooBGXerSetAttr(BoosterHandle handle,
  * \param out pointer to hold the output attribute stings
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerGetAttrNames(BoosterHandle handle,
+BGX_DLL int retsooBGXGetAttrNames(BoosterHandle handle,
                                   bst_ulong* out_len,
                                   const char*** out);
 
@@ -554,7 +554,7 @@ BGX_DLL int tsooBGXerGetAttrNames(BoosterHandle handle,
  * \param version The output version of the model.
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerLoadRabitCheckpoint(
+BGX_DLL int retsooBGXLoadRabitCheckpoint(
     BoosterHandle handle,
     int* version);
 
@@ -563,6 +563,6 @@ BGX_DLL int tsooBGXerLoadRabitCheckpoint(
  * \param handle handle
  * \return 0 when success, -1 when failure happens
  */
-BGX_DLL int tsooBGXerSaveRabitCheckpoint(BoosterHandle handle);
+BGX_DLL int retsooBGXSaveRabitCheckpoint(BoosterHandle handle);
 
 #endif  // TSOOBGX_C_API_H_

@@ -15,20 +15,20 @@ Check these declarations against the C/Fortran source code.
 */
 
 /* .Call calls */
-extern SEXP tsooBGXerBoostOneIter_R(SEXP, SEXP, SEXP, SEXP);
-extern SEXP tsooBGXerCreate_R(SEXP);
-extern SEXP tsooBGXerDumpModel_R(SEXP, SEXP, SEXP, SEXP);
-extern SEXP tsooBGXerEvalOneIter_R(SEXP, SEXP, SEXP, SEXP);
-extern SEXP tsooBGXerGetAttrNames_R(SEXP);
-extern SEXP tsooBGXerGetAttr_R(SEXP, SEXP);
-extern SEXP tsooBGXerLoadModelFromRaw_R(SEXP, SEXP);
-extern SEXP tsooBGXerLoadModel_R(SEXP, SEXP);
-extern SEXP tsooBGXerModelToRaw_R(SEXP);
-extern SEXP tsooBGXerPredict_R(SEXP, SEXP, SEXP, SEXP);
-extern SEXP tsooBGXerSaveModel_R(SEXP, SEXP);
-extern SEXP tsooBGXerSetAttr_R(SEXP, SEXP, SEXP);
-extern SEXP tsooBGXerSetParam_R(SEXP, SEXP, SEXP);
-extern SEXP tsooBGXerUpdateOneIter_R(SEXP, SEXP, SEXP);
+extern SEXP retsooBGXBoostOneIter_R(SEXP, SEXP, SEXP, SEXP);
+extern SEXP retsooBGXCreate_R(SEXP);
+extern SEXP retsooBGXDumpModel_R(SEXP, SEXP, SEXP, SEXP);
+extern SEXP retsooBGXEvalOneIter_R(SEXP, SEXP, SEXP, SEXP);
+extern SEXP retsooBGXGetAttrNames_R(SEXP);
+extern SEXP retsooBGXGetAttr_R(SEXP, SEXP);
+extern SEXP retsooBGXLoadModelFromRaw_R(SEXP, SEXP);
+extern SEXP retsooBGXLoadModel_R(SEXP, SEXP);
+extern SEXP retsooBGXModelToRaw_R(SEXP);
+extern SEXP retsooBGXPredict_R(SEXP, SEXP, SEXP, SEXP);
+extern SEXP retsooBGXSaveModel_R(SEXP, SEXP);
+extern SEXP retsooBGXSetAttr_R(SEXP, SEXP, SEXP);
+extern SEXP retsooBGXSetParam_R(SEXP, SEXP, SEXP);
+extern SEXP retsooBGXUpdateOneIter_R(SEXP, SEXP, SEXP);
 extern SEXP XGCheckNullPtr_R(SEXP);
 extern SEXP XGDMatrixCreateFromCSC_R(SEXP, SEXP, SEXP, SEXP);
 extern SEXP XGDMatrixCreateFromFile_R(SEXP, SEXP);
@@ -41,20 +41,20 @@ extern SEXP XGDMatrixSetInfo_R(SEXP, SEXP, SEXP);
 extern SEXP XGDMatrixSliceDMatrix_R(SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-  {"tsooBGXerBoostOneIter_R",     (DL_FUNC) &tsooBGXerBoostOneIter_R,     4},
-  {"tsooBGXerCreate_R",           (DL_FUNC) &tsooBGXerCreate_R,           1},
-  {"tsooBGXerDumpModel_R",        (DL_FUNC) &tsooBGXerDumpModel_R,        4},
-  {"tsooBGXerEvalOneIter_R",      (DL_FUNC) &tsooBGXerEvalOneIter_R,      4},
-  {"tsooBGXerGetAttrNames_R",     (DL_FUNC) &tsooBGXerGetAttrNames_R,     1},
-  {"tsooBGXerGetAttr_R",          (DL_FUNC) &tsooBGXerGetAttr_R,          2},
-  {"tsooBGXerLoadModelFromRaw_R", (DL_FUNC) &tsooBGXerLoadModelFromRaw_R, 2},
-  {"tsooBGXerLoadModel_R",        (DL_FUNC) &tsooBGXerLoadModel_R,        2},
-  {"tsooBGXerModelToRaw_R",       (DL_FUNC) &tsooBGXerModelToRaw_R,       1},
-  {"tsooBGXerPredict_R",          (DL_FUNC) &tsooBGXerPredict_R,          4},
-  {"tsooBGXerSaveModel_R",        (DL_FUNC) &tsooBGXerSaveModel_R,        2},
-  {"tsooBGXerSetAttr_R",          (DL_FUNC) &tsooBGXerSetAttr_R,          3},
-  {"tsooBGXerSetParam_R",         (DL_FUNC) &tsooBGXerSetParam_R,         3},
-  {"tsooBGXerUpdateOneIter_R",    (DL_FUNC) &tsooBGXerUpdateOneIter_R,    3},
+  {"retsooBGXBoostOneIter_R",     (DL_FUNC) &retsooBGXBoostOneIter_R,     4},
+  {"retsooBGXCreate_R",           (DL_FUNC) &retsooBGXCreate_R,           1},
+  {"retsooBGXDumpModel_R",        (DL_FUNC) &retsooBGXDumpModel_R,        4},
+  {"retsooBGXEvalOneIter_R",      (DL_FUNC) &retsooBGXEvalOneIter_R,      4},
+  {"retsooBGXGetAttrNames_R",     (DL_FUNC) &retsooBGXGetAttrNames_R,     1},
+  {"retsooBGXGetAttr_R",          (DL_FUNC) &retsooBGXGetAttr_R,          2},
+  {"retsooBGXLoadModelFromRaw_R", (DL_FUNC) &retsooBGXLoadModelFromRaw_R, 2},
+  {"retsooBGXLoadModel_R",        (DL_FUNC) &retsooBGXLoadModel_R,        2},
+  {"retsooBGXModelToRaw_R",       (DL_FUNC) &retsooBGXModelToRaw_R,       1},
+  {"retsooBGXPredict_R",          (DL_FUNC) &retsooBGXPredict_R,          4},
+  {"retsooBGXSaveModel_R",        (DL_FUNC) &retsooBGXSaveModel_R,        2},
+  {"retsooBGXSetAttr_R",          (DL_FUNC) &retsooBGXSetAttr_R,          3},
+  {"retsooBGXSetParam_R",         (DL_FUNC) &retsooBGXSetParam_R,         3},
+  {"retsooBGXUpdateOneIter_R",    (DL_FUNC) &retsooBGXUpdateOneIter_R,    3},
   {"XGCheckNullPtr_R",            (DL_FUNC) &XGCheckNullPtr_R,            1},
   {"XGDMatrixCreateFromCSC_R",    (DL_FUNC) &XGDMatrixCreateFromCSC_R,    4},
   {"XGDMatrixCreateFromFile_R",   (DL_FUNC) &XGDMatrixCreateFromFile_R,   2},

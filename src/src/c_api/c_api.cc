@@ -841,7 +841,7 @@ BGX_DLL int XGDMatrixNumCol(const DMatrixHandle handle,
 }
 
 // tsoobgx implementation
-BGX_DLL int tsooBGXerCreate(const DMatrixHandle dmats[],
+BGX_DLL int retsooBGXCreate(const DMatrixHandle dmats[],
                     tsoobgx::bst_ulong len,
                     BoosterHandle *out) {
   API_BEGIN();
@@ -853,14 +853,14 @@ BGX_DLL int tsooBGXerCreate(const DMatrixHandle dmats[],
   API_END();
 }
 
-BGX_DLL int tsooBGXerFree(BoosterHandle handle) {
+BGX_DLL int retsooBGXFree(BoosterHandle handle) {
   API_BEGIN();
   CHECK_HANDLE();
   delete static_cast<Booster*>(handle);
   API_END();
 }
 
-BGX_DLL int tsooBGXerSetParam(BoosterHandle handle,
+BGX_DLL int retsooBGXSetParam(BoosterHandle handle,
                               const char *name,
                               const char *value) {
   API_BEGIN();
@@ -869,7 +869,7 @@ BGX_DLL int tsooBGXerSetParam(BoosterHandle handle,
   API_END();
 }
 
-BGX_DLL int tsooBGXerUpdateOneIter(BoosterHandle handle,
+BGX_DLL int retsooBGXUpdateOneIter(BoosterHandle handle,
                                    int iter,
                                    DMatrixHandle dtrain) {
   API_BEGIN();
@@ -883,7 +883,7 @@ BGX_DLL int tsooBGXerUpdateOneIter(BoosterHandle handle,
   API_END();
 }
 
-BGX_DLL int tsooBGXerBoostOneIter(BoosterHandle handle,
+BGX_DLL int retsooBGXBoostOneIter(BoosterHandle handle,
                                   DMatrixHandle dtrain,
                                   bst_float *grad,
                                   bst_float *hess,
@@ -905,7 +905,7 @@ BGX_DLL int tsooBGXerBoostOneIter(BoosterHandle handle,
   API_END();
 }
 
-BGX_DLL int tsooBGXerEvalOneIter(BoosterHandle handle,
+BGX_DLL int retsooBGXEvalOneIter(BoosterHandle handle,
                                  int iter,
                                  DMatrixHandle dmats[],
                                  const char* evnames[],
@@ -929,7 +929,7 @@ BGX_DLL int tsooBGXerEvalOneIter(BoosterHandle handle,
   API_END();
 }
 
-BGX_DLL int tsooBGXerPredict(BoosterHandle handle,
+BGX_DLL int retsooBGXPredict(BoosterHandle handle,
                              DMatrixHandle dmat,
                              int option_mask,
                              unsigned ntree_limit,
@@ -956,7 +956,7 @@ BGX_DLL int tsooBGXerPredict(BoosterHandle handle,
   API_END();
 }
 
-BGX_DLL int tsooBGXerLoadModel(BoosterHandle handle, const char* fname) {
+BGX_DLL int retsooBGXLoadModel(BoosterHandle handle, const char* fname) {
   API_BEGIN();
   CHECK_HANDLE();
   std::unique_ptr<dmlc::Stream> fi(dmlc::Stream::Create(fname, "r"));
@@ -964,7 +964,7 @@ BGX_DLL int tsooBGXerLoadModel(BoosterHandle handle, const char* fname) {
   API_END();
 }
 
-BGX_DLL int tsooBGXerSaveModel(BoosterHandle handle, const char* fname) {
+BGX_DLL int retsooBGXSaveModel(BoosterHandle handle, const char* fname) {
   API_BEGIN();
   CHECK_HANDLE();
   std::unique_ptr<dmlc::Stream> fo(dmlc::Stream::Create(fname, "w"));
@@ -974,7 +974,7 @@ BGX_DLL int tsooBGXerSaveModel(BoosterHandle handle, const char* fname) {
   API_END();
 }
 
-BGX_DLL int tsooBGXerLoadModelFromBuffer(BoosterHandle handle,
+BGX_DLL int retsooBGXLoadModelFromBuffer(BoosterHandle handle,
                                  const void* buf,
                                  tsoobgx::bst_ulong len) {
   API_BEGIN();
@@ -984,7 +984,7 @@ BGX_DLL int tsooBGXerLoadModelFromBuffer(BoosterHandle handle,
   API_END();
 }
 
-BGX_DLL int tsooBGXerGetModelRaw(BoosterHandle handle,
+BGX_DLL int retsooBGXGetModelRaw(BoosterHandle handle,
                          tsoobgx::bst_ulong* out_len,
                          const char** out_dptr) {
   std::string& raw_str = BGXAPIThreadLocalStore::Get()->ret_str;
@@ -1020,14 +1020,14 @@ inline void tsooBGXDumpModelImpl(
   *out_models = dmlc::BeginPtr(charp_vecs);
   *len = static_cast<tsoobgx::bst_ulong>(charp_vecs.size());
 }
-BGX_DLL int tsooBGXerDumpModel(BoosterHandle handle,
+BGX_DLL int retsooBGXDumpModel(BoosterHandle handle,
                        const char* fmap,
                        int with_stats,
                        tsoobgx::bst_ulong* len,
                        const char*** out_models) {
-  return tsooBGXerDumpModelEx(handle, fmap, with_stats, "text", len, out_models);
+  return retsooBGXDumpModelEx(handle, fmap, with_stats, "text", len, out_models);
 }
-BGX_DLL int tsooBGXerDumpModelEx(BoosterHandle handle,
+BGX_DLL int retsooBGXDumpModelEx(BoosterHandle handle,
                        const char* fmap,
                        int with_stats,
                        const char *format,
@@ -1046,17 +1046,17 @@ BGX_DLL int tsooBGXerDumpModelEx(BoosterHandle handle,
   API_END();
 }
 
-BGX_DLL int tsooBGXerDumpModelWithFeatures(BoosterHandle handle,
+BGX_DLL int retsooBGXDumpModelWithFeatures(BoosterHandle handle,
                                    int fnum,
                                    const char** fname,
                                    const char** ftype,
                                    int with_stats,
                                    tsoobgx::bst_ulong* len,
                                    const char*** out_models) {
-  return tsooBGXerDumpModelExWithFeatures(handle, fnum, fname, ftype, with_stats,
+  return retsooBGXDumpModelExWithFeatures(handle, fnum, fname, ftype, with_stats,
                                    "text", len, out_models);
 }
-BGX_DLL int tsooBGXerDumpModelExWithFeatures(BoosterHandle handle,
+BGX_DLL int retsooBGXDumpModelExWithFeatures(BoosterHandle handle,
                                    int fnum,
                                    const char** fname,
                                    const char** ftype,
@@ -1074,7 +1074,7 @@ BGX_DLL int tsooBGXerDumpModelExWithFeatures(BoosterHandle handle,
   API_END();
 }
 
-BGX_DLL int tsooBGXerGetAttr(BoosterHandle handle,
+BGX_DLL int retsooBGXGetAttr(BoosterHandle handle,
                      const char* key,
                      const char** out,
                      int* success) {
@@ -1092,7 +1092,7 @@ BGX_DLL int tsooBGXerGetAttr(BoosterHandle handle,
   API_END();
 }
 
-BGX_DLL int tsooBGXerSetAttr(BoosterHandle handle,
+BGX_DLL int retsooBGXSetAttr(BoosterHandle handle,
                      const char* key,
                      const char* value) {
   auto* bst = static_cast<Booster*>(handle);
@@ -1106,7 +1106,7 @@ BGX_DLL int tsooBGXerSetAttr(BoosterHandle handle,
   API_END();
 }
 
-BGX_DLL int tsooBGXerGetAttrNames(BoosterHandle handle,
+BGX_DLL int retsooBGXGetAttrNames(BoosterHandle handle,
                      tsoobgx::bst_ulong* out_len,
                      const char*** out) {
   std::vector<std::string>& str_vecs = BGXAPIThreadLocalStore::Get()->ret_vec_str;
@@ -1124,7 +1124,7 @@ BGX_DLL int tsooBGXerGetAttrNames(BoosterHandle handle,
   API_END();
 }
 
-BGX_DLL int tsooBGXerLoadRabitCheckpoint(BoosterHandle handle,
+BGX_DLL int retsooBGXLoadRabitCheckpoint(BoosterHandle handle,
                                  int* version) {
   API_BEGIN();
   CHECK_HANDLE();
@@ -1136,7 +1136,7 @@ BGX_DLL int tsooBGXerLoadRabitCheckpoint(BoosterHandle handle,
   API_END();
 }
 
-BGX_DLL int tsooBGXerSaveRabitCheckpoint(BoosterHandle handle) {
+BGX_DLL int retsooBGXSaveRabitCheckpoint(BoosterHandle handle) {
   API_BEGIN();
   CHECK_HANDLE();
   auto* bst = static_cast<Booster*>(handle);
