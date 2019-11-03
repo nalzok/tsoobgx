@@ -1,5 +1,5 @@
 ---
-title: "Understand your dataset with Xgboost"
+title: "Understand your dataset with tsoobgX"
 output:
   rmarkdown::html_vignette:
     css: vignette.css
@@ -12,20 +12,20 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-Understand your dataset with XGBoost
+Understand your dataset with tsooBGX
 ====================================
 
 Introduction
 ------------
 
-The purpose of this vignette is to show you how to use **Xgboost** to discover and understand your own dataset better.
+The purpose of this vignette is to show you how to use **tsoobgX** to discover and understand your own dataset better.
 
-This vignette is not about predicting anything (see [Xgboost presentation](https://github.com/dmlc/xgboost/blob/master/R-package/vignettes/xgboostPresentation.Rmd)). We will explain how to use **Xgboost** to highlight the *link* between the *features* of your data and the *outcome*.
+This vignette is not about predicting anything (see [tsoobgX presentation](https://github.com/dmlc/tsoobgx/blob/master/R-package/vignettes/tsoobgxPresentation.Rmd)). We will explain how to use **tsoobgX** to highlight the *link* between the *features* of your data and the *outcome*.
 
 Package loading:
 
 ```{r libLoading, results='hold', message=F, warning=F}
-require(xgboost)
+require(tsoobgx)
 require(Matrix)
 require(data.table)
 if (!require('vcd')) install.packages('vcd')
@@ -39,7 +39,7 @@ Preparation of the dataset
 ### Numeric v.s. categorical variables
 
 
-**Xgboost** manages only `numeric` vectors.
+**tsoobgX** manages only `numeric` vectors.
 
 What to do when you have *categorical* data?
 
@@ -66,7 +66,7 @@ data(Arthritis)
 df <- data.table(Arthritis, keep.rownames = F)
 ```
 
-> `data.table` is 100% compliant with **R** `data.frame` but its syntax is more consistent and its performance for large dataset is [best in class](http://stackoverflow.com/questions/21435339/data-table-vs-dplyr-can-one-do-something-well-the-other-cant-or-does-poorly) (`dplyr` from **R** and `Pandas` from **Python** [included](https://github.com/Rdatatable/data.table/wiki/Benchmarks-%3A-Grouping)). Some parts of **Xgboost** **R** package use `data.table`.
+> `data.table` is 100% compliant with **R** `data.frame` but its syntax is more consistent and its performance for large dataset is [best in class](http://stackoverflow.com/questions/21435339/data-table-vs-dplyr-can-one-do-something-well-the-other-cant-or-does-poorly) (`dplyr` from **R** and `Pandas` from **Python** [included](https://github.com/Rdatatable/data.table/wiki/Benchmarks-%3A-Grouping)). Some parts of **tsoobgX** **R** package use `data.table`.
 
 The first thing we want to do is to have a look to the first few lines of the `data.table`:
 
@@ -166,10 +166,10 @@ output_vector = df[,Improved] == "Marked"
 Build the model
 ---------------
 
-The code below is very usual. For more information, you can look at the documentation of `xgboost` function (or at the vignette [Xgboost presentation](https://github.com/dmlc/xgboost/blob/master/R-package/vignettes/xgboostPresentation.Rmd)).
+The code below is very usual. For more information, you can look at the documentation of `tsoobgx` function (or at the vignette [tsoobgX presentation](https://github.com/dmlc/tsoobgx/blob/master/R-package/vignettes/tsoobgxPresentation.Rmd)).
 
 ```{r}
-bst <- xgboost(data = sparse_matrix, label = output_vector, max_depth = 4,
+bst <- tsoobgx(data = sparse_matrix, label = output_vector, max_depth = 4,
                eta = 1, nthread = 2, nrounds = 10,objective = "binary:logistic")
 
 ```
@@ -193,7 +193,7 @@ Feature importance
 Remember, each binary column corresponds to a single value of one of *categorical* features.
 
 ```{r}
-importance <- xgb.importance(feature_names = colnames(sparse_matrix), model = bst)
+importance <- bgx.importance(feature_names = colnames(sparse_matrix), model = bst)
 head(importance)
 ```
 
@@ -216,7 +216,7 @@ One simple solution is to count the co-occurrences of a feature and a class of t
 For that purpose we will execute the same function as above but using two more parameters, `data` and `label`.
 
 ```{r}
-importanceRaw <- xgb.importance(feature_names = colnames(sparse_matrix), model = bst, data = sparse_matrix, label = output_vector)
+importanceRaw <- bgx.importance(feature_names = colnames(sparse_matrix), model = bst, data = sparse_matrix, label = output_vector)
 
 # Cleaning for better display
 importanceClean <- importanceRaw[,`:=`(Cover=NULL, Frequency=NULL)]
@@ -242,7 +242,7 @@ Therefore, according to our findings, getting a placebo doesn't seem to help but
 All these things are nice, but it would be even better to plot the results.
 
 ```{r, fig.width=8, fig.height=5, fig.align='center'}
-xgb.plot.importance(importance_matrix = importance)
+bgx.plot.importance(importance_matrix = importance)
 ```
 
 Feature have automatically been divided in 2 clusters: the interesting features... and the others.
@@ -316,21 +316,21 @@ However, in Random Forests™ this random choice will be done for each tree, bec
 
 In boosting, when a specific link between feature and outcome have been learned by the algorithm, it will try to not refocus on it (in theory it is what happens, reality is not always that simple). Therefore, all the importance will be on feature `A` or on feature `B` (but not both). You will know that one feature have an important role in the link between the observations and the label. It is still up to you to search for the correlated features to the one detected as important if you need to know all of them.
 
-If you want to try Random Forests™ algorithm, you can tweak Xgboost parameters!
+If you want to try Random Forests™ algorithm, you can tweak tsoobgX parameters!
 
 For instance, to compute a model with 1000 trees, with a 0.5 factor on sampling rows and columns:
 
 ```{r, warning=FALSE, message=FALSE}
-data(agaricus.train, package='xgboost')
-data(agaricus.test, package='xgboost')
+data(agaricus.train, package='tsoobgx')
+data(agaricus.test, package='tsoobgx')
 train <- agaricus.train
 test <- agaricus.test
 
 #Random Forest™ - 1000 trees
-bst <- xgboost(data = train$data, label = train$label, max_depth = 4, num_parallel_tree = 1000, subsample = 0.5, colsample_bytree =0.5, nrounds = 1, objective = "binary:logistic")
+bst <- tsoobgx(data = train$data, label = train$label, max_depth = 4, num_parallel_tree = 1000, subsample = 0.5, colsample_bytree =0.5, nrounds = 1, objective = "binary:logistic")
 
 #Boosting - 3 rounds
-bst <- xgboost(data = train$data, label = train$label, max_depth = 4, nrounds = 3, objective = "binary:logistic")
+bst <- tsoobgx(data = train$data, label = train$label, max_depth = 4, nrounds = 3, objective = "binary:logistic")
 ```
 
 > Note that the parameter `round` is set to `1`.

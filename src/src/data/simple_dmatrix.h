@@ -4,11 +4,11 @@
  * \brief In-memory version of DMatrix.
  * \author Tianqi Chen
  */
-#ifndef XGBOOST_DATA_SIMPLE_DMATRIX_H_
-#define XGBOOST_DATA_SIMPLE_DMATRIX_H_
+#ifndef TSOOBGX_DATA_SIMPLE_DMATRIX_H_
+#define TSOOBGX_DATA_SIMPLE_DMATRIX_H_
 
-#include <xgboost/base.h>
-#include <xgboost/data.h>
+#include <tsoobgx/base.h>
+#include <tsoobgx/data.h>
 
 #include <algorithm>
 #include <cstring>
@@ -18,7 +18,7 @@
 
 #include "simple_csr_source.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace data {
 
 class SimpleDMatrix : public DMatrix {
@@ -48,5 +48,5 @@ class SimpleDMatrix : public DMatrix {
   std::unique_ptr<SparsePage> column_page_;
 };
 }  // namespace data
-}  // namespace xgboost
-#endif  // XGBOOST_DATA_SIMPLE_DMATRIX_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_DATA_SIMPLE_DMATRIX_H_

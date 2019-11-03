@@ -3,11 +3,11 @@
  * \file param.h
  * \brief training parameters.
  */
-#ifndef XGBOOST_LINEAR_PARAM_H_
-#define XGBOOST_LINEAR_PARAM_H_
+#ifndef TSOOBGX_LINEAR_PARAM_H_
+#define TSOOBGX_LINEAR_PARAM_H_
 #include <dmlc/parameter.h>
 
-namespace xgboost {
+namespace tsoobgx {
 namespace linear {
 /**
  * \brief A set of available FeatureSelector's
@@ -72,6 +72,6 @@ struct LinearTrainParam : public dmlc::Parameter<LinearTrainParam> {
 };
 
 }  // namespace linear
-}  // namespace xgboost
+}  // namespace tsoobgx
 
-#endif  // XGBOOST_LINEAR_PARAM_H_
+#endif  // TSOOBGX_LINEAR_PARAM_H_

@@ -1,9 +1,9 @@
 /*!
- * Copyright 2018 XGBoost contributors
+ * Copyright 2018 tsooBGX contributors
  */
 #include "common.h"
 
-namespace xgboost {
+namespace tsoobgx {
 
 int AllVisibleImpl::AllVisible() {
   int n_visgpus = 0;
@@ -17,4 +17,4 @@ int AllVisibleImpl::AllVisible() {
   return n_visgpus;
 }
 
-}  // namespace xgboost
+}  // namespace tsoobgx

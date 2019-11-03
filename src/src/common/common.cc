@@ -8,7 +8,7 @@
 #include "common.h"
 #include "./random.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 /*! \brief thread local entry for random. */
 struct RandomThreadLocalEntry {
@@ -23,10 +23,10 @@ GlobalRandomEngine& GlobalRandom() {
 }
 }  // namespace common
 
-#if !defined(XGBOOST_USE_CUDA)
+#if !defined(TSOOBGX_USE_CUDA)
 int AllVisibleImpl::AllVisible() {
   return 0;
 }
-#endif  // !defined(XGBOOST_USE_CUDA)
+#endif  // !defined(TSOOBGX_USE_CUDA)
 
-}  // namespace xgboost
+}  // namespace tsoobgx

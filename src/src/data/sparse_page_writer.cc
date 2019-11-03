@@ -3,12 +3,12 @@
  * \file sparse_batch_writer.cc
  * \param Writer class sparse page.
  */
-#include <xgboost/base.h>
-#include <xgboost/logging.h>
+#include <tsoobgx/base.h>
+#include <tsoobgx/logging.h>
 #include "./sparse_page_writer.h"
 
 #if DMLC_ENABLE_STD_THREAD
-namespace xgboost {
+namespace tsoobgx {
 namespace data {
 
 SparsePageWriter::SparsePageWriter(
@@ -70,6 +70,6 @@ void SparsePageWriter::Alloc(std::shared_ptr<SparsePage>* out_page) {
   }
 }
 }  // namespace data
-}  // namespace xgboost
+}  // namespace tsoobgx
 
 #endif  // DMLC_ENABLE_STD_THREAD

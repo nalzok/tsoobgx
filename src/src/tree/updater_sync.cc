@@ -3,13 +3,13 @@
  * \file updater_sync.cc
  * \brief synchronize the tree in all distributed nodes
  */
-#include <xgboost/tree_updater.h>
+#include <tsoobgx/tree_updater.h>
 #include <vector>
 #include <string>
 #include <limits>
 #include "../common/io.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace tree {
 
 DMLC_REGISTRY_FILE_TAG(updater_sync);
@@ -42,10 +42,10 @@ class TreeSyncher: public TreeUpdater {
   }
 };
 
-XGBOOST_REGISTER_TREE_UPDATER(TreeSyncher, "sync")
+TSOOBGX_REGISTER_TREE_UPDATER(TreeSyncher, "sync")
 .describe("Syncher that synchronize the tree in all distributed nodes.")
 .set_body([]() {
     return new TreeSyncher();
   });
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace tsoobgx

@@ -6,16 +6,16 @@
 #include <dmlc/thread_local.h>
 #include "./c_api_error.h"
 
-struct XGBAPIErrorEntry {
+struct BGXAPIErrorEntry {
   std::string last_error;
 };
 
-using XGBAPIErrorStore = dmlc::ThreadLocalStore<XGBAPIErrorEntry>;
+using BGXAPIErrorStore = dmlc::ThreadLocalStore<BGXAPIErrorEntry>;
 
-const char *XGBGetLastError() {
-  return XGBAPIErrorStore::Get()->last_error.c_str();
+const char *BGXGetLastError() {
+  return BGXAPIErrorStore::Get()->last_error.c_str();
 }
 
-void XGBAPISetLastError(const char* msg) {
-  XGBAPIErrorStore::Get()->last_error = msg;
+void BGXAPISetLastError(const char* msg) {
+  BGXAPIErrorStore::Get()->last_error = msg;
 }

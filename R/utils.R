@@ -48,7 +48,7 @@ check.booster.params <- function(params, ...) {
   if (length(multi_names) > 0) {
     warning("The following parameters were provided multiple times:\n\t",
             paste(multi_names, collapse = ', '), "\n  Only the last value for each of them will be used.\n")
-    # While xgboost internals would choose the last value for a multiple-times parameter,
+    # While tsoobgx internals would choose the last value for a multiple-times parameter,
     # enforce it here in R as well (b/c multi-parameters might be used further in R code,
     # and R takes the 1st value when multiple elements with the same name are present in a list).
     for (n in multi_names) {
@@ -134,20 +134,20 @@ check.custom.eval <- function(env = parent.frame()) {
 
 
 # Update a booster handle for an iteration with dtrain data
-xgb.iter.update <- function(booster_handle, dtrain, iter, obj = NULL) {
-  if (!identical(class(booster_handle), "xgb.Booster.handle")) {
-    stop("booster_handle must be of xgb.Booster.handle class")
+bgx.iter.update <- function(booster_handle, dtrain, iter, obj = NULL) {
+  if (!identical(class(booster_handle), "bgx.Booster.handle")) {
+    stop("booster_handle must be of bgx.Booster.handle class")
   }
-  if (!inherits(dtrain, "xgb.DMatrix")) {
-    stop("dtrain must be of xgb.DMatrix class")
+  if (!inherits(dtrain, "bgx.DMatrix")) {
+    stop("dtrain must be of bgx.DMatrix class")
   }
 
   if (is.null(obj)) {
-    .Call(XGBoosterUpdateOneIter_R, booster_handle, as.integer(iter), dtrain)
+    .Call(tsooBGXerUpdateOneIter_R, booster_handle, as.integer(iter), dtrain)
   } else {
     pred <- predict(booster_handle, dtrain)
     gpair <- obj(pred, dtrain)
-    .Call(XGBoosterBoostOneIter_R, booster_handle, dtrain, gpair$grad, gpair$hess)
+    .Call(tsooBGXerBoostOneIter_R, booster_handle, dtrain, gpair$grad, gpair$hess)
   }
   return(TRUE)
 }
@@ -156,16 +156,16 @@ xgb.iter.update <- function(booster_handle, dtrain, iter, obj = NULL) {
 # Evaluate one iteration.
 # Returns a named vector of evaluation metrics
 # with the names in a 'datasetname-metricname' format.
-xgb.iter.eval <- function(booster_handle, watchlist, iter, feval = NULL) {
-  if (!identical(class(booster_handle), "xgb.Booster.handle"))
-    stop("class of booster_handle must be xgb.Booster.handle")
+bgx.iter.eval <- function(booster_handle, watchlist, iter, feval = NULL) {
+  if (!identical(class(booster_handle), "bgx.Booster.handle"))
+    stop("class of booster_handle must be bgx.Booster.handle")
 
   if (length(watchlist) == 0)
     return(NULL)
 
   evnames <- names(watchlist)
   if (is.null(feval)) {
-    msg <- .Call(XGBoosterEvalOneIter_R, booster_handle, as.integer(iter), watchlist, as.list(evnames))
+    msg <- .Call(tsooBGXerEvalOneIter_R, booster_handle, as.integer(iter), watchlist, as.list(evnames))
     msg <- stri_split_regex(msg, '(\\s+|:|\\s+)')[[1]][-1]
     res <- as.numeric(msg[c(FALSE,TRUE)]) # even indices are the values
     names(res) <- msg[c(TRUE,FALSE)]      # odds are the names
@@ -220,7 +220,7 @@ generate.cv.folds <- function(nfold, nrows, stratified, label, params) {
       if (length(unique(y)) <= 5)
         y <- factor(y)
     }
-    folds <- xgb.createFolds(y, nfold)
+    folds <- bgx.createFolds(y, nfold)
   } else {
     # make simple non-stratified folds
     kstep <- length(rnd_idx) %/% nfold
@@ -237,7 +237,7 @@ generate.cv.folds <- function(nfold, nrows, stratified, label, params) {
 # Creates CV folds stratified by the values of y.
 # It was borrowed from caret::createFolds and simplified
 # by always returning an unnamed list of fold indices.
-xgb.createFolds <- function(y, k = 10)
+bgx.createFolds <- function(y, k = 10)
 {
   if (is.numeric(y)) {
     ## Group the numeric data based on their magnitudes
@@ -298,13 +298,13 @@ xgb.createFolds <- function(y, k = 10)
 #' At this time, some of the parameter names were changed in order to make the code style more uniform.
 #' The deprecated parameters would be removed in the next release.
 #'
-#' To see all the current deprecated and new parameters, check the \code{xgboost:::depr_par_lut} table.
+#' To see all the current deprecated and new parameters, check the \code{tsoobgx:::depr_par_lut} table.
 #'
 #' A deprecation warning is shown when any of the deprecated parameters is used in a call.
 #' An additional warning is shown when there was a partial match to a deprecated parameter
 #' (as R is able to partially match parameter names).
 #'
-#' @name xgboost-deprecated
+#' @name tsoobgx-deprecated
 NULL
 
 # Lookup table for the deprecated parameters bookkeeping
@@ -344,7 +344,7 @@ check.deprecation <- function(..., env = parent.frame()) {
     if (!ex_match[i]) {
       warning("'", pars_par, "' was partially matched to '", old_par,"'")
     }
-    .Deprecated(new_par, old = old_par, package = 'xgboost')
+    .Deprecated(new_par, old = old_par, package = 'tsoobgx')
     if (new_par != 'NULL') {
       eval(parse(text = paste(new_par, '<-', pars[[pars_par]])), envir = env)
     }

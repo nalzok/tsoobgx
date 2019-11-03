@@ -1,4 +1,4 @@
 library(testthat)
-library(xgboost)
+library(tsoobgx)
 
-test_check("xgboost")
+test_check("tsoobgx")

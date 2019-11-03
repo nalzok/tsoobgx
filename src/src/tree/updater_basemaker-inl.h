@@ -4,13 +4,13 @@
  * \brief implement a common tree constructor
  * \author Tianqi Chen
  */
-#ifndef XGBOOST_TREE_UPDATER_BASEMAKER_INL_H_
-#define XGBOOST_TREE_UPDATER_BASEMAKER_INL_H_
+#ifndef TSOOBGX_TREE_UPDATER_BASEMAKER_INL_H_
+#define TSOOBGX_TREE_UPDATER_BASEMAKER_INL_H_
 
 #include <rabit/rabit.h>
 
-#include <xgboost/base.h>
-#include <xgboost/tree_updater.h>
+#include <tsoobgx/base.h>
+#include <tsoobgx/tree_updater.h>
 #include <vector>
 #include <algorithm>
 #include <string>
@@ -22,7 +22,7 @@
 #include "../common/random.h"
 #include "../common/quantile.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace tree {
 /*!
  * \brief base tree maker class that defines common operation
@@ -473,5 +473,5 @@ class BaseMaker: public TreeUpdater {
   }
 };
 }  // namespace tree
-}  // namespace xgboost
-#endif  // XGBOOST_TREE_UPDATER_BASEMAKER_INL_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_TREE_UPDATER_BASEMAKER_INL_H_

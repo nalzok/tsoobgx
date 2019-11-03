@@ -4,18 +4,18 @@
  * \brief util to compute quantiles
  * \author Tianqi Chen
  */
-#ifndef XGBOOST_COMMON_QUANTILE_H_
-#define XGBOOST_COMMON_QUANTILE_H_
+#ifndef TSOOBGX_COMMON_QUANTILE_H_
+#define TSOOBGX_COMMON_QUANTILE_H_
 
 #include <dmlc/base.h>
-#include <xgboost/logging.h>
+#include <tsoobgx/logging.h>
 #include <cmath>
 #include <vector>
 #include <cstring>
 #include <algorithm>
 #include <iostream>
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 /*!
  * \brief experimental wsummary
@@ -35,9 +35,9 @@ struct WQSummary {
     /*! \brief the value of data */
     DType value;
     // constructor
-    XGBOOST_DEVICE Entry() {}  // NOLINT
+    TSOOBGX_DEVICE Entry() {}  // NOLINT
     // constructor
-    XGBOOST_DEVICE Entry(RType rmin, RType rmax, RType wmin, DType value)
+    TSOOBGX_DEVICE Entry(RType rmin, RType rmax, RType wmin, DType value)
         : rmin(rmin), rmax(rmax), wmin(wmin), value(value) {}
     /*!
      * \brief debug function,  check Valid
@@ -48,11 +48,11 @@ struct WQSummary {
       CHECK(rmax- rmin - wmin > -eps) <<  "relation constraint: min/max";
     }
     /*! \return rmin estimation for v strictly bigger than value */
-    XGBOOST_DEVICE inline RType RMinNext() const {
+    TSOOBGX_DEVICE inline RType RMinNext() const {
       return rmin + wmin;
     }
     /*! \return rmax estimation for v strictly smaller than value */
-    XGBOOST_DEVICE inline RType RMaxPrev() const {
+    TSOOBGX_DEVICE inline RType RMaxPrev() const {
       return rmax - wmin;
     }
   };
@@ -849,5 +849,5 @@ class GKQuantileSketch :
       public QuantileSketchTemplate<DType, RType, GKSummary<DType, RType> > {
 };
 }  // namespace common
-}  // namespace xgboost
-#endif  // XGBOOST_COMMON_QUANTILE_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_COMMON_QUANTILE_H_

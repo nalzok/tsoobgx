@@ -4,10 +4,10 @@
 #       specially compiled with GPU support.
 #
 # For the current functionality, see 
-# https://xgboost.readthedocs.io/en/latest/gpu/index.html
+# https://tsoobgx.readthedocs.io/en/latest/gpu/index.html
 #
 
-library('xgboost')
+library('tsoobgx')
 
 # Simulate N x p random matrix with some binomial response dependent on pp columns
 set.seed(111)
@@ -21,8 +21,8 @@ m <- X[, sel] %*% betas - 1 + rnorm(N)
 y <- rbinom(N, 1, plogis(m))
 
 tr <- sample.int(N, N * 0.75)
-dtrain <- xgb.DMatrix(X[tr,], label = y[tr])
-dtest <- xgb.DMatrix(X[-tr,], label = y[-tr])
+dtrain <- bgx.DMatrix(X[tr,], label = y[tr])
+dtest <- bgx.DMatrix(X[-tr,], label = y[-tr])
 wl <- list(train = dtrain, test = dtest)
 
 # An example of running 'gpu_hist' algorithm
@@ -35,11 +35,11 @@ wl <- list(train = dtrain, test = dtest)
 param <- list(objective = 'reg:logistic', eval_metric = 'auc', subsample = 0.5, nthread = 4,
               max_bin = 64, tree_method = 'gpu_hist')
 pt <- proc.time()
-bst_gpu <- xgb.train(param, dtrain, watchlist = wl, nrounds = 50)
+bst_gpu <- bgx.train(param, dtrain, watchlist = wl, nrounds = 50)
 proc.time() - pt
 
 # Compare to the 'hist' algorithm:
 param$tree_method <- 'hist'
 pt <- proc.time()
-bst_hist <- xgb.train(param, dtrain, watchlist = wl, nrounds = 50)
+bst_hist <- bgx.train(param, dtrain, watchlist = wl, nrounds = 50)
 proc.time() - pt

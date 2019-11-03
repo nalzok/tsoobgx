@@ -5,15 +5,15 @@
  * \author Tianqi Chen, Kailong Chen
  */
 #include <dmlc/omp.h>
-#include <xgboost/logging.h>
-#include <xgboost/objective.h>
+#include <tsoobgx/logging.h>
+#include <tsoobgx/objective.h>
 #include <vector>
 #include <algorithm>
 #include <utility>
 #include "../common/math.h"
 #include "../common/random.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace obj {
 
 DMLC_REGISTRY_FILE_TAG(rank_obj);
@@ -324,17 +324,17 @@ class LambdaRankObjMAP : public LambdaRankObj {
 // register the objective functions
 DMLC_REGISTER_PARAMETER(LambdaRankParam);
 
-XGBOOST_REGISTER_OBJECTIVE(PairwiseRankObj, "rank:pairwise")
+TSOOBGX_REGISTER_OBJECTIVE(PairwiseRankObj, "rank:pairwise")
 .describe("Pairwise rank objective.")
 .set_body([]() { return new PairwiseRankObj(); });
 
-XGBOOST_REGISTER_OBJECTIVE(LambdaRankNDCG, "rank:ndcg")
+TSOOBGX_REGISTER_OBJECTIVE(LambdaRankNDCG, "rank:ndcg")
 .describe("LambdaRank with NDCG as objective.")
 .set_body([]() { return new LambdaRankObjNDCG(); });
 
-XGBOOST_REGISTER_OBJECTIVE(LambdaRankObjMAP, "rank:map")
+TSOOBGX_REGISTER_OBJECTIVE(LambdaRankObjMAP, "rank:map")
 .describe("LambdaRank with MAP as objective.")
 .set_body([]() { return new LambdaRankObjMAP(); });
 
 }  // namespace obj
-}  // namespace xgboost
+}  // namespace tsoobgx

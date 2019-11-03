@@ -23,7 +23,7 @@ Check either R documentation on \code{\link[base]{environment}} or the
 \href{http://adv-r.had.co.nz/Environments.html}{Environments chapter} from the "Advanced R"
 book by Hadley Wickham. Further, the best option is to read the code of some of the existing callbacks -
 choose ones that do something similar to what you want to achieve. Also, you would need to get familiar
-with the objects available inside of the \code{xgb.train} and \code{xgb.cv} internal environments.
+with the objects available inside of the \code{bgx.train} and \code{bgx.cv} internal environments.
 }
 \seealso{
 \code{\link{cb.print.evaluation}},
@@ -32,6 +32,6 @@ with the objects available inside of the \code{xgb.train} and \code{xgb.cv} inte
 \code{\link{cb.early.stop}},
 \code{\link{cb.save.model}},
 \code{\link{cb.cv.predict}},
-\code{\link{xgb.train}},
-\code{\link{xgb.cv}}
+\code{\link{bgx.train}},
+\code{\link{bgx.cv}}
 }

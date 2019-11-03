@@ -1,20 +1,20 @@
-require(xgboost)
+require(tsoobgx)
 require(data.table)
 require(Matrix)
 
 set.seed(1982)
 
 # load in the agaricus dataset
-data(agaricus.train, package='xgboost')
-data(agaricus.test, package='xgboost')
-dtrain <- xgb.DMatrix(data = agaricus.train$data, label = agaricus.train$label)
-dtest <- xgb.DMatrix(data = agaricus.test$data, label = agaricus.test$label)
+data(agaricus.train, package='tsoobgx')
+data(agaricus.test, package='tsoobgx')
+dtrain <- bgx.DMatrix(data = agaricus.train$data, label = agaricus.train$label)
+dtest <- bgx.DMatrix(data = agaricus.test$data, label = agaricus.test$label)
 
 param <- list(max_depth=2, eta=1, silent=1, objective='binary:logistic')
 nrounds = 4
 
 # training the model for two rounds
-bst = xgb.train(params = param, data = dtrain, nrounds = nrounds, nthread = 2)
+bst = bgx.train(params = param, data = dtrain, nrounds = nrounds, nthread = 2)
 
 # Model accuracy without new features
 accuracy.before <- sum((predict(bst, agaricus.test$data) >= 0.5) == agaricus.test$label) / length(agaricus.test$label)
@@ -41,10 +41,10 @@ new.features.test <- create.new.tree.features(bst, agaricus.test$data)
 colnames(new.features.test) <- colnames(new.features.train)
 
 # learning with new features
-new.dtrain <- xgb.DMatrix(data = new.features.train, label = agaricus.train$label)
-new.dtest <- xgb.DMatrix(data = new.features.test, label = agaricus.test$label)
+new.dtrain <- bgx.DMatrix(data = new.features.train, label = agaricus.train$label)
+new.dtest <- bgx.DMatrix(data = new.features.test, label = agaricus.test$label)
 watchlist <- list(train = new.dtrain)
-bst <- xgb.train(params = param, data = new.dtrain, nrounds = nrounds, nthread = 2)
+bst <- bgx.train(params = param, data = new.dtrain, nrounds = nrounds, nthread = 2)
 
 # Model accuracy with new features
 accuracy.after <- sum((predict(bst, new.dtest) >= 0.5) == agaricus.test$label) / length(agaricus.test$label)

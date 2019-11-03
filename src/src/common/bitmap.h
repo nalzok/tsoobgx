@@ -5,13 +5,13 @@
  *  NOTE: bitmap is only threadsafe per word access, remember this when using bitmap
  * \author Tianqi Chen
  */
-#ifndef XGBOOST_COMMON_BITMAP_H_
-#define XGBOOST_COMMON_BITMAP_H_
+#ifndef TSOOBGX_COMMON_BITMAP_H_
+#define TSOOBGX_COMMON_BITMAP_H_
 
 #include <dmlc/omp.h>
 #include <vector>
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 /*! \brief bit map that contains set of bit indicators */
 struct BitMap {
@@ -63,5 +63,5 @@ struct BitMap {
   }
 };
 }  // namespace common
-}  // namespace xgboost
-#endif  // XGBOOST_COMMON_BITMAP_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_COMMON_BITMAP_H_

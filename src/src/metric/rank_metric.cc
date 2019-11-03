@@ -5,7 +5,7 @@
  * \author Kailong Chen, Tianqi Chen
  */
 #include <rabit/rabit.h>
-#include <xgboost/metric.h>
+#include <tsoobgx/metric.h>
 #include <dmlc/registry.h>
 #include <cmath>
 
@@ -32,17 +32,17 @@ namespace {
  */
 
 using PredIndPairContainer
-  = std::vector<std::pair<xgboost::bst_float, unsigned>>;
+  = std::vector<std::pair<tsoobgx::bst_float, unsigned>>;
 
 class PerInstanceWeightPolicy {
  public:
-  inline static xgboost::bst_float
-  GetWeightOfInstance(const xgboost::MetaInfo& info,
+  inline static tsoobgx::bst_float
+  GetWeightOfInstance(const tsoobgx::MetaInfo& info,
                       unsigned instance_id, unsigned group_id) {
     return info.GetWeight(instance_id);
   }
-  inline static xgboost::bst_float
-  GetWeightOfSortedRecord(const xgboost::MetaInfo& info,
+  inline static tsoobgx::bst_float
+  GetWeightOfSortedRecord(const tsoobgx::MetaInfo& info,
                           const PredIndPairContainer& rec,
                           unsigned record_id, unsigned group_id) {
     return info.GetWeight(rec[record_id].second);
@@ -51,14 +51,14 @@ class PerInstanceWeightPolicy {
 
 class PerGroupWeightPolicy {
  public:
-  inline static xgboost::bst_float
-  GetWeightOfInstance(const xgboost::MetaInfo& info,
+  inline static tsoobgx::bst_float
+  GetWeightOfInstance(const tsoobgx::MetaInfo& info,
                       unsigned instance_id, unsigned group_id) {
     return info.GetWeight(group_id);
   }
 
-  inline static xgboost::bst_float
-  GetWeightOfSortedRecord(const xgboost::MetaInfo& info,
+  inline static tsoobgx::bst_float
+  GetWeightOfSortedRecord(const tsoobgx::MetaInfo& info,
                           const PredIndPairContainer& rec,
                           unsigned record_id, unsigned group_id) {
     return info.GetWeight(group_id);
@@ -67,7 +67,7 @@ class PerGroupWeightPolicy {
 
 }  // anonymous namespace
 
-namespace xgboost {
+namespace tsoobgx {
 namespace metric {
 // tag the this file, used by force static link later.
 DMLC_REGISTRY_FILE_TAG(rank_metric);
@@ -168,7 +168,7 @@ struct EvalAuc : public Metric {
       for (unsigned j = gptr[group_id]; j < gptr[group_id + 1]; ++j) {
         rec.emplace_back(h_preds[j], j);
       }
-      XGBOOST_PARALLEL_SORT(rec.begin(), rec.end(), common::CmpFirst);
+      TSOOBGX_PARALLEL_SORT(rec.begin(), rec.end(), common::CmpFirst);
       // calculate AUC
       double sum_pospair = 0.0;
       double sum_npos = 0.0, sum_nneg = 0.0, buf_pos = 0.0, buf_neg = 0.0;
@@ -341,9 +341,9 @@ struct EvalNDCG : public EvalRankList{
     return sumdcg;
   }
   virtual bst_float EvalMetric(std::vector<std::pair<bst_float, unsigned> > &rec) const { // NOLINT(*)
-    XGBOOST_PARALLEL_STABLE_SORT(rec.begin(), rec.end(), common::CmpFirst);
+    TSOOBGX_PARALLEL_STABLE_SORT(rec.begin(), rec.end(), common::CmpFirst);
     bst_float dcg = this->CalcDCG(rec);
-    XGBOOST_PARALLEL_STABLE_SORT(rec.begin(), rec.end(), common::CmpSecond);
+    TSOOBGX_PARALLEL_STABLE_SORT(rec.begin(), rec.end(), common::CmpSecond);
     bst_float idcg = this->CalcDCG(rec);
     if (idcg == 0.0f) {
       if (minus_) {
@@ -475,7 +475,7 @@ struct EvalAucPR : public Metric {
         total_neg += wt * (1.0f - h_labels[j]);
         rec.emplace_back(h_preds[j], j);
       }
-      XGBOOST_PARALLEL_SORT(rec.begin(), rec.end(), common::CmpFirst);
+      TSOOBGX_PARALLEL_SORT(rec.begin(), rec.end(), common::CmpFirst);
       // we need pos > 0 && neg > 0
       if (0.0 == total_pos || 0.0 == total_neg) {
         auc_error = 1;
@@ -545,32 +545,32 @@ struct EvalAucPR : public Metric {
 };
 
 
-XGBOOST_REGISTER_METRIC(AMS, "ams")
+TSOOBGX_REGISTER_METRIC(AMS, "ams")
 .describe("AMS metric for higgs.")
 .set_body([](const char* param) { return new EvalAMS(param); });
 
-XGBOOST_REGISTER_METRIC(Auc, "auc")
+TSOOBGX_REGISTER_METRIC(Auc, "auc")
 .describe("Area under curve for both classification and rank.")
 .set_body([](const char* param) { return new EvalAuc(); });
 
-XGBOOST_REGISTER_METRIC(AucPR, "aucpr")
+TSOOBGX_REGISTER_METRIC(AucPR, "aucpr")
 .describe("Area under PR curve for both classification and rank.")
 .set_body([](const char* param) { return new EvalAucPR(); });
 
-XGBOOST_REGISTER_METRIC(Precision, "pre")
+TSOOBGX_REGISTER_METRIC(Precision, "pre")
 .describe("precision@k for rank.")
 .set_body([](const char* param) { return new EvalPrecision(param); });
 
-XGBOOST_REGISTER_METRIC(NDCG, "ndcg")
+TSOOBGX_REGISTER_METRIC(NDCG, "ndcg")
 .describe("ndcg@k for rank.")
 .set_body([](const char* param) { return new EvalNDCG(param); });
 
-XGBOOST_REGISTER_METRIC(MAP, "map")
+TSOOBGX_REGISTER_METRIC(MAP, "map")
 .describe("map@k for rank.")
 .set_body([](const char* param) { return new EvalMAP(param); });
 
-XGBOOST_REGISTER_METRIC(Cox, "cox-nloglik")
+TSOOBGX_REGISTER_METRIC(Cox, "cox-nloglik")
 .describe("Negative log partial likelihood of Cox proportioanl hazards model.")
 .set_body([](const char* param) { return new EvalCox(); });
 }  // namespace metric
-}  // namespace xgboost
+}  // namespace tsoobgx

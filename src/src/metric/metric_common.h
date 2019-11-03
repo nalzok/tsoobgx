@@ -2,13 +2,13 @@
  * Copyright 2018-2019 by Contributors
  * \file metric_param.cc
  */
-#ifndef XGBOOST_METRIC_METRIC_COMMON_H_
-#define XGBOOST_METRIC_METRIC_COMMON_H_
+#ifndef TSOOBGX_METRIC_METRIC_COMMON_H_
+#define TSOOBGX_METRIC_METRIC_COMMON_H_
 
 #include <dmlc/parameter.h>
 #include "../common/common.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace metric {
 
 // Created exclusively for GPU.
@@ -30,11 +30,11 @@ class PackedReduceResult {
   double weights_sum_;
 
  public:
-  XGBOOST_DEVICE PackedReduceResult() : residue_sum_{0}, weights_sum_{0} {}
-  XGBOOST_DEVICE PackedReduceResult(double residue, double weight)
+  TSOOBGX_DEVICE PackedReduceResult() : residue_sum_{0}, weights_sum_{0} {}
+  TSOOBGX_DEVICE PackedReduceResult(double residue, double weight)
       : residue_sum_{residue}, weights_sum_{weight} {}
 
-  XGBOOST_DEVICE
+  TSOOBGX_DEVICE
   PackedReduceResult operator+(PackedReduceResult const &other) const {
     return PackedReduceResult{residue_sum_ + other.residue_sum_,
                               weights_sum_ + other.weights_sum_};
@@ -49,6 +49,6 @@ class PackedReduceResult {
 };
 
 }  // namespace metric
-}  // namespace xgboost
+}  // namespace tsoobgx
 
-#endif  // XGBOOST_METRIC_METRIC_COMMON_H_
+#endif  // TSOOBGX_METRIC_METRIC_COMMON_H_

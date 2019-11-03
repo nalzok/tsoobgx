@@ -1,5 +1,5 @@
 /*!
- * Copyright 2018 XGBoost contributors
+ * Copyright 2018 tsooBGX contributors
  */
 
 #include "./hist_util.h"
@@ -19,7 +19,7 @@
 #include "./device_helpers.cuh"
 #include "./quantile.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 
 using WXQSketch = HistCutMatrix::WXQSketch;
@@ -401,4 +401,4 @@ void DeviceSketch
 }
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace tsoobgx

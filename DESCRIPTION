@@ -1,4 +1,4 @@
-Package: xgboost
+Package: tsoobgx
 Type: Package
 Title: Extreme Gradient Boosting
 Version: 0.90.0.2
@@ -26,8 +26,8 @@ Authors@R: c(
   person("Min", "Lin", role = c("aut")),
   person("Yifeng", "Geng", role = c("aut")),
   person("Yutian", "Li", role = c("aut")),
-  person("XGBoost contributors", role = c("cph"),
-         comment = "base XGBoost implementation")
+  person("tsooBGX contributors", role = c("cph"),
+         comment = "base tsooBGX implementation")
   )
 Description: Extreme Gradient Boosting, which is an efficient implementation
     of the gradient boosting framework from Chen & Guestrin (2016) <doi:10.1145/2939672.2939785>.
@@ -39,8 +39,8 @@ Description: Extreme Gradient Boosting, which is an efficient implementation
     The package is made to be extensible, so that users are also allowed to define
     their own objectives easily.
 License: Apache License (== 2.0) | file LICENSE
-URL: https://github.com/dmlc/xgboost
-BugReports: https://github.com/dmlc/xgboost/issues
+URL: https://github.com/dmlc/tsoobgx
+BugReports: https://github.com/dmlc/tsoobgx/issues
 NeedsCompilation: yes
 VignetteBuilder: knitr
 Suggests: knitr, rmarkdown, ggplot2 (>= 1.0.1), DiagrammeR (>= 0.9.0),
@@ -67,7 +67,7 @@ Author: Tianqi Chen [aut],
   Min Lin [aut],
   Yifeng Geng [aut],
   Yutian Li [aut],
-  XGBoost contributors [cph] (base XGBoost implementation)
+  tsooBGX contributors [cph] (base tsooBGX implementation)
 Maintainer: Tong He <hetong007@gmail.com>
 Repository: CRAN
 Date/Publication: 2019-08-01 19:20:02 UTC

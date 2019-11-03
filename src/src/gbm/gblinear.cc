@@ -7,16 +7,16 @@
  */
 #include <dmlc/omp.h>
 #include <dmlc/parameter.h>
-#include <xgboost/gbm.h>
-#include <xgboost/logging.h>
-#include <xgboost/linear_updater.h>
+#include <tsoobgx/gbm.h>
+#include <tsoobgx/logging.h>
+#include <tsoobgx/linear_updater.h>
 #include <vector>
 #include <string>
 #include <sstream>
 #include <algorithm>
 #include "../common/timer.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace gbm {
 
 DMLC_REGISTRY_FILE_TAG(gblinear);
@@ -290,11 +290,11 @@ class GBLinear : public GradientBooster {
 DMLC_REGISTER_PARAMETER(GBLinearModelParam);
 DMLC_REGISTER_PARAMETER(GBLinearTrainParam);
 
-XGBOOST_REGISTER_GBM(GBLinear, "gblinear")
+TSOOBGX_REGISTER_GBM(GBLinear, "gblinear")
     .describe("Linear booster, implement generalized linear model.")
     .set_body([](const std::vector<std::shared_ptr<DMatrix> > &cache,
                  bst_float base_margin) {
       return new GBLinear(cache, base_margin);
     });
 }  // namespace gbm
-}  // namespace xgboost
+}  // namespace tsoobgx

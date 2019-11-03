@@ -5,11 +5,11 @@
  * \author Henry Gouk
  */
 
-#ifndef XGBOOST_TREE_SPLIT_EVALUATOR_H_
-#define XGBOOST_TREE_SPLIT_EVALUATOR_H_
+#ifndef TSOOBGX_TREE_SPLIT_EVALUATOR_H_
+#define TSOOBGX_TREE_SPLIT_EVALUATOR_H_
 
 #include <dmlc/registry.h>
-#include <xgboost/base.h>
+#include <tsoobgx/base.h>
 #include <functional>
 #include <memory>
 #include <string>
@@ -18,7 +18,7 @@
 
 #define ROOT_PARENT_ID (-1 & ((1U << 31) - 1))
 
-namespace xgboost {
+namespace tsoobgx {
 namespace tree {
 
 // Should GradStats be in this header, rather than param.h?
@@ -85,19 +85,19 @@ struct SplitEvaluatorReg
  *
  * \code
  * // example of registering a split evaluator
- * XGBOOST_REGISTER_SPLIT_EVALUATOR(SplitEval, "splitEval")
+ * TSOOBGX_REGISTER_SPLIT_EVALUATOR(SplitEval, "splitEval")
  * .describe("Some split evaluator")
  * .set_body([]() {
  *     return new SplitEval();
  *   });
  * \endcode
  */
-#define XGBOOST_REGISTER_SPLIT_EVALUATOR(UniqueID, Name) \
-  static DMLC_ATTRIBUTE_UNUSED ::xgboost::tree::SplitEvaluatorReg& \
+#define TSOOBGX_REGISTER_SPLIT_EVALUATOR(UniqueID, Name) \
+  static DMLC_ATTRIBUTE_UNUSED ::tsoobgx::tree::SplitEvaluatorReg& \
   __make_ ## SplitEvaluatorReg ## _ ## UniqueID ## __ = \
-      ::dmlc::Registry< ::xgboost::tree::SplitEvaluatorReg>::Get()->__REGISTER__(Name)  //NOLINT
+      ::dmlc::Registry< ::tsoobgx::tree::SplitEvaluatorReg>::Get()->__REGISTER__(Name)  //NOLINT
 
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace tsoobgx
 
-#endif  // XGBOOST_TREE_SPLIT_EVALUATOR_H_
+#endif  // TSOOBGX_TREE_SPLIT_EVALUATOR_H_

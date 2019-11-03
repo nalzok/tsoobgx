@@ -5,10 +5,10 @@
  * \author Tianqi Chen
  */
 #include "./simple_dmatrix.h"
-#include <xgboost/data.h>
+#include <tsoobgx/data.h>
 #include "../common/random.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace data {
 MetaInfo& SimpleDMatrix::Info() { return source_->info; }
 
@@ -83,4 +83,4 @@ BatchSet SimpleDMatrix::GetSortedColumnBatches() {
 
 bool SimpleDMatrix::SingleColBlock() const { return true; }
 }  // namespace data
-}  // namespace xgboost
+}  // namespace tsoobgx

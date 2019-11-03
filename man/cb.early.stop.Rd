@@ -38,7 +38,7 @@ The following additional fields are assigned to the model's R object:
      It differs from \code{best_iteration} in multiclass or random forest settings.
 }
 
-The Same values are also stored as xgb-attributes:
+The Same values are also stored as bgx-attributes:
 \itemize{
 \item \code{best_iteration} is stored as a 0-based iteration index (for interoperability of binary models)
 \item \code{best_msg} message string is also stored.
@@ -58,5 +58,5 @@ Callback function expects the following values to be set in its calling frame:
 }
 \seealso{
 \code{\link{callbacks}},
-\code{\link{xgb.attr}}
+\code{\link{bgx.attr}}
 }

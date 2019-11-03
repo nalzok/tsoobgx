@@ -13,16 +13,16 @@
 #include "./quantile.h"
 #include "./../tree/updater_quantile_hist.h"
 
-#if defined(XGBOOST_MM_PREFETCH_PRESENT)
+#if defined(TSOOBGX_MM_PREFETCH_PRESENT)
   #include <xmmintrin.h>
   #define PREFETCH_READ_T0(addr) _mm_prefetch(reinterpret_cast<const char*>(addr), _MM_HINT_T0)
-#elif defined(XGBOOST_BUILTIN_PREFETCH_PRESENT)
+#elif defined(TSOOBGX_BUILTIN_PREFETCH_PRESENT)
   #define PREFETCH_READ_T0(addr) __builtin_prefetch(reinterpret_cast<const char*>(addr), 0, 3)
 #else  // no SW pre-fetching available; PREFETCH_READ_T0 is no-op
   #define PREFETCH_READ_T0(addr) do {} while (0)
-#endif  // defined(XGBOOST_MM_PREFETCH_PRESENT)
+#endif  // defined(TSOOBGX_MM_PREFETCH_PRESENT)
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 
 HistCutMatrix::HistCutMatrix() {
@@ -324,7 +324,7 @@ static size_t GetConflictCount(const std::vector<bool>& mark,
                                const Column& column,
                                size_t max_cnt) {
   size_t ret = 0;
-  if (column.GetType() == xgboost::common::kDenseColumn) {
+  if (column.GetType() == tsoobgx::common::kDenseColumn) {
     for (size_t i = 0; i < column.Size(); ++i) {
       if (column.GetFeatureBinIdx(i) != std::numeric_limits<uint32_t>::max() && mark[i]) {
         ++ret;
@@ -349,7 +349,7 @@ static size_t GetConflictCount(const std::vector<bool>& mark,
 inline void
 MarkUsed(std::vector<bool>* p_mark, const Column& column) {
   std::vector<bool>& mark = *p_mark;
-  if (column.GetType() == xgboost::common::kDenseColumn) {
+  if (column.GetType() == tsoobgx::common::kDenseColumn) {
     for (size_t i = 0; i < column.Size(); ++i) {
       if (column.GetFeatureBinIdx(i) != std::numeric_limits<uint32_t>::max()) {
         mark[i] = true;
@@ -719,4 +719,4 @@ void GHistBuilder::SubtractionTrick(GHistRow self, GHistRow sibling, GHistRow pa
 }
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace tsoobgx

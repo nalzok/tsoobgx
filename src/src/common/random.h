@@ -4,11 +4,11 @@
  * \brief Utility related to random.
  * \author Tianqi Chen
  */
-#ifndef XGBOOST_COMMON_RANDOM_H_
-#define XGBOOST_COMMON_RANDOM_H_
+#ifndef TSOOBGX_COMMON_RANDOM_H_
+#define TSOOBGX_COMMON_RANDOM_H_
 
 #include <rabit/rabit.h>
-#include <xgboost/logging.h>
+#include <tsoobgx/logging.h>
 #include <algorithm>
 #include <vector>
 #include <limits>
@@ -20,19 +20,19 @@
 #include "io.h"
 #include "host_device_vector.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 /*!
  * \brief Define mt19937 as default type Random Engine.
  */
 using RandomEngine = std::mt19937;
 
-#if XGBOOST_CUSTOMIZE_GLOBAL_PRNG
+#if TSOOBGX_CUSTOMIZE_GLOBAL_PRNG
 /*!
  * \brief An customized random engine, used to be plugged in PRNG from other systems.
- *  The implementation of this library is not provided by xgboost core library.
+ *  The implementation of this library is not provided by tsoobgx core library.
  *  Instead the other library can implement this class, which will be used as GlobalRandomEngine
- *  If XGBOOST_RANDOM_CUSTOMIZE = 1, by default this is switched off.
+ *  If TSOOBGX_RANDOM_CUSTOMIZE = 1, by default this is switched off.
  */
 class CustomGlobalRandomEngine {
  public:
@@ -67,7 +67,7 @@ typedef CustomGlobalRandomEngine GlobalRandomEngine;
  * \brief global random engine
  */
 using GlobalRandomEngine = RandomEngine;
-#endif  // XGBOOST_CUSTOMIZE_GLOBAL_PRNG
+#endif  // TSOOBGX_CUSTOMIZE_GLOBAL_PRNG
 
 /*!
  * \brief global singleton of a random engine.
@@ -174,7 +174,7 @@ class ColumnSampler {
    * \return The sampled feature set.
    * \note If colsample_bynode_ < 1.0, this method creates a new feature set each time it
    * is called. Therefore, it should be called only once per node.
-   * \note With distributed xgboost, this function must be called exactly once for the
+   * \note With distributed tsoobgx, this function must be called exactly once for the
    * construction of each tree node, and must be called the same number of times in each
    * process and with the same parameters to return the same feature set across processes.
    */
@@ -197,5 +197,5 @@ class ColumnSampler {
 };
 
 }  // namespace common
-}  // namespace xgboost
-#endif  // XGBOOST_COMMON_RANDOM_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_COMMON_RANDOM_H_

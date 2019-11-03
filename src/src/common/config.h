@@ -4,8 +4,8 @@
  * \brief helper class to load in configures from file
  * \author Tianqi Chen
  */
-#ifndef XGBOOST_COMMON_CONFIG_H_
-#define XGBOOST_COMMON_CONFIG_H_
+#ifndef TSOOBGX_COMMON_CONFIG_H_
+#define TSOOBGX_COMMON_CONFIG_H_
 
 #include <cstdio>
 #include <cstring>
@@ -13,7 +13,7 @@
 #include <istream>
 #include <fstream>
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 /*!
  * \brief base implementation of config reader
@@ -189,5 +189,5 @@ class ConfigIterator: public ConfigStreamReader {
   std::ifstream fi_;
 };
 }  // namespace common
-}  // namespace xgboost
-#endif  // XGBOOST_COMMON_CONFIG_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_COMMON_CONFIG_H_

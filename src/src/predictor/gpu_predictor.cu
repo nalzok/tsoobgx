@@ -6,16 +6,16 @@
 #include <thrust/device_ptr.h>
 #include <thrust/device_vector.h>
 #include <thrust/fill.h>
-#include <xgboost/data.h>
-#include <xgboost/predictor.h>
-#include <xgboost/tree_model.h>
-#include <xgboost/tree_updater.h>
+#include <tsoobgx/data.h>
+#include <tsoobgx/predictor.h>
+#include <tsoobgx/tree_model.h>
+#include <tsoobgx/tree_updater.h>
 #include <memory>
 #include "../common/common.h"
 #include "../common/device_helpers.cuh"
 #include "../common/host_device_vector.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace predictor {
 
 DMLC_REGISTRY_FILE_TAG(gpu_predictor);
@@ -47,7 +47,7 @@ void IncrementOffset(IterT begin_itr, IterT end_itr, size_t amount) {
  * prediction
  */
 struct DevicePredictionNode {
-  XGBOOST_DEVICE DevicePredictionNode()
+  TSOOBGX_DEVICE DevicePredictionNode()
       : fidx{-1}, left_child_idx{-1}, right_child_idx{-1} {}
 
   union NodeValue {
@@ -76,13 +76,13 @@ struct DevicePredictionNode {
     }
   }
 
-  XGBOOST_DEVICE bool IsLeaf() const { return left_child_idx == -1; }
+  TSOOBGX_DEVICE bool IsLeaf() const { return left_child_idx == -1; }
 
-  XGBOOST_DEVICE int GetFidx() const { return fidx & ((1U << 31) - 1U); }
+  TSOOBGX_DEVICE int GetFidx() const { return fidx & ((1U << 31) - 1U); }
 
-  XGBOOST_DEVICE bool MissingLeft() const { return (fidx >> 31) != 0; }
+  TSOOBGX_DEVICE bool MissingLeft() const { return (fidx >> 31) != 0; }
 
-  XGBOOST_DEVICE int MissingIdx() const {
+  TSOOBGX_DEVICE int MissingIdx() const {
     if (MissingLeft()) {
       return this->left_child_idx;
     } else {
@@ -90,9 +90,9 @@ struct DevicePredictionNode {
     }
   }
 
-  XGBOOST_DEVICE float GetFvalue() const { return val.fvalue; }
+  TSOOBGX_DEVICE float GetFvalue() const { return val.fvalue; }
 
-  XGBOOST_DEVICE float GetWeight() const { return val.leaf_weight; }
+  TSOOBGX_DEVICE float GetWeight() const { return val.leaf_weight; }
 };
 
 struct ElementLoader {
@@ -213,7 +213,7 @@ __global__ void PredictKernel(common::Span<const DevicePredictionNode> d_nodes,
   }
 }
 
-class GPUPredictor : public xgboost::Predictor {
+class GPUPredictor : public tsoobgx::Predictor {
  protected:
   struct DevicePredictionCacheEntry {
     std::shared_ptr<DMatrix> data;
@@ -534,9 +534,9 @@ class GPUPredictor : public xgboost::Predictor {
   common::Monitor monitor_;
 };
 
-XGBOOST_REGISTER_PREDICTOR(GPUPredictor, "gpu_predictor")
+TSOOBGX_REGISTER_PREDICTOR(GPUPredictor, "gpu_predictor")
     .describe("Make predictions using GPU.")
     .set_body([]() { return new GPUPredictor(); });
 
 }  // namespace predictor
-}  // namespace xgboost
+}  // namespace tsoobgx

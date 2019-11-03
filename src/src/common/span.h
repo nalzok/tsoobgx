@@ -1,12 +1,12 @@
 /*!
- * Copyright 2018 XGBoost contributors
+ * Copyright 2018 tsooBGX contributors
  * \brief span class based on ISO++20 span
  *
  * About NOLINTs in this file:
  *
  *   If we want Span to work with std interface, like range for loop, the
- *   naming must be consistant with std, not XGBoost. Also, the interface also
- *   conflicts with XGBoost coding style, specifically, the use of `explicit'
+ *   naming must be consistant with std, not tsooBGX. Also, the interface also
+ *   conflicts with tsooBGX coding style, specifically, the use of `explicit'
  *   keyword.
  *
  *
@@ -26,10 +26,10 @@
  * THE SOFTWARE.
  */
 
-#ifndef XGBOOST_COMMON_SPAN_H_
-#define XGBOOST_COMMON_SPAN_H_
+#ifndef TSOOBGX_COMMON_SPAN_H_
+#define TSOOBGX_COMMON_SPAN_H_
 
-#include <xgboost/logging.h>  // CHECK
+#include <tsoobgx/logging.h>  // CHECK
 
 #include <cinttypes>          // int64_t
 #include <type_traits>
@@ -64,7 +64,7 @@
 
 #endif  // defined(_MSC_VER) && _MSC_VER < 1910
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 
 // Usual logging facility is not available inside device code.
@@ -89,7 +89,7 @@ namespace common {
 
 namespace detail {
 /*!
- * By default, XGBoost uses uint32_t for indexing data. int64_t covers all
+ * By default, tsooBGX uses uint32_t for indexing data. int64_t covers all
  *   values uint32_t can represent. Also, On x86-64 Linux, GCC uses long int to
  *   represent ptrdiff_t, which is just int64_t. So we make it determinstic
  *   here.
@@ -123,105 +123,105 @@ class SpanIterator {
     IsConst, const ElementType, ElementType>::type&;
   using pointer = typename std::add_pointer<reference>::type;     // NOLINT
 
-  XGBOOST_DEVICE constexpr SpanIterator() : span_{nullptr}, index_{0} {}
+  TSOOBGX_DEVICE constexpr SpanIterator() : span_{nullptr}, index_{0} {}
 
-  XGBOOST_DEVICE constexpr SpanIterator(
+  TSOOBGX_DEVICE constexpr SpanIterator(
       const SpanType* _span,
       typename SpanType::index_type _idx) __span_noexcept :
                                            span_(_span), index_(_idx) {}
 
   friend SpanIterator<SpanType, true>;
   template <bool B, typename std::enable_if<!B && IsConst>::type* = nullptr>
-  XGBOOST_DEVICE constexpr SpanIterator(                         // NOLINT
+  TSOOBGX_DEVICE constexpr SpanIterator(                         // NOLINT
       const SpanIterator<SpanType, B>& other_) __span_noexcept
       : SpanIterator(other_.span_, other_.index_) {}
 
-  XGBOOST_DEVICE reference operator*() const {
+  TSOOBGX_DEVICE reference operator*() const {
     SPAN_CHECK(index_ < span_->size());
     return *(span_->data() + index_);
   }
 
-  XGBOOST_DEVICE pointer operator->() const {
+  TSOOBGX_DEVICE pointer operator->() const {
     SPAN_CHECK(index_ != span_->size());
     return  span_->data() + index_;
   }
 
-  XGBOOST_DEVICE SpanIterator& operator++() {
+  TSOOBGX_DEVICE SpanIterator& operator++() {
     SPAN_CHECK(0 <= index_ && index_ != span_->size());
     index_++;
     return *this;
   }
 
-  XGBOOST_DEVICE SpanIterator operator++(int) {
+  TSOOBGX_DEVICE SpanIterator operator++(int) {
     auto ret = *this;
     ++(*this);
     return ret;
   }
 
-  XGBOOST_DEVICE SpanIterator& operator--() {
+  TSOOBGX_DEVICE SpanIterator& operator--() {
     SPAN_CHECK(index_ != 0 && index_ <= span_->size());
     index_--;
     return *this;
   }
 
-  XGBOOST_DEVICE SpanIterator operator--(int) {
+  TSOOBGX_DEVICE SpanIterator operator--(int) {
     auto ret = *this;
     --(*this);
     return ret;
   }
 
-  XGBOOST_DEVICE SpanIterator operator+(difference_type n) const {
+  TSOOBGX_DEVICE SpanIterator operator+(difference_type n) const {
     auto ret = *this;
     return ret += n;
   }
 
-  XGBOOST_DEVICE SpanIterator& operator+=(difference_type n) {
+  TSOOBGX_DEVICE SpanIterator& operator+=(difference_type n) {
     SPAN_CHECK((index_ + n) >= 0 && (index_ + n) <= span_->size());
     index_ += n;
     return *this;
   }
 
-  XGBOOST_DEVICE difference_type operator-(SpanIterator rhs) const {
+  TSOOBGX_DEVICE difference_type operator-(SpanIterator rhs) const {
     SPAN_CHECK(span_ == rhs.span_);
     return index_ - rhs.index_;
   }
 
-  XGBOOST_DEVICE SpanIterator operator-(difference_type n) const {
+  TSOOBGX_DEVICE SpanIterator operator-(difference_type n) const {
     auto ret = *this;
     return ret -= n;
   }
 
-  XGBOOST_DEVICE SpanIterator& operator-=(difference_type n) {
+  TSOOBGX_DEVICE SpanIterator& operator-=(difference_type n) {
     return *this += -n;
   }
 
   // friends
-  XGBOOST_DEVICE constexpr friend bool operator==(
+  TSOOBGX_DEVICE constexpr friend bool operator==(
       SpanIterator _lhs, SpanIterator _rhs) __span_noexcept {
     return _lhs.span_ == _rhs.span_ && _lhs.index_ == _rhs.index_;
   }
 
-  XGBOOST_DEVICE constexpr friend bool operator!=(
+  TSOOBGX_DEVICE constexpr friend bool operator!=(
       SpanIterator _lhs, SpanIterator _rhs) __span_noexcept {
     return !(_lhs == _rhs);
   }
 
-  XGBOOST_DEVICE constexpr friend bool operator<(
+  TSOOBGX_DEVICE constexpr friend bool operator<(
       SpanIterator _lhs, SpanIterator _rhs) __span_noexcept {
     return _lhs.index_ < _rhs.index_;
   }
 
-  XGBOOST_DEVICE constexpr friend bool operator<=(
+  TSOOBGX_DEVICE constexpr friend bool operator<=(
       SpanIterator _lhs, SpanIterator _rhs) __span_noexcept {
     return !(_rhs < _lhs);
   }
 
-  XGBOOST_DEVICE constexpr friend bool operator>(
+  TSOOBGX_DEVICE constexpr friend bool operator>(
       SpanIterator _lhs, SpanIterator _rhs) __span_noexcept {
     return _rhs < _lhs;
   }
 
-  XGBOOST_DEVICE constexpr friend bool operator>=(
+  TSOOBGX_DEVICE constexpr friend bool operator>=(
       SpanIterator _lhs, SpanIterator _rhs) __span_noexcept {
     return !(_rhs > _lhs);
   }
@@ -279,14 +279,14 @@ struct IsSpan : public IsSpanOracle<typename std::remove_cv<T>::type> {};
 // Re-implement std algorithms here to adopt CUDA.
 template <typename T>
 struct Less {
-  XGBOOST_DEVICE constexpr bool operator()(const T& _x, const T& _y) const {
+  TSOOBGX_DEVICE constexpr bool operator()(const T& _x, const T& _y) const {
     return _x < _y;
   }
 };
 
 template <typename T>
 struct Greater {
-  XGBOOST_DEVICE constexpr bool operator()(const T& _x, const T& _y) const {
+  TSOOBGX_DEVICE constexpr bool operator()(const T& _x, const T& _y) const {
     return _x > _y;
   }
 };
@@ -294,7 +294,7 @@ struct Greater {
 template <class InputIt1, class InputIt2,
           class Compare =
           detail::Less<decltype(std::declval<InputIt1>().operator*())>>
-XGBOOST_DEVICE bool LexicographicalCompare(InputIt1 first1, InputIt1 last1,
+TSOOBGX_DEVICE bool LexicographicalCompare(InputIt1 first1, InputIt1 last1,
                                             InputIt2 first2, InputIt2 last2) {
   Compare comp;
   for (; first1 != last1 && first2 != last2; ++first1, ++first2) {
@@ -396,22 +396,22 @@ class Span {
 
   // constructors
 
-  XGBOOST_DEVICE constexpr Span() __span_noexcept : size_(0), data_(nullptr) {}
+  TSOOBGX_DEVICE constexpr Span() __span_noexcept : size_(0), data_(nullptr) {}
 
-  XGBOOST_DEVICE Span(pointer _ptr, index_type _count) :
+  TSOOBGX_DEVICE Span(pointer _ptr, index_type _count) :
       size_(_count), data_(_ptr) {
     SPAN_CHECK(_count >= 0);
     SPAN_CHECK(_ptr || _count == 0);
   }
 
-  XGBOOST_DEVICE Span(pointer _first, pointer _last) :
+  TSOOBGX_DEVICE Span(pointer _first, pointer _last) :
       size_(_last - _first), data_(_first) {
     SPAN_CHECK(size_ >= 0);
     SPAN_CHECK(data_ || size_ == 0);
   }
 
   template <std::size_t N>
-  XGBOOST_DEVICE constexpr Span(element_type (&arr)[N])  // NOLINT
+  TSOOBGX_DEVICE constexpr Span(element_type (&arr)[N])  // NOLINT
       __span_noexcept : size_(N), data_(&arr[0]) {}
 
   template <class Container,
@@ -422,7 +422,7 @@ class Span {
               std::is_convertible<
                 typename Container::pointer,
                 decltype(std::declval<Container>().data())>::value>>
-  XGBOOST_DEVICE Span(Container& _cont) :  // NOLINT
+  TSOOBGX_DEVICE Span(Container& _cont) :  // NOLINT
       size_(_cont.size()), data_(_cont.data()) {}
 
   template <class Container,
@@ -432,104 +432,104 @@ class Span {
               std::is_convertible<
                 typename Container::pointer,
                 decltype(std::declval<Container>().data())>::value>>
-  XGBOOST_DEVICE Span(const Container& _cont) : size_(_cont.size()),  // NOLINT
+  TSOOBGX_DEVICE Span(const Container& _cont) : size_(_cont.size()),  // NOLINT
                                                 data_(_cont.data()) {}
 
   template <class U, detail::ptrdiff_t OtherExtent,
             class = typename std::enable_if<
               detail::IsAllowedElementTypeConversion<U, T>::value &&
               detail::IsAllowedExtentConversion<OtherExtent, Extent>::value>>
-  XGBOOST_DEVICE constexpr Span(const Span<U, OtherExtent>& _other)   // NOLINT
+  TSOOBGX_DEVICE constexpr Span(const Span<U, OtherExtent>& _other)   // NOLINT
       __span_noexcept : size_(_other.size()), data_(_other.data()) {}
 
-  XGBOOST_DEVICE constexpr Span(const Span& _other)
+  TSOOBGX_DEVICE constexpr Span(const Span& _other)
       __span_noexcept : size_(_other.size()), data_(_other.data()) {}
 
-  XGBOOST_DEVICE Span& operator=(const Span& _other) __span_noexcept {
+  TSOOBGX_DEVICE Span& operator=(const Span& _other) __span_noexcept {
     size_ = _other.size();
     data_ = _other.data();
     return *this;
   }
 
-  XGBOOST_DEVICE ~Span() __span_noexcept {};  // NOLINT
+  TSOOBGX_DEVICE ~Span() __span_noexcept {};  // NOLINT
 
-  XGBOOST_DEVICE constexpr iterator begin() const __span_noexcept {  // NOLINT
+  TSOOBGX_DEVICE constexpr iterator begin() const __span_noexcept {  // NOLINT
     return {this, 0};
   }
 
-  XGBOOST_DEVICE constexpr iterator end() const __span_noexcept {    // NOLINT
+  TSOOBGX_DEVICE constexpr iterator end() const __span_noexcept {    // NOLINT
     return {this, size()};
   }
 
-  XGBOOST_DEVICE constexpr const_iterator cbegin() const __span_noexcept {  // NOLINT
+  TSOOBGX_DEVICE constexpr const_iterator cbegin() const __span_noexcept {  // NOLINT
     return {this, 0};
   }
 
-  XGBOOST_DEVICE constexpr const_iterator cend() const __span_noexcept {    // NOLINT
+  TSOOBGX_DEVICE constexpr const_iterator cend() const __span_noexcept {    // NOLINT
     return {this, size()};
   }
 
-  XGBOOST_DEVICE constexpr reverse_iterator rbegin() const __span_noexcept {  // NOLINT
+  TSOOBGX_DEVICE constexpr reverse_iterator rbegin() const __span_noexcept {  // NOLINT
     return reverse_iterator{end()};
   }
 
-  XGBOOST_DEVICE constexpr reverse_iterator rend() const __span_noexcept {    // NOLINT
+  TSOOBGX_DEVICE constexpr reverse_iterator rend() const __span_noexcept {    // NOLINT
     return reverse_iterator{begin()};
   }
 
-  XGBOOST_DEVICE constexpr const_reverse_iterator crbegin() const __span_noexcept {  // NOLINT
+  TSOOBGX_DEVICE constexpr const_reverse_iterator crbegin() const __span_noexcept {  // NOLINT
     return const_reverse_iterator{cend()};
   }
 
-  XGBOOST_DEVICE constexpr const_reverse_iterator crend() const __span_noexcept {    // NOLINT
+  TSOOBGX_DEVICE constexpr const_reverse_iterator crend() const __span_noexcept {    // NOLINT
     return const_reverse_iterator{cbegin()};
   }
 
-  XGBOOST_DEVICE reference operator[](index_type _idx) const {
+  TSOOBGX_DEVICE reference operator[](index_type _idx) const {
     SPAN_CHECK(_idx >= 0 && _idx < size());
     return data()[_idx];
   }
 
-  XGBOOST_DEVICE constexpr reference operator()(index_type _idx) const {
+  TSOOBGX_DEVICE constexpr reference operator()(index_type _idx) const {
     return this->operator[](_idx);
   }
 
-  XGBOOST_DEVICE constexpr pointer data() const __span_noexcept {   // NOLINT
+  TSOOBGX_DEVICE constexpr pointer data() const __span_noexcept {   // NOLINT
     return data_;
   }
 
   // Observers
-  XGBOOST_DEVICE constexpr index_type size() const __span_noexcept {  // NOLINT
+  TSOOBGX_DEVICE constexpr index_type size() const __span_noexcept {  // NOLINT
     return size_;
   }
-  XGBOOST_DEVICE constexpr index_type size_bytes() const __span_noexcept {  // NOLINT
+  TSOOBGX_DEVICE constexpr index_type size_bytes() const __span_noexcept {  // NOLINT
     return size() * sizeof(T);
   }
 
-  XGBOOST_DEVICE constexpr bool empty() const __span_noexcept {  // NOLINT
+  TSOOBGX_DEVICE constexpr bool empty() const __span_noexcept {  // NOLINT
     return size() == 0;
   }
 
   // Subviews
   template <detail::ptrdiff_t Count >
-  XGBOOST_DEVICE Span<element_type, Count> first() const {  // NOLINT
+  TSOOBGX_DEVICE Span<element_type, Count> first() const {  // NOLINT
     SPAN_CHECK(Count >= 0 && Count <= size());
     return {data(), Count};
   }
 
-  XGBOOST_DEVICE Span<element_type, dynamic_extent> first(  // NOLINT
+  TSOOBGX_DEVICE Span<element_type, dynamic_extent> first(  // NOLINT
       detail::ptrdiff_t _count) const {
     SPAN_CHECK(_count >= 0 && _count <= size());
     return {data(), _count};
   }
 
   template <detail::ptrdiff_t Count >
-  XGBOOST_DEVICE Span<element_type, Count> last() const {  // NOLINT
+  TSOOBGX_DEVICE Span<element_type, Count> last() const {  // NOLINT
     SPAN_CHECK(Count >=0 && size() - Count >= 0);
     return {data() + size() - Count, Count};
   }
 
-  XGBOOST_DEVICE Span<element_type, dynamic_extent> last(  // NOLINT
+  TSOOBGX_DEVICE Span<element_type, dynamic_extent> last(  // NOLINT
       detail::ptrdiff_t _count) const {
     SPAN_CHECK(_count >= 0 && _count <= size());
     return subspan(size() - _count, _count);
@@ -541,7 +541,7 @@ class Span {
    */
   template <detail::ptrdiff_t Offset,
             detail::ptrdiff_t Count = dynamic_extent>
-  XGBOOST_DEVICE auto subspan() const ->                   // NOLINT
+  TSOOBGX_DEVICE auto subspan() const ->                   // NOLINT
       Span<element_type,
            detail::ExtentValue<Extent, Offset, Count>::value> {
     SPAN_CHECK(Offset >= 0 && (Offset < size() || size() == 0));
@@ -551,7 +551,7 @@ class Span {
     return {data() + Offset, Count == dynamic_extent ? size() - Offset : Count};
   }
 
-  XGBOOST_DEVICE Span<element_type, dynamic_extent> subspan(  // NOLINT
+  TSOOBGX_DEVICE Span<element_type, dynamic_extent> subspan(  // NOLINT
       detail::ptrdiff_t _offset,
       detail::ptrdiff_t _count = dynamic_extent) const {
     SPAN_CHECK(_offset >= 0 && (_offset < size() || size() == 0));
@@ -568,7 +568,7 @@ class Span {
 };
 
 template <class T, detail::ptrdiff_t X, class U, detail::ptrdiff_t Y>
-XGBOOST_DEVICE bool operator==(Span<T, X> l, Span<U, Y> r) {
+TSOOBGX_DEVICE bool operator==(Span<T, X> l, Span<U, Y> r) {
   if (l.size() != r.size()) {
     return false;
   }
@@ -582,23 +582,23 @@ XGBOOST_DEVICE bool operator==(Span<T, X> l, Span<U, Y> r) {
 }
 
 template <class T, detail::ptrdiff_t X, class U, detail::ptrdiff_t Y>
-XGBOOST_DEVICE constexpr bool operator!=(Span<T, X> l, Span<U, Y> r) {
+TSOOBGX_DEVICE constexpr bool operator!=(Span<T, X> l, Span<U, Y> r) {
   return !(l == r);
 }
 
 template <class T, detail::ptrdiff_t X, class U, detail::ptrdiff_t Y>
-XGBOOST_DEVICE constexpr bool operator<(Span<T, X> l, Span<U, Y> r) {
+TSOOBGX_DEVICE constexpr bool operator<(Span<T, X> l, Span<U, Y> r) {
   return detail::LexicographicalCompare(l.begin(), l.end(),
                                          r.begin(), r.end());
 }
 
 template <class T, detail::ptrdiff_t X, class U, detail::ptrdiff_t Y>
-XGBOOST_DEVICE constexpr bool operator<=(Span<T, X> l, Span<U, Y> r) {
+TSOOBGX_DEVICE constexpr bool operator<=(Span<T, X> l, Span<U, Y> r) {
   return !(l > r);
 }
 
 template <class T, detail::ptrdiff_t X, class U, detail::ptrdiff_t Y>
-XGBOOST_DEVICE constexpr bool operator>(Span<T, X> l, Span<U, Y> r) {
+TSOOBGX_DEVICE constexpr bool operator>(Span<T, X> l, Span<U, Y> r) {
   return detail::LexicographicalCompare<
     typename Span<T, X>::iterator, typename Span<U, Y>::iterator,
     detail::Greater<typename Span<T, X>::element_type>>(l.begin(), l.end(),
@@ -606,24 +606,24 @@ XGBOOST_DEVICE constexpr bool operator>(Span<T, X> l, Span<U, Y> r) {
 }
 
 template <class T, detail::ptrdiff_t X, class U, detail::ptrdiff_t Y>
-XGBOOST_DEVICE constexpr bool operator>=(Span<T, X> l, Span<U, Y> r) {
+TSOOBGX_DEVICE constexpr bool operator>=(Span<T, X> l, Span<U, Y> r) {
   return !(l < r);
 }
 
 template <class T, detail::ptrdiff_t E>
-XGBOOST_DEVICE auto as_bytes(Span<T, E> s) __span_noexcept ->           // NOLINT
+TSOOBGX_DEVICE auto as_bytes(Span<T, E> s) __span_noexcept ->           // NOLINT
     Span<const byte, detail::ExtentAsBytesValue<T, E>::value> {
   return {reinterpret_cast<const byte*>(s.data()), s.size_bytes()};
 }
 
 template <class T, detail::ptrdiff_t E>
-XGBOOST_DEVICE auto as_writable_bytes(Span<T, E> s) __span_noexcept ->  // NOLINT
+TSOOBGX_DEVICE auto as_writable_bytes(Span<T, E> s) __span_noexcept ->  // NOLINT
     Span<byte, detail::ExtentAsBytesValue<T, E>::value> {
   return {reinterpret_cast<byte*>(s.data()), s.size_bytes()};
 }
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace tsoobgx
 
 #if defined(_MSC_VER) &&_MSC_VER < 1910
 #undef constexpr
@@ -631,4 +631,4 @@ XGBOOST_DEVICE auto as_writable_bytes(Span<T, E> s) __span_noexcept ->  // NOLIN
 #undef __span_noexcept
 #endif  // _MSC_VER < 1910
 
-#endif  // XGBOOST_COMMON_SPAN_H_
+#endif  // TSOOBGX_COMMON_SPAN_H_

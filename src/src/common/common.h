@@ -3,11 +3,11 @@
  * \file common.h
  * \brief Common utilities
  */
-#ifndef XGBOOST_COMMON_COMMON_H_
-#define XGBOOST_COMMON_COMMON_H_
+#ifndef TSOOBGX_COMMON_COMMON_H_
+#define TSOOBGX_COMMON_COMMON_H_
 
-#include <xgboost/base.h>
-#include <xgboost/logging.h>
+#include <tsoobgx/base.h>
+#include <tsoobgx/logging.h>
 
 #include <exception>
 #include <limits>
@@ -47,7 +47,7 @@ inline cudaError_t ThrowOnCudaError(cudaError_t code, const char *file,
 #endif  // defined(__CUDACC__)
 }  // namespace dh
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 /*!
  * \brief Split a string by delimiter
@@ -83,29 +83,29 @@ class Range {
     friend class Range;
 
    public:
-    XGBOOST_DEVICE DifferenceType operator*() const { return i_; }
-    XGBOOST_DEVICE const Iterator &operator++() {
+    TSOOBGX_DEVICE DifferenceType operator*() const { return i_; }
+    TSOOBGX_DEVICE const Iterator &operator++() {
       i_ += step_;
       return *this;
     }
-    XGBOOST_DEVICE Iterator operator++(int) {
+    TSOOBGX_DEVICE Iterator operator++(int) {
       Iterator res {*this};
       i_ += step_;
       return res;
     }
 
-    XGBOOST_DEVICE bool operator==(const Iterator &other) const {
+    TSOOBGX_DEVICE bool operator==(const Iterator &other) const {
       return i_ >= other.i_;
     }
-    XGBOOST_DEVICE bool operator!=(const Iterator &other) const {
+    TSOOBGX_DEVICE bool operator!=(const Iterator &other) const {
       return i_ < other.i_;
     }
 
-    XGBOOST_DEVICE void Step(DifferenceType s) { step_ = s; }
+    TSOOBGX_DEVICE void Step(DifferenceType s) { step_ = s; }
 
    protected:
-    XGBOOST_DEVICE explicit Iterator(DifferenceType start) : i_(start) {}
-    XGBOOST_DEVICE explicit Iterator(DifferenceType start, DifferenceType step) :
+    TSOOBGX_DEVICE explicit Iterator(DifferenceType start) : i_(start) {}
+    TSOOBGX_DEVICE explicit Iterator(DifferenceType start, DifferenceType step) :
         i_{start}, step_{step} {}
 
    public:
@@ -113,23 +113,23 @@ class Range {
     DifferenceType step_ = 1;
   };
 
-  XGBOOST_DEVICE Iterator begin() const { return begin_; }  // NOLINT
-  XGBOOST_DEVICE Iterator end() const { return end_; }      // NOLINT
+  TSOOBGX_DEVICE Iterator begin() const { return begin_; }  // NOLINT
+  TSOOBGX_DEVICE Iterator end() const { return end_; }      // NOLINT
 
-  XGBOOST_DEVICE Range(DifferenceType begin, DifferenceType end)
+  TSOOBGX_DEVICE Range(DifferenceType begin, DifferenceType end)
       : begin_(begin), end_(end) {}
-  XGBOOST_DEVICE Range(DifferenceType begin, DifferenceType end,
+  TSOOBGX_DEVICE Range(DifferenceType begin, DifferenceType end,
                        DifferenceType step)
       : begin_(begin, step), end_(end) {}
 
-  XGBOOST_DEVICE bool operator==(const Range& other) const {
+  TSOOBGX_DEVICE bool operator==(const Range& other) const {
     return *begin_ == *other.begin_ && *end_ == *other.end_;
   }
-  XGBOOST_DEVICE bool operator!=(const Range& other) const {
+  TSOOBGX_DEVICE bool operator!=(const Range& other) const {
     return !(*this == other);
   }
 
-  XGBOOST_DEVICE void Step(DifferenceType s) { begin_.Step(s); }
+  TSOOBGX_DEVICE void Step(DifferenceType s) { begin_.Step(s); }
 
  private:
   Iterator begin_;
@@ -244,5 +244,5 @@ class GPUSet {
   common::Range devices_;
 };
 
-}  // namespace xgboost
-#endif  // XGBOOST_COMMON_COMMON_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_COMMON_COMMON_H_

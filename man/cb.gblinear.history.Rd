@@ -15,9 +15,9 @@ selected per iteration.}
 }
 \value{
 Results are stored in the \code{coefs} element of the closure.
-The \code{\link{xgb.gblinear.history}} convenience function provides an easy way to access it.
-With \code{xgb.train}, it is either a dense of a sparse matrix.
-While with \code{xgb.cv}, it is a list (an element per each fold) of such matrices.
+The \code{\link{bgx.gblinear.history}} convenience function provides an easy way to access it.
+With \code{bgx.train}, it is either a dense of a sparse matrix.
+While with \code{bgx.cv}, it is a list (an element per each fold) of such matrices.
 }
 \description{
 Callback closure for collecting the model coefficients history of a gblinear booster
@@ -39,57 +39,57 @@ Callback function expects the following values to be set in its calling frame:
 require(magrittr)
 x <- model.matrix(Species ~ .^2, iris)[,-1]
 colnames(x)
-dtrain <- xgb.DMatrix(scale(x), label = 1*(iris$Species == "versicolor"))
+dtrain <- bgx.DMatrix(scale(x), label = 1*(iris$Species == "versicolor"))
 param <- list(booster = "gblinear", objective = "reg:logistic", eval_metric = "auc",
               lambda = 0.0003, alpha = 0.0003, nthread = 2)
 # For 'shotgun', which is a default linear updater, using high eta values may result in
 # unstable behaviour in some datasets. With this simple dataset, however, the high learning
 # rate does not break the convergence, but allows us to illustrate the typical pattern of
 # "stochastic explosion" behaviour of this lock-free algorithm at early boosting iterations.
-bst <- xgb.train(param, dtrain, list(tr=dtrain), nrounds = 200, eta = 1.,
+bst <- bgx.train(param, dtrain, list(tr=dtrain), nrounds = 200, eta = 1.,
                  callbacks = list(cb.gblinear.history()))
 # Extract the coefficients' path and plot them vs boosting iteration number:
-coef_path <- xgb.gblinear.history(bst)
+coef_path <- bgx.gblinear.history(bst)
 matplot(coef_path, type = 'l')
 
 # With the deterministic coordinate descent updater, it is safer to use higher learning rates.
 # Will try the classical componentwise boosting which selects a single best feature per round:
-bst <- xgb.train(param, dtrain, list(tr=dtrain), nrounds = 200, eta = 0.8,
+bst <- bgx.train(param, dtrain, list(tr=dtrain), nrounds = 200, eta = 0.8,
                  updater = 'coord_descent', feature_selector = 'thrifty', top_k = 1,
                  callbacks = list(cb.gblinear.history()))
-xgb.gblinear.history(bst) \%>\% matplot(type = 'l')
+bgx.gblinear.history(bst) \%>\% matplot(type = 'l')
 #  Componentwise boosting is known to have similar effect to Lasso regularization.
 # Try experimenting with various values of top_k, eta, nrounds,
 # as well as different feature_selectors.
 
-# For xgb.cv:
-bst <- xgb.cv(param, dtrain, nfold = 5, nrounds = 100, eta = 0.8,
+# For bgx.cv:
+bst <- bgx.cv(param, dtrain, nfold = 5, nrounds = 100, eta = 0.8,
              callbacks = list(cb.gblinear.history()))
 # coefficients in the CV fold #3
-xgb.gblinear.history(bst)[[3]] \%>\% matplot(type = 'l')
+bgx.gblinear.history(bst)[[3]] \%>\% matplot(type = 'l')
 
 
 #### Multiclass classification:
 #
-dtrain <- xgb.DMatrix(scale(x), label = as.numeric(iris$Species) - 1)
+dtrain <- bgx.DMatrix(scale(x), label = as.numeric(iris$Species) - 1)
 param <- list(booster = "gblinear", objective = "multi:softprob", num_class = 3,
               lambda = 0.0003, alpha = 0.0003, nthread = 2)
 # For the default linear updater 'shotgun' it sometimes is helpful
 # to use smaller eta to reduce instability
-bst <- xgb.train(param, dtrain, list(tr=dtrain), nrounds = 70, eta = 0.5,
+bst <- bgx.train(param, dtrain, list(tr=dtrain), nrounds = 70, eta = 0.5,
                  callbacks = list(cb.gblinear.history()))
 # Will plot the coefficient paths separately for each class:
-xgb.gblinear.history(bst, class_index = 0) \%>\% matplot(type = 'l')
-xgb.gblinear.history(bst, class_index = 1) \%>\% matplot(type = 'l')
-xgb.gblinear.history(bst, class_index = 2) \%>\% matplot(type = 'l')
+bgx.gblinear.history(bst, class_index = 0) \%>\% matplot(type = 'l')
+bgx.gblinear.history(bst, class_index = 1) \%>\% matplot(type = 'l')
+bgx.gblinear.history(bst, class_index = 2) \%>\% matplot(type = 'l')
 
 # CV:
-bst <- xgb.cv(param, dtrain, nfold = 5, nrounds = 70, eta = 0.5,
+bst <- bgx.cv(param, dtrain, nfold = 5, nrounds = 70, eta = 0.5,
               callbacks = list(cb.gblinear.history(FALSE)))
 # 1st forld of 1st class
-xgb.gblinear.history(bst, class_index = 0)[[1]] \%>\% matplot(type = 'l')
+bgx.gblinear.history(bst, class_index = 0)[[1]] \%>\% matplot(type = 'l')
 
 }
 \seealso{
-\code{\link{callbacks}}, \code{\link{xgb.gblinear.history}}.
+\code{\link{callbacks}}, \code{\link{bgx.gblinear.history}}.
 }

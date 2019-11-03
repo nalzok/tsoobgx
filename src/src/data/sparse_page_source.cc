@@ -4,7 +4,7 @@
  */
 #include <dmlc/base.h>
 #include <dmlc/timer.h>
-#include <xgboost/logging.h>
+#include <tsoobgx/logging.h>
 #include <memory>
 #include <vector>
 #include <string>
@@ -25,17 +25,17 @@ GetCacheShards(const std::string& cache_info) {
       && std::isalpha(cache_info[0], std::locale::classic())
       && cache_info[1] == ':') {
     std::vector<std::string> cache_shards
-      = xgboost::common::Split(cache_info.substr(2), ':');
+      = tsoobgx::common::Split(cache_info.substr(2), ':');
     cache_shards[0] = cache_info.substr(0, 2) + cache_shards[0];
     return cache_shards;
   }
 #endif  // (defined _WIN32) || (defined __CYGWIN__)
-  return xgboost::common::Split(cache_info, ':');
+  return tsoobgx::common::Split(cache_info, ':');
 }
 
 }  // anonymous namespace
 
-namespace xgboost {
+namespace tsoobgx {
 namespace data {
 
 SparsePageSource::SparsePageSource(const std::string& cache_info,
@@ -297,5 +297,5 @@ void SparsePageSource::CreateColumnPage(DMatrix* src,
   CreatePageFromDMatrix(src, cache_info, page_type);
 }
 }  // namespace data
-}  // namespace xgboost
+}  // namespace tsoobgx
 #endif  // DMLC_ENABLE_STD_THREAD

@@ -1,11 +1,11 @@
 /*!
- * Copyright 2018 XGBoost contributors
+ * Copyright 2018 tsooBGX contributors
  */
-#ifndef XGBOOST_COMMON_TRANSFORM_H_
-#define XGBOOST_COMMON_TRANSFORM_H_
+#ifndef TSOOBGX_COMMON_TRANSFORM_H_
+#define TSOOBGX_COMMON_TRANSFORM_H_
 
 #include <dmlc/omp.h>
-#include <xgboost/data.h>
+#include <tsoobgx/data.h>
 #include <utility>
 #include <vector>
 #include <type_traits>  // enable_if
@@ -18,7 +18,7 @@
 #include "device_helpers.cuh"
 #endif  // defined (__CUDACC__)
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 
 constexpr size_t kBlockThreads = 256;
@@ -204,6 +204,6 @@ class Transform {
 };
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace tsoobgx
 
-#endif  // XGBOOST_COMMON_TRANSFORM_H_
+#endif  // TSOOBGX_COMMON_TRANSFORM_H_

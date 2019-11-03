@@ -1,17 +1,17 @@
 /*!
- * Copyright 2017 XGBoost contributors
+ * Copyright 2017 tsooBGX contributors
  */
-#ifndef XGBOOST_USE_CUDA
+#ifndef TSOOBGX_USE_CUDA
 
 // dummy implementation of HostDeviceVector in case CUDA is not used
 
-#include <xgboost/base.h>
-#include <xgboost/data.h>
+#include <tsoobgx/base.h>
+#include <tsoobgx/data.h>
 #include <cstdint>
 #include <utility>
 #include "./host_device_vector.h"
 
-namespace xgboost {
+namespace tsoobgx {
 
 template <typename T>
 struct HostDeviceVectorImpl {
@@ -169,6 +169,6 @@ template class HostDeviceVector<int>;
 template class HostDeviceVector<Entry>;
 template class HostDeviceVector<size_t>;
 
-}  // namespace xgboost
+}  // namespace tsoobgx
 
-#endif  // XGBOOST_USE_CUDA
+#endif  // TSOOBGX_USE_CUDA

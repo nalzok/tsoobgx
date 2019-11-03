@@ -5,8 +5,8 @@
  * \author Tianqi Chen
  */
 #include <rabit/rabit.h>
-#include <xgboost/base.h>
-#include <xgboost/tree_updater.h>
+#include <tsoobgx/base.h>
+#include <tsoobgx/tree_updater.h>
 #include <vector>
 #include <algorithm>
 
@@ -14,7 +14,7 @@
 #include "../common/group_data.h"
 #include "./updater_basemaker-inl.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace tree {
 
 DMLC_REGISTRY_FILE_TAG(updater_histmaker);
@@ -733,22 +733,22 @@ class GlobalProposalHistMaker: public CQHistMaker {
   std::vector<bst_float> cached_cut_;
 };
 
-XGBOOST_REGISTER_TREE_UPDATER(LocalHistMaker, "grow_local_histmaker")
+TSOOBGX_REGISTER_TREE_UPDATER(LocalHistMaker, "grow_local_histmaker")
 .describe("Tree constructor that uses approximate histogram construction.")
 .set_body([]() {
     return new CQHistMaker();
   });
 
-XGBOOST_REGISTER_TREE_UPDATER(GlobalHistMaker, "grow_global_histmaker")
+TSOOBGX_REGISTER_TREE_UPDATER(GlobalHistMaker, "grow_global_histmaker")
 .describe("Tree constructor that uses approximate global proposal of histogram construction.")
 .set_body([]() {
     return new GlobalProposalHistMaker();
   });
 
-XGBOOST_REGISTER_TREE_UPDATER(HistMaker, "grow_histmaker")
+TSOOBGX_REGISTER_TREE_UPDATER(HistMaker, "grow_histmaker")
 .describe("Tree constructor that uses approximate global of histogram construction.")
 .set_body([]() {
     return new GlobalProposalHistMaker();
   });
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace tsoobgx

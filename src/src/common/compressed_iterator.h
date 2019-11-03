@@ -3,7 +3,7 @@
  * \file compressed_iterator.h
  */
 #pragma once
-#include <xgboost/base.h>
+#include <tsoobgx/base.h>
 #include <cmath>
 #include <cstddef>
 #include <algorithm>
@@ -12,7 +12,7 @@
 #include "device_helpers.cuh"
 #endif  // __CUDACC__
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 
 using CompressedByteT = unsigned char;
@@ -193,7 +193,7 @@ class CompressedIterator {
     symbol_bits_ = detail::SymbolBits(num_symbols);
   }
 
-  XGBOOST_DEVICE reference operator*() const {
+  TSOOBGX_DEVICE reference operator*() const {
     const int bits_per_byte = 8;
     size_t start_bit_idx = ((offset_ + 1) * symbol_bits_ - 1);
     size_t start_byte_idx = start_bit_idx / bits_per_byte;
@@ -213,11 +213,11 @@ class CompressedIterator {
     return static_cast<T>(tmp & mask);
   }
 
-  XGBOOST_DEVICE reference operator[](size_t idx) const {
+  TSOOBGX_DEVICE reference operator[](size_t idx) const {
     self_type offset = (*this);
     offset.offset_ += idx;
     return *offset;
   }
 };
 }  // namespace common
-}  // namespace xgboost
+}  // namespace tsoobgx

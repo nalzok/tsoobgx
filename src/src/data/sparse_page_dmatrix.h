@@ -4,10 +4,10 @@
  * \brief External-memory version of DMatrix.
  * \author Tianqi Chen
  */
-#ifndef XGBOOST_DATA_SPARSE_PAGE_DMATRIX_H_
-#define XGBOOST_DATA_SPARSE_PAGE_DMATRIX_H_
+#ifndef TSOOBGX_DATA_SPARSE_PAGE_DMATRIX_H_
+#define TSOOBGX_DATA_SPARSE_PAGE_DMATRIX_H_
 
-#include <xgboost/data.h>
+#include <tsoobgx/data.h>
 #include <algorithm>
 #include <memory>
 #include <string>
@@ -16,7 +16,7 @@
 
 #include "sparse_page_source.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace data {
 
 class SparsePageDMatrix : public DMatrix {
@@ -50,5 +50,5 @@ class SparsePageDMatrix : public DMatrix {
   std::vector<float> col_density_;
 };
 }  // namespace data
-}  // namespace xgboost
-#endif  // XGBOOST_DATA_SPARSE_PAGE_DMATRIX_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_DATA_SPARSE_PAGE_DMATRIX_H_

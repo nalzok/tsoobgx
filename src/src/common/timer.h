@@ -2,17 +2,17 @@
  * Copyright by Contributors 2017
  */
 #pragma once
-#include <xgboost/logging.h>
+#include <tsoobgx/logging.h>
 #include <chrono>
 #include <iostream>
 #include <map>
 #include <string>
 
-#if defined(XGBOOST_USE_NVTX) && defined(__CUDACC__)
+#if defined(TSOOBGX_USE_NVTX) && defined(__CUDACC__)
 #include <nvToolsExt.h>
 #endif
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 struct Timer {
   using ClockT = std::chrono::high_resolution_clock;
@@ -96,7 +96,7 @@ struct Monitor {
     if (ConsoleLogger::ShouldLog(ConsoleLogger::LV::kDebug)) {
       auto &stats = statistics_map[name];
       stats.timer.Start();
-#if defined(XGBOOST_USE_NVTX) && defined(__CUDACC__)
+#if defined(TSOOBGX_USE_NVTX) && defined(__CUDACC__)
       stats.nvtx_id = nvtxRangeStartA(name.c_str());
 #endif
     }
@@ -106,11 +106,11 @@ struct Monitor {
       auto &stats = statistics_map[name];
       stats.timer.Stop();
       stats.count++;
-#if defined(XGBOOST_USE_NVTX) && defined(__CUDACC__)
+#if defined(TSOOBGX_USE_NVTX) && defined(__CUDACC__)
       nvtxRangeEnd(stats.nvtx_id);
 #endif
     }
   }
 };
 }  // namespace common
-}  // namespace xgboost
+}  // namespace tsoobgx

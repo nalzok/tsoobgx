@@ -3,10 +3,10 @@
  * \author Tianqi Chen, Rory Mitchell
  */
 
-#include <xgboost/linear_updater.h>
+#include <tsoobgx/linear_updater.h>
 #include "coordinate_common.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace linear {
 
 DMLC_REGISTRY_FILE_TAG(updater_shotgun);
@@ -86,10 +86,10 @@ class ShotgunUpdater : public LinearUpdater {
   std::unique_ptr<FeatureSelector> selector_;
 };
 
-XGBOOST_REGISTER_LINEAR_UPDATER(ShotgunUpdater, "shotgun")
+TSOOBGX_REGISTER_LINEAR_UPDATER(ShotgunUpdater, "shotgun")
     .describe(
         "Update linear model according to shotgun coordinate descent "
         "algorithm.")
     .set_body([]() { return new ShotgunUpdater(); });
 }  // namespace linear
-}  // namespace xgboost
+}  // namespace tsoobgx

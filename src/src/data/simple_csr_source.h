@@ -5,16 +5,16 @@
  *  This is an in-memory data structure that holds the data in row oriented format.
  * \author Tianqi Chen
  */
-#ifndef XGBOOST_DATA_SIMPLE_CSR_SOURCE_H_
-#define XGBOOST_DATA_SIMPLE_CSR_SOURCE_H_
+#ifndef TSOOBGX_DATA_SIMPLE_CSR_SOURCE_H_
+#define TSOOBGX_DATA_SIMPLE_CSR_SOURCE_H_
 
-#include <xgboost/base.h>
-#include <xgboost/data.h>
+#include <tsoobgx/base.h>
+#include <tsoobgx/data.h>
 #include <vector>
 #include <algorithm>
 
 
-namespace xgboost {
+namespace tsoobgx {
 namespace data {
 /*!
  * \brief The simplest form of data holder, can be used to create DMatrix.
@@ -71,5 +71,5 @@ class SimpleCSRSource : public DataSource {
   bool at_first_{true};
 };
 }  // namespace data
-}  // namespace xgboost
-#endif  // XGBOOST_DATA_SIMPLE_CSR_SOURCE_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_DATA_SIMPLE_CSR_SOURCE_H_

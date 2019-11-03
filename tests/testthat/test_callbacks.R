@@ -1,12 +1,12 @@
 # More specific testing of callbacks
 
-require(xgboost)
+require(tsoobgx)
 require(data.table)
 
 context("callbacks")
 
-data(agaricus.train, package='xgboost')
-data(agaricus.test, package='xgboost')
+data(agaricus.train, package='tsoobgx')
+data(agaricus.test, package='tsoobgx')
 train <- agaricus.train
 test <- agaricus.test
 
@@ -19,8 +19,8 @@ add.noise <- function(label, frac) {
 set.seed(11)
 ltrain <- add.noise(train$label, 0.2)
 ltest <- add.noise(test$label, 0.2)
-dtrain <- xgb.DMatrix(train$data, label = ltrain)
-dtest <- xgb.DMatrix(test$data, label = ltest)
+dtrain <- bgx.DMatrix(train$data, label = ltrain)
+dtest <- bgx.DMatrix(test$data, label = ltest)
 watchlist = list(train=dtrain, test=dtest)
 
 
@@ -109,7 +109,7 @@ param <- list(objective = "binary:logistic", max_depth = 4, nthread = 2)
 
 test_that("can store evaluation_log without printing", {
   expect_silent(
-    bst <- xgb.train(param, dtrain, nrounds = 10, watchlist, eta = 1, verbose = 0)
+    bst <- bgx.train(param, dtrain, nrounds = 10, watchlist, eta = 1, verbose = 0)
   )
   expect_false(is.null(bst$evaluation_log))
   expect_false(is.null(bst$evaluation_log$train_error))
@@ -120,14 +120,14 @@ test_that("cb.reset.parameters works as expected", {
 
   # fixed eta
   set.seed(111)
-  bst0 <- xgb.train(param, dtrain, nrounds = 2, watchlist, eta = 0.9, verbose = 0)
+  bst0 <- bgx.train(param, dtrain, nrounds = 2, watchlist, eta = 0.9, verbose = 0)
   expect_false(is.null(bst0$evaluation_log))
   expect_false(is.null(bst0$evaluation_log$train_error))
 
   # same eta but re-set as a vector parameter in the callback
   set.seed(111)
   my_par <- list(eta = c(0.9, 0.9))
-  bst1 <- xgb.train(param, dtrain, nrounds = 2, watchlist, verbose = 0,
+  bst1 <- bgx.train(param, dtrain, nrounds = 2, watchlist, verbose = 0,
                     callbacks = list(cb.reset.parameters(my_par)))
   expect_false(is.null(bst1$evaluation_log$train_error))
   expect_equal(bst0$evaluation_log$train_error, 
@@ -136,7 +136,7 @@ test_that("cb.reset.parameters works as expected", {
   # same eta but re-set via a function in the callback
   set.seed(111)
   my_par <- list(eta = function(itr, itr_end) 0.9)
-  bst2 <- xgb.train(param, dtrain, nrounds = 2, watchlist, verbose = 0,
+  bst2 <- bgx.train(param, dtrain, nrounds = 2, watchlist, verbose = 0,
                     callbacks = list(cb.reset.parameters(my_par)))
   expect_false(is.null(bst2$evaluation_log$train_error))
   expect_equal(bst0$evaluation_log$train_error, 
@@ -145,7 +145,7 @@ test_that("cb.reset.parameters works as expected", {
   # different eta re-set as a vector parameter in the callback
   set.seed(111)
   my_par <- list(eta = c(0.6, 0.5))
-  bst3 <- xgb.train(param, dtrain, nrounds = 2, watchlist, verbose = 0,
+  bst3 <- bgx.train(param, dtrain, nrounds = 2, watchlist, verbose = 0,
                     callbacks = list(cb.reset.parameters(my_par)))
   expect_false(is.null(bst3$evaluation_log$train_error))
   expect_false(all(bst0$evaluation_log$train_error == bst3$evaluation_log$train_error))
@@ -153,18 +153,18 @@ test_that("cb.reset.parameters works as expected", {
   # resetting multiple parameters at the same time runs with no error
   my_par <- list(eta = c(1., 0.5), gamma = c(1, 2), max_depth = c(4, 8))
   expect_error(
-    bst4 <- xgb.train(param, dtrain, nrounds = 2, watchlist, verbose = 0,
+    bst4 <- bgx.train(param, dtrain, nrounds = 2, watchlist, verbose = 0,
                       callbacks = list(cb.reset.parameters(my_par)))
   , NA) # NA = no error
   # CV works as well
   expect_error(
-    bst4 <- xgb.cv(param, dtrain, nfold = 2, nrounds = 2, verbose = 0,
+    bst4 <- bgx.cv(param, dtrain, nfold = 2, nrounds = 2, verbose = 0,
                    callbacks = list(cb.reset.parameters(my_par)))
   , NA) # NA = no error
 
   # expect no learning with 0 learning rate
   my_par <- list(eta = c(0., 0.))
-  bstX <- xgb.train(param, dtrain, nrounds = 2, watchlist, verbose = 0,
+  bstX <- bgx.train(param, dtrain, nrounds = 2, watchlist, verbose = 0,
                     callbacks = list(cb.reset.parameters(my_par)))
   expect_false(is.null(bstX$evaluation_log$train_error))
   er <- unique(bstX$evaluation_log$train_error)
@@ -173,33 +173,33 @@ test_that("cb.reset.parameters works as expected", {
 })
 
 test_that("cb.save.model works as expected", {
-  files <- c('xgboost_01.model', 'xgboost_02.model', 'xgboost.model')
+  files <- c('tsoobgx_01.model', 'tsoobgx_02.model', 'tsoobgx.model')
   for (f in files) if (file.exists(f)) file.remove(f)
   
-  bst <- xgb.train(param, dtrain, nrounds = 2, watchlist, eta = 1, verbose = 0,
-                   save_period = 1, save_name = "xgboost_%02d.model")
-  expect_true(file.exists('xgboost_01.model'))
-  expect_true(file.exists('xgboost_02.model'))
-  b1 <- xgb.load('xgboost_01.model')
-  expect_equal(xgb.ntree(b1), 1)
-  b2 <- xgb.load('xgboost_02.model')
-  expect_equal(xgb.ntree(b2), 2)
+  bst <- bgx.train(param, dtrain, nrounds = 2, watchlist, eta = 1, verbose = 0,
+                   save_period = 1, save_name = "tsoobgx_%02d.model")
+  expect_true(file.exists('tsoobgx_01.model'))
+  expect_true(file.exists('tsoobgx_02.model'))
+  b1 <- bgx.load('tsoobgx_01.model')
+  expect_equal(bgx.ntree(b1), 1)
+  b2 <- bgx.load('tsoobgx_02.model')
+  expect_equal(bgx.ntree(b2), 2)
   expect_equal(bst$raw, b2$raw)
 
   # save_period = 0 saves the last iteration's model
-  bst <- xgb.train(param, dtrain, nrounds = 2, watchlist, eta = 1, verbose = 0,
+  bst <- bgx.train(param, dtrain, nrounds = 2, watchlist, eta = 1, verbose = 0,
                    save_period = 0)
-  expect_true(file.exists('xgboost.model'))
-  b2 <- xgb.load('xgboost.model')
+  expect_true(file.exists('tsoobgx.model'))
+  b2 <- bgx.load('tsoobgx.model')
   expect_equal(bst$raw, b2$raw)
   
   for (f in files) if (file.exists(f)) file.remove(f)
 })
 
-test_that("early stopping xgb.train works", {
+test_that("early stopping bgx.train works", {
   set.seed(11)
   expect_output(
-    bst <- xgb.train(param, dtrain, nrounds = 20, watchlist, eta = 0.3,
+    bst <- bgx.train(param, dtrain, nrounds = 20, watchlist, eta = 0.3,
                      early_stopping_rounds = 3, maximize = FALSE)
   , "Stopping. Best iteration")
   expect_false(is.null(bst$best_iteration))
@@ -214,7 +214,7 @@ test_that("early stopping xgb.train works", {
   
   set.seed(11)
   expect_silent(
-    bst0 <- xgb.train(param, dtrain, nrounds = 20, watchlist, eta = 0.3,
+    bst0 <- bgx.train(param, dtrain, nrounds = 20, watchlist, eta = 0.3,
                       early_stopping_rounds = 3, maximize = FALSE, verbose = 0)
   )
   expect_equal(bst$evaluation_log, bst0$evaluation_log)
@@ -223,7 +223,7 @@ test_that("early stopping xgb.train works", {
 test_that("early stopping using a specific metric works", {
   set.seed(11)
   expect_output(
-    bst <- xgb.train(param, dtrain, nrounds = 20, watchlist, eta = 0.6,
+    bst <- bgx.train(param, dtrain, nrounds = 20, watchlist, eta = 0.6,
                      eval_metric="logloss", eval_metric="auc",
                      callbacks = list(cb.early.stop(stopping_rounds = 3, maximize = FALSE,
                                                     metric_name = 'test_logloss')))
@@ -239,10 +239,10 @@ test_that("early stopping using a specific metric works", {
   expect_equal(logloss_log, logloss_pred, tolerance = 1e-5)
 })
 
-test_that("early stopping xgb.cv works", {
+test_that("early stopping bgx.cv works", {
   set.seed(11)
   expect_output(
-    cv <- xgb.cv(param, dtrain, nfold = 5, eta = 0.3, nrounds = 20,
+    cv <- bgx.cv(param, dtrain, nfold = 5, eta = 0.3, nrounds = 20,
                  early_stopping_rounds = 3, maximize = FALSE)
   , "Stopping. Best iteration")
   expect_false(is.null(cv$best_iteration))
@@ -252,10 +252,10 @@ test_that("early stopping xgb.cv works", {
   expect_true(cv$evaluation_log[, test_error_mean[cv$best_iteration] == min(test_error_mean)])
 })
 
-test_that("prediction in xgb.cv works", {
+test_that("prediction in bgx.cv works", {
   set.seed(11)
   nrounds = 4
-  cv <- xgb.cv(param, dtrain, nfold = 5, eta = 0.5, nrounds = nrounds, prediction = TRUE, verbose = 0)
+  cv <- bgx.cv(param, dtrain, nfold = 5, eta = 0.5, nrounds = nrounds, prediction = TRUE, verbose = 0)
   expect_false(is.null(cv$evaluation_log))
   expect_false(is.null(cv$pred))
   expect_length(cv$pred, nrow(train$data))
@@ -265,26 +265,26 @@ test_that("prediction in xgb.cv works", {
 
   # save CV models
   set.seed(11)
-  cvx <- xgb.cv(param, dtrain, nfold = 5, eta = 0.5, nrounds = nrounds, prediction = TRUE, verbose = 0,
+  cvx <- bgx.cv(param, dtrain, nfold = 5, eta = 0.5, nrounds = nrounds, prediction = TRUE, verbose = 0,
                 callbacks = list(cb.cv.predict(save_models = TRUE)))
   expect_equal(cv$evaluation_log, cvx$evaluation_log)
   expect_length(cvx$models, 5)
-  expect_true(all(sapply(cvx$models, class) == 'xgb.Booster'))
+  expect_true(all(sapply(cvx$models, class) == 'bgx.Booster'))
 })
 
-test_that("prediction in xgb.cv works for gblinear too", {
+test_that("prediction in bgx.cv works for gblinear too", {
   set.seed(11)
   p <- list(booster = 'gblinear', objective = "reg:logistic", nthread = 2)
-  cv <- xgb.cv(p, dtrain, nfold = 5, eta = 0.5, nrounds = 2, prediction = TRUE, verbose = 0)
+  cv <- bgx.cv(p, dtrain, nfold = 5, eta = 0.5, nrounds = 2, prediction = TRUE, verbose = 0)
   expect_false(is.null(cv$evaluation_log))
   expect_false(is.null(cv$pred))
   expect_length(cv$pred, nrow(train$data))
 })
 
-test_that("prediction in early-stopping xgb.cv works", {
+test_that("prediction in early-stopping bgx.cv works", {
   set.seed(11)
   expect_output(
-    cv <- xgb.cv(param, dtrain, nfold = 5, eta = 0.1, nrounds = 20,
+    cv <- bgx.cv(param, dtrain, nfold = 5, eta = 0.1, nrounds = 20,
                  early_stopping_rounds = 5, maximize = FALSE, prediction = TRUE)
   , "Stopping. Best iteration")
   
@@ -301,11 +301,11 @@ test_that("prediction in early-stopping xgb.cv works", {
   expect_gt(abs(err_pred - err_log_last), 1e-4)
 })
 
-test_that("prediction in xgb.cv for softprob works", {
+test_that("prediction in bgx.cv for softprob works", {
   lb <- as.numeric(iris$Species) - 1
   set.seed(11)
   expect_warning(
-    cv <- xgb.cv(data = as.matrix(iris[, -5]), label = lb, nfold = 4,
+    cv <- bgx.cv(data = as.matrix(iris[, -5]), label = lb, nfold = 4,
                  eta = 0.5, nrounds = 5, max_depth = 3, nthread = 2,
                  subsample = 0.8, gamma = 2, verbose = 0,
                  prediction = TRUE, objective = "multi:softprob", num_class = 3)

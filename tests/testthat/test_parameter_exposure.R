@@ -1,14 +1,14 @@
 context('Test model params and call are exposed to R')
 
-require(xgboost)
+require(tsoobgx)
 
-data(agaricus.train, package='xgboost')
-data(agaricus.test, package='xgboost')
+data(agaricus.train, package='tsoobgx')
+data(agaricus.test, package='tsoobgx')
 
-dtrain <- xgb.DMatrix(agaricus.train$data, label = agaricus.train$label)
-dtest <- xgb.DMatrix(agaricus.test$data, label = agaricus.test$label)
+dtrain <- bgx.DMatrix(agaricus.train$data, label = agaricus.train$label)
+dtest <- bgx.DMatrix(agaricus.test$data, label = agaricus.test$label)
 
-bst <- xgboost(data = dtrain,
+bst <- tsoobgx(data = dtrain,
                max_depth = 2,
                eta = 1,
                nrounds = 10,

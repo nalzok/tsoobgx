@@ -1,11 +1,11 @@
-require(xgboost)
+require(tsoobgx)
 # load in the agaricus dataset
-data(agaricus.train, package='xgboost')
-data(agaricus.test, package='xgboost')
-dtrain <- xgb.DMatrix(agaricus.train$data, label = agaricus.train$label)
-dtest <- xgb.DMatrix(agaricus.test$data, label = agaricus.test$label)
+data(agaricus.train, package='tsoobgx')
+data(agaricus.test, package='tsoobgx')
+dtrain <- bgx.DMatrix(agaricus.train$data, label = agaricus.train$label)
+dtest <- bgx.DMatrix(agaricus.test$data, label = agaricus.test$label)
 ##
-#  this script demonstrate how to fit generalized linear model in xgboost
+#  this script demonstrate how to fit generalized linear model in tsoobgx
 #  basically, we are using linear model, instead of tree for our boosters
 #  you can fit a linear regression, or logistic regression model
 ##
@@ -18,7 +18,7 @@ param <- list(objective = "binary:logistic", booster = "gblinear",
               nthread = 2, alpha = 0.0001, lambda = 1)
 
 # normally, you do not need to set eta (step_size)
-# XGBoost uses a parallel coordinate descent algorithm (shotgun), 
+# tsooBGX uses a parallel coordinate descent algorithm (shotgun), 
 # there could be affection on convergence with parallelization on certain cases
 # setting eta to be smaller value, e.g 0.5 can make the optimization more stable
 
@@ -27,7 +27,7 @@ param <- list(objective = "binary:logistic", booster = "gblinear",
 ##
 watchlist <- list(eval = dtest, train = dtrain)
 num_round <- 2
-bst <- xgb.train(param, dtrain, num_round, watchlist)
+bst <- bgx.train(param, dtrain, num_round, watchlist)
 ypred <- predict(bst, dtest)
 labels <- getinfo(dtest, 'label')
 cat('error of preds=', mean(as.numeric(ypred>0.5)!=labels),'\n')

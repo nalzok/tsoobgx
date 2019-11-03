@@ -4,11 +4,11 @@
  *  External memory data source, saved with sparse_batch_page binary format.
  * \author Tianqi Chen
  */
-#ifndef XGBOOST_DATA_SPARSE_PAGE_SOURCE_H_
-#define XGBOOST_DATA_SPARSE_PAGE_SOURCE_H_
+#ifndef TSOOBGX_DATA_SPARSE_PAGE_SOURCE_H_
+#define TSOOBGX_DATA_SPARSE_PAGE_SOURCE_H_
 
-#include <xgboost/base.h>
-#include <xgboost/data.h>
+#include <tsoobgx/base.h>
+#include <tsoobgx/data.h>
 #include <dmlc/threadediter.h>
 
 #include <algorithm>
@@ -18,7 +18,7 @@
 
 #include "sparse_page_writer.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace data {
 /*!
  * \brief External memory data source.
@@ -97,5 +97,5 @@ class SparsePageSource : public DataSource {
   std::vector<std::unique_ptr<dmlc::ThreadedIter<SparsePage> > > prefetchers_;
 };
 }  // namespace data
-}  // namespace xgboost
-#endif  // XGBOOST_DATA_SPARSE_PAGE_SOURCE_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_DATA_SPARSE_PAGE_SOURCE_H_

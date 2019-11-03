@@ -3,12 +3,12 @@
  * \author Rory Mitchell
  */
 
-#include <xgboost/linear_updater.h>
+#include <tsoobgx/linear_updater.h>
 #include "./param.h"
 #include "../common/timer.h"
 #include "coordinate_common.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace linear {
 
 DMLC_REGISTER_PARAMETER(CoordinateParam);
@@ -86,8 +86,8 @@ class CoordinateUpdater : public LinearUpdater {
   common::Monitor monitor_;
 };
 
-XGBOOST_REGISTER_LINEAR_UPDATER(CoordinateUpdater, "coord_descent")
+TSOOBGX_REGISTER_LINEAR_UPDATER(CoordinateUpdater, "coord_descent")
     .describe("Update linear model according to coordinate descent algorithm.")
     .set_body([]() { return new CoordinateUpdater(); });
 }  // namespace linear
-}  // namespace xgboost
+}  // namespace tsoobgx

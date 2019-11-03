@@ -4,14 +4,14 @@
  * \brief Quick Utility to compute subset of rows
  * \author Philip Cho, Tianqi Chen
  */
-#ifndef XGBOOST_COMMON_ROW_SET_H_
-#define XGBOOST_COMMON_ROW_SET_H_
+#ifndef TSOOBGX_COMMON_ROW_SET_H_
+#define TSOOBGX_COMMON_ROW_SET_H_
 
-#include <xgboost/data.h>
+#include <tsoobgx/data.h>
 #include <algorithm>
 #include <vector>
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 
 /*! \brief collection of rowset */
@@ -124,6 +124,6 @@ class RowSetCollection {
 };
 
 }  // namespace common
-}  // namespace xgboost
+}  // namespace tsoobgx
 
-#endif  // XGBOOST_COMMON_ROW_SET_H_
+#endif  // TSOOBGX_COMMON_ROW_SET_H_

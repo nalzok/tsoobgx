@@ -1,4 +1,4 @@
-library(xgboost)
+library(tsoobgx)
 library(data.table)
 
 set.seed(1024)
@@ -68,27 +68,27 @@ cols2ids <- function(object, col_names) {
 interaction_list_fid = cols2ids(interaction_list, colnames(train))
 
 # Fit model with interaction constraints
-bst = xgboost(data = train, label = y, max_depth = 4,
+bst = tsoobgx(data = train, label = y, max_depth = 4,
               eta = 0.1, nthread = 2, nrounds = 1000,
               interaction_constraints = interaction_list_fid)
 
-bst_tree <- xgb.model.dt.tree(colnames(train), bst)
+bst_tree <- bgx.model.dt.tree(colnames(train), bst)
 bst_interactions <- treeInteractions(bst_tree, 4)  # interactions constrained to combinations of V1*V2 and V3*V4*V5
 
 # Fit model without interaction constraints
-bst2 = xgboost(data = train, label = y, max_depth = 4,
+bst2 = tsoobgx(data = train, label = y, max_depth = 4,
                eta = 0.1, nthread = 2, nrounds = 1000)
 
-bst2_tree <- xgb.model.dt.tree(colnames(train), bst2)
+bst2_tree <- bgx.model.dt.tree(colnames(train), bst2)
 bst2_interactions <- treeInteractions(bst2_tree, 4)  # much more interactions
 
 # Fit model with both interaction and monotonicity constraints
-bst3 = xgboost(data = train, label = y, max_depth = 4,
+bst3 = tsoobgx(data = train, label = y, max_depth = 4,
                eta = 0.1, nthread = 2, nrounds = 1000,
                interaction_constraints = interaction_list_fid,
                monotone_constraints = c(-1,0,0,0,0,0,0,0,0,0))
 
-bst3_tree <- xgb.model.dt.tree(colnames(train), bst3)
+bst3_tree <- bgx.model.dt.tree(colnames(train), bst3)
 bst3_interactions <- treeInteractions(bst3_tree, 4)  # interactions still constrained to combinations of V1*V2 and V3*V4*V5
 
 # Show monotonic constraints still apply by checking scores after incrementing V1

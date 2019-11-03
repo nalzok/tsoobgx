@@ -5,8 +5,8 @@
 
 #include <thrust/execution_policy.h>
 #include <thrust/inner_product.h>
-#include <xgboost/data.h>
-#include <xgboost/linear_updater.h>
+#include <tsoobgx/data.h>
+#include <tsoobgx/linear_updater.h>
 #include "../common/common.h"
 #include "../common/span.h"
 #include "../common/device_helpers.cuh"
@@ -14,13 +14,13 @@
 #include "./param.h"
 #include "coordinate_common.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace linear {
 
 DMLC_REGISTRY_FILE_TAG(updater_gpu_coordinate);
 
 void RescaleIndices(int device_idx, size_t ridx_begin,
-                    common::Span<xgboost::Entry> data) {
+                    common::Span<tsoobgx::Entry> data) {
   dh::LaunchN(device_idx, data.size(),
               [=] __device__(size_t idx) { data[idx].index -= ridx_begin; });
 }
@@ -29,7 +29,7 @@ class DeviceShard {
   int device_id_;
   dh::BulkAllocator ba_;
   std::vector<size_t> row_ptr_;
-  common::Span<xgboost::Entry> data_;
+  common::Span<tsoobgx::Entry> data_;
   common::Span<GradientPair> gpair_;
   dh::CubMemory temp_;
   size_t ridx_begin_;
@@ -58,10 +58,10 @@ class DeviceShard {
       };
       auto column_begin =
           std::lower_bound(col.cbegin(), col.cend(),
-                           xgboost::Entry(row_begin, 0.0f), cmp);
+                           tsoobgx::Entry(row_begin, 0.0f), cmp);
       auto column_end =
           std::lower_bound(col.cbegin(), col.cend(),
-                           xgboost::Entry(row_end, 0.0f), cmp);
+                           tsoobgx::Entry(row_end, 0.0f), cmp);
       column_segments.emplace_back(
           std::make_pair(column_begin - col.cbegin(), column_end - col.cbegin()));
       row_ptr_.push_back(row_ptr_.back() + (column_end - column_begin));
@@ -117,7 +117,7 @@ class DeviceShard {
 
   GradientPair GetGradient(int group_idx, int num_group, int fidx) {
     dh::safe_cuda(cudaSetDevice(device_id_));
-    common::Span<xgboost::Entry> d_col = data_.subspan(row_ptr_[fidx]);
+    common::Span<tsoobgx::Entry> d_col = data_.subspan(row_ptr_[fidx]);
     size_t col_size = row_ptr_[fidx + 1] - row_ptr_[fidx];
     common::Span<GradientPair> d_gpair = gpair_;
     auto counting = thrust::make_counting_iterator(0ull);
@@ -302,10 +302,10 @@ class GPUCoordinateUpdater : public LinearUpdater {
   std::vector<std::unique_ptr<DeviceShard>> shards_;
 };
 
-XGBOOST_REGISTER_LINEAR_UPDATER(GPUCoordinateUpdater, "gpu_coord_descent")
+TSOOBGX_REGISTER_LINEAR_UPDATER(GPUCoordinateUpdater, "gpu_coord_descent")
     .describe(
         "Update linear model according to coordinate descent algorithm. GPU "
         "accelerated.")
     .set_body([]() { return new GPUCoordinateUpdater(); });
 }  // namespace linear
-}  // namespace xgboost
+}  // namespace tsoobgx

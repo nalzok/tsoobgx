@@ -6,9 +6,9 @@
  */
 #include <dmlc/omp.h>
 #include <dmlc/parameter.h>
-#include <xgboost/data.h>
-#include <xgboost/logging.h>
-#include <xgboost/objective.h>
+#include <tsoobgx/data.h>
+#include <tsoobgx/logging.h>
+#include <tsoobgx/objective.h>
 #include <vector>
 #include <algorithm>
 #include <limits>
@@ -16,12 +16,12 @@
 #include "../common/math.h"
 #include "../common/transform.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace obj {
 
-#if defined(XGBOOST_USE_CUDA)
+#if defined(TSOOBGX_USE_CUDA)
 DMLC_REGISTRY_FILE_TAG(multiclass_obj_gpu);
-#endif  // defined(XGBOOST_USE_CUDA)
+#endif  // defined(TSOOBGX_USE_CUDA)
 
 struct SoftmaxMultiClassParam : public dmlc::Parameter<SoftmaxMultiClassParam> {
   int num_class;
@@ -74,7 +74,7 @@ class SoftmaxMultiClassObj : public ObjFunction {
 
     const bool is_null_weight = info.weights_.Size() == 0;
     common::Transform<>::Init(
-        [=] XGBOOST_DEVICE(size_t idx,
+        [=] TSOOBGX_DEVICE(size_t idx,
                            common::Span<GradientPair> gpair,
                            common::Span<bst_float const> labels,
                            common::Span<bst_float const> preds,
@@ -128,7 +128,7 @@ class SoftmaxMultiClassObj : public ObjFunction {
 
     if (prob) {
       common::Transform<>::Init(
-          [=] XGBOOST_DEVICE(size_t _idx, common::Span<bst_float> _preds) {
+          [=] TSOOBGX_DEVICE(size_t _idx, common::Span<bst_float> _preds) {
             common::Span<bst_float> point =
                 _preds.subspan(_idx * nclass, nclass);
             common::Softmax(point.begin(), point.end());
@@ -139,7 +139,7 @@ class SoftmaxMultiClassObj : public ObjFunction {
       io_preds->Shard(GPUDistribution::Granular(devices_, nclass));
       max_preds_.Shard(GPUDistribution::Block(devices_));
       common::Transform<>::Init(
-          [=] XGBOOST_DEVICE(size_t _idx,
+          [=] TSOOBGX_DEVICE(size_t _idx,
                              common::Span<const bst_float> _preds,
                              common::Span<bst_float> _max_preds) {
             common::Span<const bst_float> point =
@@ -171,13 +171,13 @@ class SoftmaxMultiClassObj : public ObjFunction {
 // register the objective functions
 DMLC_REGISTER_PARAMETER(SoftmaxMultiClassParam);
 
-XGBOOST_REGISTER_OBJECTIVE(SoftmaxMultiClass, "multi:softmax")
+TSOOBGX_REGISTER_OBJECTIVE(SoftmaxMultiClass, "multi:softmax")
 .describe("Softmax for multi-class classification, output class index.")
 .set_body([]() { return new SoftmaxMultiClassObj(false); });
 
-XGBOOST_REGISTER_OBJECTIVE(SoftprobMultiClass, "multi:softprob")
+TSOOBGX_REGISTER_OBJECTIVE(SoftprobMultiClass, "multi:softprob")
 .describe("Softmax for multi-class classification, output probability distribution.")
 .set_body([]() { return new SoftmaxMultiClassObj(true); });
 
 }  // namespace obj
-}  // namespace xgboost
+}  // namespace tsoobgx

@@ -1,7 +1,7 @@
-# install development version of caret library that contains xgboost models
+# install development version of caret library that contains tsoobgx models
 devtools::install_github("topepo/caret/pkg/caret") 
 require(caret)
-require(xgboost)
+require(tsoobgx)
 require(data.table)
 require(vcd)
 require(e1071)
@@ -21,15 +21,15 @@ df[,AgeCat:= as.factor(ifelse(Age > 30, "Old", "Young"))]
 # We remove ID as there is nothing to learn from this feature (it will just add some noise as the dataset is small).
 df[,ID:=NULL]
 
-#-------------Basic Training using XGBoost in caret Library-----------------
+#-------------Basic Training using tsooBGX in caret Library-----------------
 # Set up control parameters for caret::train
 # Here we use 10-fold cross-validation, repeating twice, and using random search for tuning hyper-parameters.
 fitControl <- trainControl(method = "repeatedcv", number = 10, repeats = 2, search = "random")
-# train a xgbTree model using caret::train
-model <- train(factor(Improved)~., data = df, method = "xgbTree", trControl = fitControl)
+# train a bgxTree model using caret::train
+model <- train(factor(Improved)~., data = df, method = "bgxTree", trControl = fitControl)
 
-# Instead of tree for our boosters, you can also fit a linear regression or logistic regression model using xgbLinear
-# model <- train(factor(Improved)~., data = df, method = "xgbLinear", trControl = fitControl)
+# Instead of tree for our boosters, you can also fit a linear regression or logistic regression model using bgxLinear
+# model <- train(factor(Improved)~., data = df, method = "bgxLinear", trControl = fitControl)
 
 # See model results
 print(model)

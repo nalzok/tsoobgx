@@ -1,7 +1,7 @@
 /*!
  * Copyright 2014 by Contributors
  * \file cli_main.cc
- * \brief The command line interface program of xgboost.
+ * \brief The command line interface program of tsoobgx.
  *  This file is not included in dynamic library.
  */
 // Copyright 2014 by Contributors
@@ -9,9 +9,9 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #define NOMINMAX
 
-#include <xgboost/learner.h>
-#include <xgboost/data.h>
-#include <xgboost/logging.h>
+#include <tsoobgx/learner.h>
+#include <tsoobgx/data.h>
+#include <tsoobgx/logging.h>
 #include <dmlc/timer.h>
 #include <iomanip>
 #include <ctime>
@@ -23,7 +23,7 @@
 #include "./common/config.h"
 
 
-namespace xgboost {
+namespace tsoobgx {
 
 enum CLITask {
   kTrain = 0,
@@ -366,8 +366,8 @@ int CLIRunTask(int argc, char *argv[]) {
   rabit::Finalize();
   return 0;
 }
-}  // namespace xgboost
+}  // namespace tsoobgx
 
 int main(int argc, char *argv[]) {
-  return xgboost::CLIRunTask(argc, argv);
+  return tsoobgx::CLIRunTask(argc, argv);
 }

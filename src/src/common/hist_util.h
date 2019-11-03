@@ -4,10 +4,10 @@
  * \brief Utility for fast histogram aggregation
  * \author Philip Cho, Tianqi Chen
  */
-#ifndef XGBOOST_COMMON_HIST_UTIL_H_
-#define XGBOOST_COMMON_HIST_UTIL_H_
+#ifndef TSOOBGX_COMMON_HIST_UTIL_H_
+#define TSOOBGX_COMMON_HIST_UTIL_H_
 
-#include <xgboost/data.h>
+#include <tsoobgx/data.h>
 #include <limits>
 #include <vector>
 #include "row_set.h"
@@ -16,7 +16,7 @@
 #include "./timer.h"
 #include "../include/rabit/rabit.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 
 /*
@@ -297,5 +297,5 @@ class GHistBuilder {
 
 
 }  // namespace common
-}  // namespace xgboost
-#endif  // XGBOOST_COMMON_HIST_UTIL_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_COMMON_HIST_UTIL_H_

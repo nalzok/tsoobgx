@@ -4,10 +4,10 @@
  * \brief additional math utils
  * \author Tianqi Chen
  */
-#ifndef XGBOOST_COMMON_MATH_H_
-#define XGBOOST_COMMON_MATH_H_
+#ifndef TSOOBGX_COMMON_MATH_H_
+#define TSOOBGX_COMMON_MATH_H_
 
-#include <xgboost/base.h>
+#include <tsoobgx/base.h>
 
 #include <utility>
 #include <vector>
@@ -15,14 +15,14 @@
 #include <algorithm>
 #include <utility>
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 /*!
  * \brief calculate the sigmoid of the input.
  * \param x input parameter
  * \return the transformed value.
  */
-XGBOOST_DEVICE inline float Sigmoid(float x) {
+TSOOBGX_DEVICE inline float Sigmoid(float x) {
   return 1.0f / (1.0f + expf(-x));
 }
 
@@ -35,7 +35,7 @@ XGBOOST_DEVICE inline float Sigmoid(float x) {
  * \param end end iterator of input
  */
 template <typename Iterator>
-XGBOOST_DEVICE inline void Softmax(Iterator start, Iterator end) {
+TSOOBGX_DEVICE inline void Softmax(Iterator start, Iterator end) {
   static_assert(std::is_same<bst_float,
                 typename std::remove_reference<
                   decltype(std::declval<Iterator>().operator*())>::type
@@ -63,7 +63,7 @@ XGBOOST_DEVICE inline void Softmax(Iterator start, Iterator end) {
  * \tparam Iterator The type of the iterator.
  */
 template<typename Iterator>
-XGBOOST_DEVICE inline Iterator FindMaxIndex(Iterator begin, Iterator end) {
+TSOOBGX_DEVICE inline Iterator FindMaxIndex(Iterator begin, Iterator end) {
   Iterator maxit = begin;
   for (Iterator it = begin; it != end; ++it) {
     if (*it > *maxit) maxit = it;
@@ -115,7 +115,7 @@ inline static bool CmpSecond(const std::pair<float, unsigned> &a,
   return a.second > b.second;
 }
 
-#if XGBOOST_STRICT_R_MODE
+#if TSOOBGX_STRICT_R_MODE
 // check nan
 bool CheckNAN(double v);
 #else
@@ -127,17 +127,17 @@ inline bool CheckNAN(T v) {
   return std::isnan(v);
 #endif  // _MSC_VER
 }
-#endif  // XGBOOST_STRICT_R_MODE_
+#endif  // TSOOBGX_STRICT_R_MODE_
 
 // GPU version is not uploaded in CRAN anyway.
 // Specialize only when using R with CPU.
-#if XGBOOST_STRICT_R_MODE && !defined(XGBOOST_USE_CUDA)
+#if TSOOBGX_STRICT_R_MODE && !defined(TSOOBGX_USE_CUDA)
 double LogGamma(double v);
 
 #else  // Not R or R with GPU.
 
 template<typename T>
-XGBOOST_DEVICE inline T LogGamma(T v) {
+TSOOBGX_DEVICE inline T LogGamma(T v) {
 #ifdef _MSC_VER
 
 #if _MSC_VER >= 1800
@@ -154,8 +154,8 @@ XGBOOST_DEVICE inline T LogGamma(T v) {
 #endif  // _MSC_VER
 }
 
-#endif  // XGBOOST_STRICT_R_MODE && !defined(XGBOOST_USE_CUDA)
+#endif  // TSOOBGX_STRICT_R_MODE && !defined(TSOOBGX_USE_CUDA)
 
 }  // namespace common
-}  // namespace xgboost
-#endif  // XGBOOST_COMMON_MATH_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_COMMON_MATH_H_

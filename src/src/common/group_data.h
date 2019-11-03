@@ -11,12 +11,12 @@
  * The major algorithm is a two pass linear scan algorithm that requires two pass scan over the data
  * \author Tianqi Chen
  */
-#ifndef XGBOOST_COMMON_GROUP_DATA_H_
-#define XGBOOST_COMMON_GROUP_DATA_H_
+#ifndef TSOOBGX_COMMON_GROUP_DATA_H_
+#define TSOOBGX_COMMON_GROUP_DATA_H_
 
 #include <vector>
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 /*!
  * \brief multi-thread version of group builder
@@ -111,5 +111,5 @@ struct ParallelGroupBuilder {
   std::vector<std::vector<SizeType> > tmp_thread_rptr_;
 };
 }  // namespace common
-}  // namespace xgboost
-#endif  // XGBOOST_COMMON_GROUP_DATA_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_COMMON_GROUP_DATA_H_

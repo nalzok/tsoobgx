@@ -6,8 +6,8 @@
  */
 
 #include <dmlc/omp.h>
-#include <xgboost/logging.h>
-#include <xgboost/objective.h>
+#include <tsoobgx/logging.h>
+#include <tsoobgx/objective.h>
 #include <cmath>
 #include <memory>
 #include <vector>
@@ -19,12 +19,12 @@
 #include "./regression_loss.h"
 
 
-namespace xgboost {
+namespace tsoobgx {
 namespace obj {
 
-#if defined(XGBOOST_USE_CUDA)
+#if defined(TSOOBGX_USE_CUDA)
 DMLC_REGISTRY_FILE_TAG(regression_obj_gpu);
-#endif  // defined(XGBOOST_USE_CUDA)
+#endif  // defined(TSOOBGX_USE_CUDA)
 
 struct RegLossParam : public dmlc::Parameter<RegLossParam> {
   float scale_pos_weight;
@@ -72,7 +72,7 @@ class RegLossObj : public ObjFunction {
     bool is_null_weight = info.weights_.Size() == 0;
     auto scale_pos_weight = param_.scale_pos_weight;
     common::Transform<>::Init(
-        [=] XGBOOST_DEVICE(size_t _idx,
+        [=] TSOOBGX_DEVICE(size_t _idx,
                            common::Span<int> _label_correct,
                            common::Span<GradientPair> _out_gpair,
                            common::Span<const bst_float> _preds,
@@ -110,7 +110,7 @@ class RegLossObj : public ObjFunction {
 
   void PredTransform(HostDeviceVector<float> *io_preds) override {
     common::Transform<>::Init(
-        [] XGBOOST_DEVICE(size_t _idx, common::Span<float> _preds) {
+        [] TSOOBGX_DEVICE(size_t _idx, common::Span<float> _preds) {
           _preds[_idx] = Loss::PredTransform(_preds[_idx]);
         }, common::Range{0, static_cast<int64_t>(io_preds->Size())},
         devices_).Eval(io_preds);
@@ -128,49 +128,49 @@ class RegLossObj : public ObjFunction {
 // register the objective functions
 DMLC_REGISTER_PARAMETER(RegLossParam);
 
-XGBOOST_REGISTER_OBJECTIVE(SquaredLossRegression, "reg:squarederror")
+TSOOBGX_REGISTER_OBJECTIVE(SquaredLossRegression, "reg:squarederror")
 .describe("Regression with squared error.")
 .set_body([]() { return new RegLossObj<LinearSquareLoss>(); });
 
-XGBOOST_REGISTER_OBJECTIVE(LogisticRegression, "reg:logistic")
+TSOOBGX_REGISTER_OBJECTIVE(LogisticRegression, "reg:logistic")
 .describe("Logistic regression for probability regression task.")
 .set_body([]() { return new RegLossObj<LogisticRegression>(); });
 
-XGBOOST_REGISTER_OBJECTIVE(LogisticClassification, "binary:logistic")
+TSOOBGX_REGISTER_OBJECTIVE(LogisticClassification, "binary:logistic")
 .describe("Logistic regression for binary classification task.")
 .set_body([]() { return new RegLossObj<LogisticClassification>(); });
 
-XGBOOST_REGISTER_OBJECTIVE(LogisticRaw, "binary:logitraw")
+TSOOBGX_REGISTER_OBJECTIVE(LogisticRaw, "binary:logitraw")
 .describe("Logistic regression for classification, output score "
           "before logistic transformation.")
 .set_body([]() { return new RegLossObj<LogisticRaw>(); });
 
 // Deprecated functions
-XGBOOST_REGISTER_OBJECTIVE(LinearRegression, "reg:linear")
+TSOOBGX_REGISTER_OBJECTIVE(LinearRegression, "reg:linear")
 .describe("Regression with squared error.")
 .set_body([]() {
     LOG(WARNING) << "reg:linear is now deprecated in favor of reg:squarederror.";
     return new RegLossObj<LinearSquareLoss>(); });
 
-XGBOOST_REGISTER_OBJECTIVE(GPULinearRegression, "gpu:reg:linear")
+TSOOBGX_REGISTER_OBJECTIVE(GPULinearRegression, "gpu:reg:linear")
 .describe("Deprecated. Linear regression (computed on GPU).")
 .set_body([]() {
     LOG(WARNING) << "gpu:reg:linear is now deprecated, use reg:linear instead.";
     return new RegLossObj<LinearSquareLoss>(); });
 
-XGBOOST_REGISTER_OBJECTIVE(GPULogisticRegression, "gpu:reg:logistic")
+TSOOBGX_REGISTER_OBJECTIVE(GPULogisticRegression, "gpu:reg:logistic")
 .describe("Deprecated. Logistic regression for probability regression task (computed on GPU).")
 .set_body([]() {
     LOG(WARNING) << "gpu:reg:logistic is now deprecated, use reg:logistic instead.";
     return new RegLossObj<LogisticRegression>(); });
 
-XGBOOST_REGISTER_OBJECTIVE(GPULogisticClassification, "gpu:binary:logistic")
+TSOOBGX_REGISTER_OBJECTIVE(GPULogisticClassification, "gpu:binary:logistic")
 .describe("Deprecated. Logistic regression for binary classification task (computed on GPU).")
 .set_body([]() {
     LOG(WARNING) << "gpu:binary:logistic is now deprecated, use binary:logistic instead.";
     return new RegLossObj<LogisticClassification>(); });
 
-XGBOOST_REGISTER_OBJECTIVE(GPULogisticRaw, "gpu:binary:logitraw")
+TSOOBGX_REGISTER_OBJECTIVE(GPULogisticRaw, "gpu:binary:logitraw")
 .describe("Deprecated. Logistic regression for classification, output score "
           "before logistic transformation (computed on GPU)")
 .set_body([]() {
@@ -219,7 +219,7 @@ class PoissonRegression : public ObjFunction {
     bool is_null_weight = info.weights_.Size() == 0;
     bst_float max_delta_step = param_.max_delta_step;
     common::Transform<>::Init(
-        [=] XGBOOST_DEVICE(size_t _idx,
+        [=] TSOOBGX_DEVICE(size_t _idx,
                            common::Span<int> _label_correct,
                            common::Span<GradientPair> _out_gpair,
                            common::Span<const bst_float> _preds,
@@ -246,7 +246,7 @@ class PoissonRegression : public ObjFunction {
   }
   void PredTransform(HostDeviceVector<bst_float> *io_preds) override {
     common::Transform<>::Init(
-        [] XGBOOST_DEVICE(size_t _idx, common::Span<bst_float> _preds) {
+        [] TSOOBGX_DEVICE(size_t _idx, common::Span<bst_float> _preds) {
           _preds[_idx] = expf(_preds[_idx]);
         },
         common::Range{0, static_cast<int64_t>(io_preds->Size())}, devices_)
@@ -271,7 +271,7 @@ class PoissonRegression : public ObjFunction {
 // register the objective functions
 DMLC_REGISTER_PARAMETER(PoissonRegressionParam);
 
-XGBOOST_REGISTER_OBJECTIVE(PoissonRegression, "count:poisson")
+TSOOBGX_REGISTER_OBJECTIVE(PoissonRegression, "count:poisson")
 .describe("Possion regression for count data.")
 .set_body([]() { return new PoissonRegression(); });
 
@@ -359,7 +359,7 @@ class CoxRegression : public ObjFunction {
 };
 
 // register the objective function
-XGBOOST_REGISTER_OBJECTIVE(CoxRegression, "survival:cox")
+TSOOBGX_REGISTER_OBJECTIVE(CoxRegression, "survival:cox")
 .describe("Cox regression for censored survival data (negative labels are considered censored).")
 .set_body([]() { return new CoxRegression(); });
 
@@ -399,7 +399,7 @@ class GammaRegression : public ObjFunction {
 
     const bool is_null_weight = info.weights_.Size() == 0;
     common::Transform<>::Init(
-        [=] XGBOOST_DEVICE(size_t _idx,
+        [=] TSOOBGX_DEVICE(size_t _idx,
                            common::Span<int> _label_correct,
                            common::Span<GradientPair> _out_gpair,
                            common::Span<const bst_float> _preds,
@@ -426,7 +426,7 @@ class GammaRegression : public ObjFunction {
   }
   void PredTransform(HostDeviceVector<bst_float> *io_preds) override {
     common::Transform<>::Init(
-        [] XGBOOST_DEVICE(size_t _idx, common::Span<bst_float> _preds) {
+        [] TSOOBGX_DEVICE(size_t _idx, common::Span<bst_float> _preds) {
           _preds[_idx] = expf(_preds[_idx]);
         },
         common::Range{0, static_cast<int64_t>(io_preds->Size())}, devices_)
@@ -451,7 +451,7 @@ class GammaRegression : public ObjFunction {
 // register the objective functions
 DMLC_REGISTER_PARAMETER(GammaRegressionParam);
 // register the objective functions
-XGBOOST_REGISTER_OBJECTIVE(GammaRegression, "reg:gamma")
+TSOOBGX_REGISTER_OBJECTIVE(GammaRegression, "reg:gamma")
 .describe("Gamma regression for severity data.")
 .set_body([]() { return new GammaRegression(); });
 
@@ -496,7 +496,7 @@ class TweedieRegression : public ObjFunction {
     const bool is_null_weight = info.weights_.Size() == 0;
     const float rho = param_.tweedie_variance_power;
     common::Transform<>::Init(
-        [=] XGBOOST_DEVICE(size_t _idx,
+        [=] TSOOBGX_DEVICE(size_t _idx,
                            common::Span<int> _label_correct,
                            common::Span<GradientPair> _out_gpair,
                            common::Span<const bst_float> _preds,
@@ -527,7 +527,7 @@ class TweedieRegression : public ObjFunction {
   }
   void PredTransform(HostDeviceVector<bst_float> *io_preds) override {
     common::Transform<>::Init(
-        [] XGBOOST_DEVICE(size_t _idx, common::Span<bst_float> _preds) {
+        [] TSOOBGX_DEVICE(size_t _idx, common::Span<bst_float> _preds) {
           _preds[_idx] = expf(_preds[_idx]);
         },
         common::Range{0, static_cast<int64_t>(io_preds->Size())}, devices_)
@@ -554,9 +554,9 @@ class TweedieRegression : public ObjFunction {
 // register the objective functions
 DMLC_REGISTER_PARAMETER(TweedieRegressionParam);
 
-XGBOOST_REGISTER_OBJECTIVE(TweedieRegression, "reg:tweedie")
+TSOOBGX_REGISTER_OBJECTIVE(TweedieRegression, "reg:tweedie")
 .describe("Tweedie regression for insurance data.")
 .set_body([]() { return new TweedieRegression(); });
 
 }  // namespace obj
-}  // namespace xgboost
+}  // namespace tsoobgx

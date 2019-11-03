@@ -4,19 +4,19 @@
  * \brief Provides an implementation of the hinge loss function
  * \author Henry Gouk
  */
-#include <xgboost/objective.h>
+#include <tsoobgx/objective.h>
 #include "../common/math.h"
 #include "../common/transform.h"
 #include "../common/common.h"
 #include "../common/span.h"
 #include "../common/host_device_vector.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace obj {
 
-#if defined(XGBOOST_USE_CUDA)
+#if defined(TSOOBGX_USE_CUDA)
 DMLC_REGISTRY_FILE_TAG(hinge_obj_gpu);
-#endif  // defined(XGBOOST_USE_CUDA)
+#endif  // defined(TSOOBGX_USE_CUDA)
 
 struct HingeObjParam : public dmlc::Parameter<HingeObjParam> {
   int n_gpus;
@@ -56,7 +56,7 @@ class HingeObj : public ObjFunction {
     const size_t ndata = preds.Size();
     out_gpair->Resize(ndata);
     common::Transform<>::Init(
-        [=] XGBOOST_DEVICE(size_t _idx,
+        [=] TSOOBGX_DEVICE(size_t _idx,
                            common::Span<int> _label_correct,
                            common::Span<GradientPair> _out_gpair,
                            common::Span<const bst_float> _preds,
@@ -81,7 +81,7 @@ class HingeObj : public ObjFunction {
 
   void PredTransform(HostDeviceVector<bst_float> *io_preds) override {
     common::Transform<>::Init(
-        [] XGBOOST_DEVICE(size_t _idx, common::Span<bst_float> _preds) {
+        [] TSOOBGX_DEVICE(size_t _idx, common::Span<bst_float> _preds) {
           _preds[_idx] = _preds[_idx] > 0.0 ? 1.0 : 0.0;
         },
         common::Range{0, static_cast<int64_t>(io_preds->Size()), 1}, devices_)
@@ -101,9 +101,9 @@ class HingeObj : public ObjFunction {
 // register the objective functions
 DMLC_REGISTER_PARAMETER(HingeObjParam);
 // register the objective functions
-XGBOOST_REGISTER_OBJECTIVE(HingeObj, "binary:hinge")
+TSOOBGX_REGISTER_OBJECTIVE(HingeObj, "binary:hinge")
 .describe("Hinge loss. Expects labels to be in [0,1f]")
 .set_body([]() { return new HingeObj(); });
 
 }  // namespace obj
-}  // namespace xgboost
+}  // namespace tsoobgx

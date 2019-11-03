@@ -1,9 +1,9 @@
-require(xgboost)
+require(tsoobgx)
 # load in the agaricus dataset
-data(agaricus.train, package='xgboost')
-data(agaricus.test, package='xgboost')
-dtrain <- xgb.DMatrix(agaricus.train$data, label = agaricus.train$label)
-dtest <- xgb.DMatrix(agaricus.test$data, label = agaricus.test$label)
+data(agaricus.train, package='tsoobgx')
+data(agaricus.test, package='tsoobgx')
+dtrain <- bgx.DMatrix(agaricus.train$data, label = agaricus.train$label)
+dtest <- bgx.DMatrix(agaricus.test$data, label = agaricus.test$label)
 # note: for customized objective function, we leave objective as default
 # note: what we are getting is margin value in prediction
 # you must know what you are doing
@@ -32,9 +32,9 @@ evalerror <- function(preds, dtrain) {
 }
 print ('start training with early Stopping setting')
 
-bst <- xgb.train(param, dtrain, num_round, watchlist,
+bst <- bgx.train(param, dtrain, num_round, watchlist,
                  objective = logregobj, eval_metric = evalerror, maximize = FALSE,
                  early_stopping_round = 3)
-bst <- xgb.cv(param, dtrain, num_round, nfold = 5,
+bst <- bgx.cv(param, dtrain, num_round, nfold = 5,
               objective = logregobj, eval_metric = evalerror,
               maximize = FALSE, early_stopping_rounds = 3)

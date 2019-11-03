@@ -5,7 +5,7 @@
  * \author Tianqi Chen
  */
 #include <rabit/rabit.h>
-#include <xgboost/tree_updater.h>
+#include <tsoobgx/tree_updater.h>
 
 #include <string>
 #include <memory>
@@ -13,7 +13,7 @@
 #include "./param.h"
 #include "../common/io.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace tree {
 
 DMLC_REGISTRY_FILE_TAG(updater_prune);
@@ -83,10 +83,10 @@ class TreePruner: public TreeUpdater {
   TrainParam param_;
 };
 
-XGBOOST_REGISTER_TREE_UPDATER(TreePruner, "prune")
+TSOOBGX_REGISTER_TREE_UPDATER(TreePruner, "prune")
 .describe("Pruner that prune the tree according to statistics.")
 .set_body([]() {
     return new TreePruner();
   });
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace tsoobgx

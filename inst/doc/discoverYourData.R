@@ -1,5 +1,5 @@
 ## ----libLoading, results='hold', message=F, warning=F--------------------
-require(xgboost)
+require(tsoobgx)
 require(Matrix)
 require(data.table)
 if (!require('vcd')) install.packages('vcd')
@@ -34,16 +34,16 @@ head(sparse_matrix)
 output_vector = df[,Improved] == "Marked"
 
 ## ------------------------------------------------------------------------
-bst <- xgboost(data = sparse_matrix, label = output_vector, max_depth = 4,
+bst <- tsoobgx(data = sparse_matrix, label = output_vector, max_depth = 4,
                eta = 1, nthread = 2, nrounds = 10,objective = "binary:logistic")
 
 
 ## ------------------------------------------------------------------------
-importance <- xgb.importance(feature_names = colnames(sparse_matrix), model = bst)
+importance <- bgx.importance(feature_names = colnames(sparse_matrix), model = bst)
 head(importance)
 
 ## ------------------------------------------------------------------------
-importanceRaw <- xgb.importance(feature_names = colnames(sparse_matrix), model = bst, data = sparse_matrix, label = output_vector)
+importanceRaw <- bgx.importance(feature_names = colnames(sparse_matrix), model = bst, data = sparse_matrix, label = output_vector)
 
 # Cleaning for better display
 importanceClean <- importanceRaw[,`:=`(Cover=NULL, Frequency=NULL)]
@@ -51,7 +51,7 @@ importanceClean <- importanceRaw[,`:=`(Cover=NULL, Frequency=NULL)]
 head(importanceClean)
 
 ## ---- fig.width=8, fig.height=5, fig.align='center'----------------------
-xgb.plot.importance(importance_matrix = importance)
+bgx.plot.importance(importance_matrix = importance)
 
 ## ---- warning=FALSE, message=FALSE---------------------------------------
 c2 <- chisq.test(df$Age, output_vector)
@@ -66,14 +66,14 @@ c2 <- chisq.test(df$AgeCat, output_vector)
 print(c2)
 
 ## ---- warning=FALSE, message=FALSE---------------------------------------
-data(agaricus.train, package='xgboost')
-data(agaricus.test, package='xgboost')
+data(agaricus.train, package='tsoobgx')
+data(agaricus.test, package='tsoobgx')
 train <- agaricus.train
 test <- agaricus.test
 
 #Random Forest™ - 1000 trees
-bst <- xgboost(data = train$data, label = train$label, max_depth = 4, num_parallel_tree = 1000, subsample = 0.5, colsample_bytree =0.5, nrounds = 1, objective = "binary:logistic")
+bst <- tsoobgx(data = train$data, label = train$label, max_depth = 4, num_parallel_tree = 1000, subsample = 0.5, colsample_bytree =0.5, nrounds = 1, objective = "binary:logistic")
 
 #Boosting - 3 rounds
-bst <- xgboost(data = train$data, label = train$label, max_depth = 4, nrounds = 3, objective = "binary:logistic")
+bst <- tsoobgx(data = train$data, label = train$label, max_depth = 4, nrounds = 3, objective = "binary:logistic")
 

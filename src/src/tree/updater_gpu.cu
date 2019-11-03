@@ -1,7 +1,7 @@
 /*!
- * Copyright 2017-2018 XGBoost contributors
+ * Copyright 2017-2018 tsooBGX contributors
  */
-#include <xgboost/tree_updater.h>
+#include <tsoobgx/tree_updater.h>
 #include <utility>
 #include <vector>
 #include <limits>
@@ -11,13 +11,13 @@
 #include "param.h"
 #include "updater_gpu_common.cuh"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace tree {
 
 DMLC_REGISTRY_FILE_TAG(updater_gpu);
 
 template <typename GradientPairT>
-XGBOOST_DEVICE float inline LossChangeMissing(const GradientPairT& scan,
+TSOOBGX_DEVICE float inline LossChangeMissing(const GradientPairT& scan,
                                               const GradientPairT& missing,
                                               const GradientPairT& parent_sum,
                                               const float& parent_gain,
@@ -825,9 +825,9 @@ class GPUMaker : public TreeUpdater {
   }
 };
 
-XGBOOST_REGISTER_TREE_UPDATER(GPUMaker, "grow_gpu")
+TSOOBGX_REGISTER_TREE_UPDATER(GPUMaker, "grow_gpu")
     .describe("Grow tree with GPU.")
     .set_body([]() { return new GPUMaker(); });
 
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace tsoobgx

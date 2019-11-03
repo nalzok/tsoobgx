@@ -5,15 +5,15 @@
  * \author Philip Cho
  */
 
-#ifndef XGBOOST_COMMON_COLUMN_MATRIX_H_
-#define XGBOOST_COMMON_COLUMN_MATRIX_H_
+#ifndef TSOOBGX_COMMON_COLUMN_MATRIX_H_
+#define TSOOBGX_COMMON_COLUMN_MATRIX_H_
 
 #include <limits>
 #include <vector>
 #include "hist_util.h"
 
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 
 
@@ -163,7 +163,7 @@ class ColumnMatrix {
     }
   }
 
-  /* Fetch an individual column. This code should be used with XGBOOST_TYPE_SWITCH
+  /* Fetch an individual column. This code should be used with TSOOBGX_TYPE_SWITCH
      to determine type of bin id's */
   inline Column GetColumn(unsigned fid) const {
     Column c(type_[fid], &index_[boundary_[fid].index_begin], index_base_[fid],
@@ -195,5 +195,5 @@ class ColumnMatrix {
 };
 
 }  // namespace common
-}  // namespace xgboost
-#endif  // XGBOOST_COMMON_COLUMN_MATRIX_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_COMMON_COLUMN_MATRIX_H_

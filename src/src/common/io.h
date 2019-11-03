@@ -5,15 +5,15 @@
  * \author Tianqi Chen
  */
 
-#ifndef XGBOOST_COMMON_IO_H_
-#define XGBOOST_COMMON_IO_H_
+#ifndef TSOOBGX_COMMON_IO_H_
+#define TSOOBGX_COMMON_IO_H_
 
 #include <dmlc/io.h>
 #include <rabit/rabit.h>
 #include <string>
 #include <cstring>
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 using MemoryFixSizeBuffer = rabit::utils::MemoryFixSizeBuffer;
 using MemoryBufferStream = rabit::utils::MemoryBufferStream;
@@ -71,5 +71,5 @@ class PeekableInStream : public dmlc::Stream {
   std::string buffer_;
 };
 }  // namespace common
-}  // namespace xgboost
-#endif  // XGBOOST_COMMON_IO_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_COMMON_IO_H_

@@ -5,23 +5,23 @@
  * \author Kailong Chen, Tianqi Chen
  */
 #include <rabit/rabit.h>
-#include <xgboost/metric.h>
+#include <tsoobgx/metric.h>
 #include <cmath>
 
 #include "metric_common.h"
 #include "../common/math.h"
 #include "../common/common.h"
 
-#if defined(XGBOOST_USE_CUDA)
+#if defined(TSOOBGX_USE_CUDA)
 #include <thrust/execution_policy.h>  // thrust::cuda::par
 #include <thrust/functional.h>        // thrust::plus<>
 #include <thrust/transform_reduce.h>
 #include <thrust/iterator/counting_iterator.h>
 
 #include "../common/device_helpers.cuh"
-#endif  // XGBOOST_USE_CUDA
+#endif  // TSOOBGX_USE_CUDA
 
-namespace xgboost {
+namespace tsoobgx {
 namespace metric {
 // tag the this file, used by force static link later.
 DMLC_REGISTRY_FILE_TAG(multiclass_metric);
@@ -71,7 +71,7 @@ class MultiClassMetricsReduction {
     return res;
   }
 
-#if defined(XGBOOST_USE_CUDA)
+#if defined(TSOOBGX_USE_CUDA)
 
   PackedReduceResult DeviceReduceMetrics(
       GPUSet::GpuIdType device_id,
@@ -96,7 +96,7 @@ class MultiClassMetricsReduction {
     PackedReduceResult result = thrust::transform_reduce(
         thrust::cuda::par(allocators_.at(device_index)),
         begin, end,
-        [=] XGBOOST_DEVICE(size_t idx) {
+        [=] TSOOBGX_DEVICE(size_t idx) {
           bst_float weight = is_null_weight ? 1.0f : s_weights[idx];
           bst_float residue = 0;
           auto label = static_cast<int>(s_labels[idx]);
@@ -115,7 +115,7 @@ class MultiClassMetricsReduction {
     return result;
   }
 
-#endif  // XGBOOST_USE_CUDA
+#endif  // TSOOBGX_USE_CUDA
 
   PackedReduceResult Reduce(
       GPUSet devices,
@@ -128,7 +128,7 @@ class MultiClassMetricsReduction {
     if (devices.IsEmpty()) {
       result = CpuReduceMetrics(weights, labels, preds, n_class);
     }
-#if defined(XGBOOST_USE_CUDA)
+#if defined(TSOOBGX_USE_CUDA)
     else {  // NOLINT
       if (allocators_.size() != devices.Size()) {
         allocators_.clear();
@@ -151,15 +151,15 @@ class MultiClassMetricsReduction {
         result += res;
       }
     }
-#endif  // defined(XGBOOST_USE_CUDA)
+#endif  // defined(TSOOBGX_USE_CUDA)
     return result;
   }
 
  private:
-#if defined(XGBOOST_USE_CUDA)
+#if defined(TSOOBGX_USE_CUDA)
   dh::PinnedMemory label_error_;
   std::vector<dh::CubMemory> allocators_;
-#endif  // defined(XGBOOST_USE_CUDA)
+#endif  // defined(TSOOBGX_USE_CUDA)
 };
 
 /*!
@@ -201,7 +201,7 @@ struct EvalMClassBase : public Metric {
    * \param pred prediction value of current instance
    * \param nclass number of class in the prediction
    */
-  XGBOOST_DEVICE static bst_float EvalRow(int label,
+  TSOOBGX_DEVICE static bst_float EvalRow(int label,
                                           const bst_float *pred,
                                           size_t nclass);
   /*!
@@ -225,7 +225,7 @@ struct EvalMatchError : public EvalMClassBase<EvalMatchError> {
   const char* Name() const override {
     return "merror";
   }
-  XGBOOST_DEVICE static bst_float EvalRow(int label,
+  TSOOBGX_DEVICE static bst_float EvalRow(int label,
                                           const bst_float *pred,
                                           size_t nclass) {
     return common::FindMaxIndex(pred, pred + nclass) != pred + static_cast<int>(label);
@@ -237,7 +237,7 @@ struct EvalMultiLogLoss : public EvalMClassBase<EvalMultiLogLoss> {
   const char* Name() const override {
     return "mlogloss";
   }
-  XGBOOST_DEVICE static bst_float EvalRow(int label,
+  TSOOBGX_DEVICE static bst_float EvalRow(int label,
                                           const bst_float *pred,
                                           size_t nclass) {
     const bst_float eps = 1e-16f;
@@ -250,12 +250,12 @@ struct EvalMultiLogLoss : public EvalMClassBase<EvalMultiLogLoss> {
   }
 };
 
-XGBOOST_REGISTER_METRIC(MatchError, "merror")
+TSOOBGX_REGISTER_METRIC(MatchError, "merror")
 .describe("Multiclass classification error.")
 .set_body([](const char* param) { return new EvalMatchError(); });
 
-XGBOOST_REGISTER_METRIC(MultiLogLoss, "mlogloss")
+TSOOBGX_REGISTER_METRIC(MultiLogLoss, "mlogloss")
 .describe("Multiclass negative loglikelihood.")
 .set_body([](const char* param) { return new EvalMultiLogLoss(); });
 }  // namespace metric
-}  // namespace xgboost
+}  // namespace tsoobgx

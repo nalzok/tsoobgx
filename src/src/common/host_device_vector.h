@@ -1,5 +1,5 @@
 /*!
- * Copyright 2017 XGBoost contributors
+ * Copyright 2017 tsooBGX contributors
  */
 
 /**
@@ -34,7 +34,7 @@
  * DevicePointer and data on GPU  --> no problems, the device ptr
  *                        will be returned immediately.
  *
- * What if xgboost is compiled without CUDA?<br/>
+ * What if tsoobgx is compiled without CUDA?<br/>
  * In that case, there's a special implementation which always falls-back to
  * working with std::vector. This logic can be found in host_device_vector.cc
  *
@@ -49,8 +49,8 @@
  * All other methods are not thread safe.
  */
 
-#ifndef XGBOOST_COMMON_HOST_DEVICE_VECTOR_H_
-#define XGBOOST_COMMON_HOST_DEVICE_VECTOR_H_
+#ifndef TSOOBGX_COMMON_HOST_DEVICE_VECTOR_H_
+#define TSOOBGX_COMMON_HOST_DEVICE_VECTOR_H_
 
 #include <dmlc/logging.h>
 
@@ -69,7 +69,7 @@
 #include <thrust/device_ptr.h>
 #endif  // __CUDACC__
 
-namespace xgboost {
+namespace tsoobgx {
 
 #ifdef __CUDACC__
 // Sets a function to call instead of cudaSetDevice();
@@ -270,6 +270,6 @@ class HostDeviceVector {
   HostDeviceVectorImpl<T>* impl_;
 };
 
-}  // namespace xgboost
+}  // namespace tsoobgx
 
-#endif  // XGBOOST_COMMON_HOST_DEVICE_VECTOR_H_
+#endif  // TSOOBGX_COMMON_HOST_DEVICE_VECTOR_H_

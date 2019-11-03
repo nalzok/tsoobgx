@@ -1,5 +1,5 @@
 /*!
- * Copyright 2017-2018 XGBoost contributors
+ * Copyright 2017-2018 tsooBGX contributors
  */
 #include <thrust/copy.h>
 #include <thrust/functional.h>
@@ -7,7 +7,7 @@
 #include <thrust/iterator/transform_iterator.h>
 #include <thrust/reduce.h>
 #include <thrust/sequence.h>
-#include <xgboost/tree_updater.h>
+#include <tsoobgx/tree_updater.h>
 #include <algorithm>
 #include <cmath>
 #include <memory>
@@ -25,7 +25,7 @@
 #include "param.h"
 #include "updater_gpu_common.cuh"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace tree {
 
 #if !defined(GTEST_TEST)
@@ -149,7 +149,7 @@ struct ELLPackMatrix {
   bool is_dense;
   int null_gidx_value;
 
-  XGBOOST_DEVICE size_t BinCount() const { return gidx_fvalue_map.size(); }
+  TSOOBGX_DEVICE size_t BinCount() const { return gidx_fvalue_map.size(); }
 
   // Get a matrix element, uses binary search for look up
   // Return NaN if missing
@@ -186,7 +186,7 @@ struct ELLPackMatrix {
 
 // With constraints
 template <typename GradientPairT>
-XGBOOST_DEVICE float inline LossChangeMissing(
+TSOOBGX_DEVICE float inline LossChangeMissing(
     const GradientPairT& scan, const GradientPairT& missing, const GradientPairT& parent_sum,
     const float& parent_gain, const GPUTrainingParam& param, int constraint,
     const ValueConstraint& value_constraint,
@@ -464,7 +464,7 @@ struct CalcWeightTrainParam {
   float reg_lambda;
   float max_delta_step;
   float learning_rate;
-  XGBOOST_DEVICE explicit CalcWeightTrainParam(const TrainParam& p)
+  TSOOBGX_DEVICE explicit CalcWeightTrainParam(const TrainParam& p)
       : min_child_weight(p.min_child_weight),
         reg_alpha(p.reg_alpha),
         reg_lambda(p.reg_lambda),
@@ -1399,7 +1399,7 @@ class GPUHistMakerSpecialised{
     ValueConstraint::Init(&param_, dmat->Info().num_col_);
     // build tree
     try {
-      for (xgboost::RegTree* tree : trees) {
+      for (tsoobgx::RegTree* tree : trees) {
         this->UpdateTree(gpair, dmat, tree);
       }
       dh::safe_cuda(cudaGetLastError());
@@ -1605,10 +1605,10 @@ class GPUHistMaker : public TreeUpdater {
 };
 
 #if !defined(GTEST_TEST)
-XGBOOST_REGISTER_TREE_UPDATER(GPUHistMaker, "grow_gpu_hist")
+TSOOBGX_REGISTER_TREE_UPDATER(GPUHistMaker, "grow_gpu_hist")
     .describe("Grow tree with GPU.")
     .set_body([]() { return new GPUHistMaker(); });
 #endif  // !defined(GTEST_TEST)
 
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace tsoobgx

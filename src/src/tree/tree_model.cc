@@ -3,14 +3,14 @@
  * \file tree_model.cc
  * \brief model structure for tree
  */
-#include <xgboost/tree_model.h>
+#include <tsoobgx/tree_model.h>
 #include <sstream>
 #include <limits>
 #include <cmath>
 #include <iomanip>
 #include "./param.h"
 
-namespace xgboost {
+namespace tsoobgx {
 // register tree parameter
 DMLC_REGISTER_PARAMETER(TreeParam);
 
@@ -408,4 +408,4 @@ void RegTree::CalculateContributions(const RegTree::FVec &feat,
            1, 1, -1, condition, condition_feature, 1);
   delete[] unique_path_data;
 }
-}  // namespace xgboost
+}  // namespace tsoobgx

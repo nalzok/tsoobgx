@@ -1,5 +1,5 @@
 /*!
- * Copyright 2017 XGBoost contributors
+ * Copyright 2017 tsooBGX contributors
  */
 #pragma once
 #include <thrust/random.h>
@@ -15,7 +15,7 @@
 #if !defined(__CUDA_ARCH__) || __CUDA_ARCH__ >= 600
 
 #else  // In device code and CUDA < 600
-XGBOOST_DEVICE __forceinline__ double atomicAdd(double* address, double val) {
+TSOOBGX_DEVICE __forceinline__ double atomicAdd(double* address, double val) {
   unsigned long long int* address_as_ull =
       (unsigned long long int*)address;                   // NOLINT
   unsigned long long int old = *address_as_ull, assumed;  // NOLINT
@@ -33,7 +33,7 @@ XGBOOST_DEVICE __forceinline__ double atomicAdd(double* address, double val) {
 }
 #endif
 
-namespace xgboost {
+namespace tsoobgx {
 namespace tree {
 
 // Atomic add function for gradients
@@ -62,7 +62,7 @@ struct GPUTrainingParam {
 
   GPUTrainingParam() = default;
 
-  XGBOOST_DEVICE explicit GPUTrainingParam(const TrainParam& param)
+  TSOOBGX_DEVICE explicit GPUTrainingParam(const TrainParam& param)
       : min_child_weight(param.min_child_weight),
         reg_lambda(param.reg_lambda),
         reg_alpha(param.reg_alpha),
@@ -93,11 +93,11 @@ struct DeviceSplitCandidate {
   GradientPair left_sum;
   GradientPair right_sum;
 
-  XGBOOST_DEVICE DeviceSplitCandidate()
+  TSOOBGX_DEVICE DeviceSplitCandidate()
       : loss_chg(-FLT_MAX), dir(kLeftDir), fvalue(0), findex(-1) {}
 
   template <typename ParamT>
-  XGBOOST_DEVICE void Update(const DeviceSplitCandidate& other,
+  TSOOBGX_DEVICE void Update(const DeviceSplitCandidate& other,
                              const ParamT& param) {
     if (other.loss_chg > loss_chg &&
         other.left_sum.GetHess() >= param.min_child_weight &&
@@ -106,7 +106,7 @@ struct DeviceSplitCandidate {
     }
   }
 
-  XGBOOST_DEVICE void Update(float loss_chg_in, DefaultDirection dir_in,
+  TSOOBGX_DEVICE void Update(float loss_chg_in, DefaultDirection dir_in,
                          float fvalue_in, int findex_in,
                          GradientPair left_sum_in,
                          GradientPair right_sum_in,
@@ -122,13 +122,13 @@ struct DeviceSplitCandidate {
       findex = findex_in;
     }
   }
-  XGBOOST_DEVICE bool IsValid() const { return loss_chg > 0.0f; }
+  TSOOBGX_DEVICE bool IsValid() const { return loss_chg > 0.0f; }
 };
 
 struct DeviceSplitCandidateReduceOp {
   GPUTrainingParam param;
   DeviceSplitCandidateReduceOp(GPUTrainingParam param) : param(param) {}
-  XGBOOST_DEVICE DeviceSplitCandidate operator()(
+  TSOOBGX_DEVICE DeviceSplitCandidate operator()(
       const DeviceSplitCandidate& a, const DeviceSplitCandidate& b) const {
     DeviceSplitCandidate best;
     best.Update(a, param);
@@ -206,8 +206,8 @@ struct SumCallbackOp {
   // Running prefix
   T running_total;
   // Constructor
-  XGBOOST_DEVICE SumCallbackOp() : running_total(T()) {}
-  XGBOOST_DEVICE T operator()(T block_aggregate) {
+  TSOOBGX_DEVICE SumCallbackOp() : running_total(T()) {}
+  TSOOBGX_DEVICE T operator()(T block_aggregate) {
     T old_prefix = running_total;
     running_total += block_aggregate;
     return old_prefix;
@@ -215,7 +215,7 @@ struct SumCallbackOp {
 };
 
 template <typename GradientPairT>
-XGBOOST_DEVICE inline float DeviceCalcLossChange(const GPUTrainingParam& param,
+TSOOBGX_DEVICE inline float DeviceCalcLossChange(const GPUTrainingParam& param,
                                              const GradientPairT& left,
                                              const GradientPairT& parent_sum,
                                              const float& parent_gain) {
@@ -226,33 +226,33 @@ XGBOOST_DEVICE inline float DeviceCalcLossChange(const GPUTrainingParam& param,
 }
 
 // Total number of nodes in tree, given depth
-XGBOOST_DEVICE inline int MaxNodesDepth(int depth) {
+TSOOBGX_DEVICE inline int MaxNodesDepth(int depth) {
   return (1 << (depth + 1)) - 1;
 }
 
 // Number of nodes at this level of the tree
-XGBOOST_DEVICE inline int MaxNodesLevel(int depth) { return 1 << depth; }
+TSOOBGX_DEVICE inline int MaxNodesLevel(int depth) { return 1 << depth; }
 
 // Whether a node is currently being processed at current depth
-XGBOOST_DEVICE inline bool IsNodeActive(int nidx, int depth) {
+TSOOBGX_DEVICE inline bool IsNodeActive(int nidx, int depth) {
   return nidx >= MaxNodesDepth(depth - 1);
 }
 
-XGBOOST_DEVICE inline int ParentNodeIdx(int nidx) { return (nidx - 1) / 2; }
+TSOOBGX_DEVICE inline int ParentNodeIdx(int nidx) { return (nidx - 1) / 2; }
 
-XGBOOST_DEVICE inline int LeftChildNodeIdx(int nidx) {
+TSOOBGX_DEVICE inline int LeftChildNodeIdx(int nidx) {
   return nidx * 2 + 1;
 }
 
-XGBOOST_DEVICE inline int RightChildNodeIdx(int nidx) {
+TSOOBGX_DEVICE inline int RightChildNodeIdx(int nidx) {
   return nidx * 2 + 2;
 }
 
-XGBOOST_DEVICE inline bool IsLeftChild(int nidx) {
+TSOOBGX_DEVICE inline bool IsLeftChild(int nidx) {
   return nidx % 2 == 1;
 }
 
-// Copy gpu dense representation of tree to xgboost sparse representation
+// Copy gpu dense representation of tree to tsoobgx sparse representation
 inline void Dense2SparseTree(RegTree* p_tree,
                               common::Span<DeviceNodeStats> nodes,
                               const TrainParam& param) {
@@ -288,11 +288,11 @@ struct BernoulliRng {
   float p;
   uint32_t seed;
 
-  XGBOOST_DEVICE BernoulliRng(float p, size_t seed_) : p(p) {
+  TSOOBGX_DEVICE BernoulliRng(float p, size_t seed_) : p(p) {
     seed = static_cast<uint32_t>(seed_);
   }
 
-  XGBOOST_DEVICE bool operator()(const int i) const {
+  TSOOBGX_DEVICE bool operator()(const int i) const {
     thrust::default_random_engine rng(seed);
     thrust::uniform_real_distribution<float> dist;
     rng.discard(i);
@@ -310,7 +310,7 @@ inline void SubsampleGradientPair(int device_idx,
 
   BernoulliRng rng(subsample, common::GlobalRandom()());
 
-  dh::LaunchN(device_idx, d_gpair.size(), [=] XGBOOST_DEVICE(int i) {
+  dh::LaunchN(device_idx, d_gpair.size(), [=] TSOOBGX_DEVICE(int i) {
     if (!rng(i + offset)) {
       d_gpair[i] = GradientPair();
     }
@@ -318,4 +318,4 @@ inline void SubsampleGradientPair(int device_idx,
 }
 
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace tsoobgx

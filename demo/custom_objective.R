@@ -1,9 +1,9 @@
-require(xgboost)
+require(tsoobgx)
 # load in the agaricus dataset
-data(agaricus.train, package='xgboost')
-data(agaricus.test, package='xgboost')
-dtrain <- xgb.DMatrix(agaricus.train$data, label = agaricus.train$label)
-dtest <- xgb.DMatrix(agaricus.test$data, label = agaricus.test$label)
+data(agaricus.train, package='tsoobgx')
+data(agaricus.test, package='tsoobgx')
+dtrain <- bgx.DMatrix(agaricus.train$data, label = agaricus.train$label)
+dtest <- bgx.DMatrix(agaricus.test$data, label = agaricus.test$label)
 
 # note: for customized objective function, we leave objective as default
 # note: what we are getting is margin value in prediction
@@ -37,8 +37,8 @@ param <- list(max_depth=2, eta=1, nthread = 2, verbosity=0,
               objective=logregobj, eval_metric=evalerror)
 print ('start training with user customized objective')
 # training with customized objective, we can also do step by step training
-# simply look at xgboost.py's implementation of train
-bst <- xgb.train(param, dtrain, num_round, watchlist)
+# simply look at tsoobgx.py's implementation of train
+bst <- bgx.train(param, dtrain, num_round, watchlist)
 
 #
 # there can be cases where you want additional information 
@@ -61,5 +61,5 @@ param <- list(max_depth=2, eta=1, nthread = 2, verbosity=0,
               objective=logregobjattr, eval_metric=evalerror)
 print ('start training with user customized objective, with additional attributes in DMatrix')
 # training with customized objective, we can also do step by step training
-# simply look at xgboost.py's implementation of train
-bst <- xgb.train(param, dtrain, num_round, watchlist)
+# simply look at tsoobgx.py's implementation of train
+bst <- bgx.train(param, dtrain, num_round, watchlist)

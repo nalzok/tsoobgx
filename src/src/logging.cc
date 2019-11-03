@@ -6,21 +6,21 @@
  */
 #include <rabit/rabit.h>
 #include <dmlc/parameter.h>
-#include <xgboost/logging.h>
+#include <tsoobgx/logging.h>
 
 #include <iostream>
 #include <map>
 
-#if !defined(XGBOOST_STRICT_R_MODE) || XGBOOST_STRICT_R_MODE == 0
+#if !defined(TSOOBGX_STRICT_R_MODE) || TSOOBGX_STRICT_R_MODE == 0
 // Override logging mechanism for non-R interfaces
 void dmlc::CustomLogMessage::Log(const std::string& msg) {
-  const xgboost::LogCallbackRegistry* registry
-    = xgboost::LogCallbackRegistryStore::Get();
+  const tsoobgx::LogCallbackRegistry* registry
+    = tsoobgx::LogCallbackRegistryStore::Get();
   auto callback = registry->Get();
   callback(msg.c_str());
 }
 
-namespace xgboost {
+namespace tsoobgx {
 
 ConsoleLogger::~ConsoleLogger() {
   if (ShouldLog(cur_verbosity_)) {
@@ -33,11 +33,11 @@ TrackerLogger::~TrackerLogger() {
   rabit::TrackerPrint(log_stream_.str());
 }
 
-}  // namespace xgboost
+}  // namespace tsoobgx
 
-#endif  // !defined(XGBOOST_STRICT_R_MODE) || XGBOOST_STRICT_R_MODE == 0
+#endif  // !defined(TSOOBGX_STRICT_R_MODE) || TSOOBGX_STRICT_R_MODE == 0
 
-namespace xgboost {
+namespace tsoobgx {
 
 DMLC_REGISTER_PARAMETER(ConsoleLoggerParam);
 
@@ -111,4 +111,4 @@ ConsoleLogger::ConsoleLogger(
   }
 }
 
-}  // namespace xgboost
+}  // namespace tsoobgx

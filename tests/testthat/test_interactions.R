@@ -1,6 +1,6 @@
 context('Test prediction of feature interactions')
 
-require(xgboost)
+require(tsoobgx)
 require(magrittr)
 
 set.seed(123)
@@ -22,9 +22,9 @@ test_that("predict feature interactions works", {
 
   y <- f_int(X)
 
-  dm <- xgb.DMatrix(X, label = y)
+  dm <- bgx.DMatrix(X, label = y)
   param <- list(eta=0.1, max_depth=4, base_score=mean(y), lambda=0, nthread=2)
-  b <- xgb.train(param, dm, 100)
+  b <- bgx.train(param, dm, 100)
   
   pred = predict(b, dm, outputmargin=TRUE)
 
@@ -95,7 +95,7 @@ test_that("SHAP contribution values are not NAN", {
 
   ivs <- c("x1", "x2")
 
-  fit <- xgboost(
+  fit <- tsoobgx(
     verbose = 0,
     params = list(
       objective = "reg:squarederror",
@@ -116,9 +116,9 @@ test_that("SHAP contribution values are not NAN", {
 
 
 test_that("multiclass feature interactions work", {
-  dm <- xgb.DMatrix(as.matrix(iris[,-5]), label=as.numeric(iris$Species)-1)
+  dm <- bgx.DMatrix(as.matrix(iris[,-5]), label=as.numeric(iris$Species)-1)
   param <- list(eta=0.1, max_depth=4, objective='multi:softprob', num_class=3)
-  b <- xgb.train(param, dm, 40)
+  b <- bgx.train(param, dm, 40)
   pred = predict(b, dm, outputmargin=TRUE) %>% array(c(3, 150)) %>% t
 
   # SHAP contributions:

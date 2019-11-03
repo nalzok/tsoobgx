@@ -1,17 +1,17 @@
 /*!
- * Copyright 2017 XGBoost contributors
+ * Copyright 2017 tsooBGX contributors
  */
 
 #include "./host_device_vector.h"
 #include <thrust/fill.h>
-#include <xgboost/data.h>
+#include <tsoobgx/data.h>
 #include <algorithm>
 #include <cstdint>
 #include <mutex>
 #include "./device_helpers.cuh"
 
 
-namespace xgboost {
+namespace tsoobgx {
 
 // the handler to call instead of cudaSetDevice; only used for testing
 static void (*cudaSetDeviceHandler)(int) = nullptr;  // NOLINT
@@ -617,4 +617,4 @@ template class HostDeviceVector<int>;
 template class HostDeviceVector<Entry>;
 template class HostDeviceVector<size_t>;
 
-}  // namespace xgboost
+}  // namespace tsoobgx

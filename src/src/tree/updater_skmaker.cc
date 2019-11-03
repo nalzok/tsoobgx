@@ -6,8 +6,8 @@
  * \author Tianqi Chen
  */
 #include <rabit/rabit.h>
-#include <xgboost/base.h>
-#include <xgboost/tree_updater.h>
+#include <tsoobgx/base.h>
+#include <tsoobgx/tree_updater.h>
 #include <vector>
 #include <algorithm>
 
@@ -15,7 +15,7 @@
 #include "../common/group_data.h"
 #include "./updater_basemaker-inl.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace tree {
 
 DMLC_REGISTRY_FILE_TAG(updater_skmaker);
@@ -97,7 +97,7 @@ class SketchMaker: public BaseMaker {
     }
     /*! \brief calculate gain of the solution */
     inline double CalcGain(const TrainParam &param) const {
-      return xgboost::tree::CalcGain(param, pos_grad - neg_grad, sum_hess);
+      return tsoobgx::tree::CalcGain(param, pos_grad - neg_grad, sum_hess);
     }
     /*! \brief set current value to a - b */
     inline void SetSubstract(const SKStats &a, const SKStats &b) {
@@ -107,7 +107,7 @@ class SketchMaker: public BaseMaker {
     }
     // calculate leaf weight
     inline double CalcWeight(const TrainParam &param) const {
-      return xgboost::tree::CalcWeight(param, pos_grad - neg_grad, sum_hess);
+      return tsoobgx::tree::CalcWeight(param, pos_grad - neg_grad, sum_hess);
     }
     /*! \brief add statistics to the data */
     inline void Add(const SKStats &b) {
@@ -384,10 +384,10 @@ class SketchMaker: public BaseMaker {
   std::vector<common::WXQuantileSketch<bst_float, bst_float> > sketchs_;
 };
 
-XGBOOST_REGISTER_TREE_UPDATER(SketchMaker, "grow_skmaker")
+TSOOBGX_REGISTER_TREE_UPDATER(SketchMaker, "grow_skmaker")
 .describe("Approximate sketching maker.")
 .set_body([]() {
     return new SketchMaker();
   });
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace tsoobgx

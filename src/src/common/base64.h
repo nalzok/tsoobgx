@@ -5,16 +5,16 @@
  * base64 is easier to store and pass as text format in mapreduce
  * \author Tianqi Chen
  */
-#ifndef XGBOOST_COMMON_BASE64_H_
-#define XGBOOST_COMMON_BASE64_H_
+#ifndef TSOOBGX_COMMON_BASE64_H_
+#define TSOOBGX_COMMON_BASE64_H_
 
-#include <xgboost/logging.h>
+#include <tsoobgx/logging.h>
 #include <cctype>
 #include <cstdio>
 #include <string>
 #include "./io.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace common {
 /*! \brief buffer reader of the stream that allows you to get */
 class StreamBufferReader {
@@ -268,5 +268,5 @@ class Base64OutStream: public dmlc::Stream {
   }
 };
 }  // namespace common
-}  // namespace xgboost
-#endif  // XGBOOST_COMMON_BASE64_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_COMMON_BASE64_H_

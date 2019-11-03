@@ -3,21 +3,21 @@
  * \file objective.cc
  * \brief Registry of all objective functions.
  */
-#include <xgboost/objective.h>
+#include <tsoobgx/objective.h>
 #include <dmlc/registry.h>
 
 #include "../common/host_device_vector.h"
 
 namespace dmlc {
-DMLC_REGISTRY_ENABLE(::xgboost::ObjFunctionReg);
+DMLC_REGISTRY_ENABLE(::tsoobgx::ObjFunctionReg);
 }  // namespace dmlc
 
-namespace xgboost {
+namespace tsoobgx {
 // implement factory functions
 ObjFunction* ObjFunction::Create(const std::string& name) {
-  auto *e = ::dmlc::Registry< ::xgboost::ObjFunctionReg>::Get()->Find(name);
+  auto *e = ::dmlc::Registry< ::tsoobgx::ObjFunctionReg>::Get()->Find(name);
   if (e == nullptr) {
-    for (const auto& entry : ::dmlc::Registry< ::xgboost::ObjFunctionReg>::List()) {
+    for (const auto& entry : ::dmlc::Registry< ::tsoobgx::ObjFunctionReg>::List()) {
       LOG(INFO) << "Objective candidate: " << entry->name;
     }
     LOG(FATAL) << "Unknown objective function " << name;
@@ -25,12 +25,12 @@ ObjFunction* ObjFunction::Create(const std::string& name) {
   return (e->body)();
 }
 
-}  // namespace xgboost
+}  // namespace tsoobgx
 
-namespace xgboost {
+namespace tsoobgx {
 namespace obj {
 // List of files that will be force linked in static links.
-#ifdef XGBOOST_USE_CUDA
+#ifdef TSOOBGX_USE_CUDA
 DMLC_REGISTRY_LINK_TAG(regression_obj_gpu);
 DMLC_REGISTRY_LINK_TAG(hinge_obj_gpu);
 DMLC_REGISTRY_LINK_TAG(multiclass_obj_gpu);
@@ -38,7 +38,7 @@ DMLC_REGISTRY_LINK_TAG(multiclass_obj_gpu);
 DMLC_REGISTRY_LINK_TAG(regression_obj);
 DMLC_REGISTRY_LINK_TAG(hinge_obj);
 DMLC_REGISTRY_LINK_TAG(multiclass_obj);
-#endif  // XGBOOST_USE_CUDA
+#endif  // TSOOBGX_USE_CUDA
 DMLC_REGISTRY_LINK_TAG(rank_obj);
 }  // namespace obj
-}  // namespace xgboost
+}  // namespace tsoobgx

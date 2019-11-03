@@ -4,12 +4,12 @@
 #pragma once
 #include <dmlc/io.h>
 #include <dmlc/parameter.h>
-#include <xgboost/feature_map.h>
+#include <tsoobgx/feature_map.h>
 #include <vector>
 #include <string>
 #include <cstring>
 
-namespace xgboost {
+namespace tsoobgx {
 namespace gbm {
 // model parameter
 struct GBLinearModelParam : public dmlc::Parameter<GBLinearModelParam> {
@@ -110,4 +110,4 @@ class GBLinearModel {
   }
 };
 }  // namespace gbm
-}  // namespace xgboost
+}  // namespace tsoobgx

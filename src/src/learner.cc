@@ -6,8 +6,8 @@
  */
 #include <dmlc/io.h>
 #include <dmlc/timer.h>
-#include <xgboost/learner.h>
-#include <xgboost/logging.h>
+#include <tsoobgx/learner.h>
+#include <tsoobgx/logging.h>
 #include <algorithm>
 #include <iomanip>
 #include <limits>
@@ -61,7 +61,7 @@ inline std::string RenderParamVal(const std::string& str) {
 DECLARE_FIELD_ENUM_CLASS(TreeMethod);
 DECLARE_FIELD_ENUM_CLASS(DataSplitMode);
 
-namespace xgboost {
+namespace tsoobgx {
 // implementation of base learner.
 bool Learner::AllowLazyCheckPoint() const {
   return gbm_->AllowLazyCheckPoint();
@@ -176,9 +176,9 @@ class LearnerImpl : public Learner {
   }
 
   static void AssertGPUSupport() {
-#ifndef XGBOOST_USE_CUDA
-    LOG(FATAL) << "XGBoost version not compiled with GPU support.";
-#endif  // XGBOOST_USE_CUDA
+#ifndef TSOOBGX_USE_CUDA
+    LOG(FATAL) << "tsooBGX version not compiled with GPU support.";
+#endif  // TSOOBGX_USE_CUDA
   }
 
 
@@ -363,7 +363,7 @@ class LearnerImpl : public Learner {
         const std::string prefix = "SAVED_PARAM_";
         if (kv.first.find(prefix) == 0) {
           const std::string saved_param = kv.first.substr(prefix.length());
-#ifdef XGBOOST_USE_CUDA
+#ifdef TSOOBGX_USE_CUDA
           if (saved_param == "predictor" || saved_param == "n_gpus"
               || saved_param == "gpu_id") {
             cfg_[saved_param] = kv.second;
@@ -375,7 +375,7 @@ class LearnerImpl : public Learner {
               << saved_param << "' parameter as follows:\n"
               << "  * Python package: bst.set_param('"
               << saved_param << "', [new value])\n"
-              << "  * R package:      xgb.parameters(bst) <- list("
+              << "  * R package:      bgx.parameters(bst) <- list("
               << saved_param << " = [new value])\n"
               << "  * JVM packages:   bst.setParam(\""
               << saved_param << "\", [new value])";
@@ -383,11 +383,11 @@ class LearnerImpl : public Learner {
 #else
           if (saved_param == "predictor" && kv.second == "gpu_predictor") {
             LOG(INFO) << "Parameter 'predictor' will be set to 'cpu_predictor' "
-                      << "since XGBoost wasn't compiled with GPU support.";
+                      << "since tsooBGX wasn't compiled with GPU support.";
             cfg_["predictor"] = "cpu_predictor";
             kv.second = "cpu_predictor";
           }
-#endif  // XGBOOST_USE_CUDA
+#endif  // TSOOBGX_USE_CUDA
         }
       }
       attributes_ =
@@ -614,7 +614,7 @@ class LearnerImpl : public Learner {
         << "Precondition violated; dsplit cannot be 'auto' in distributed mode";
       if (tparam_.dsplit == DataSplitMode::kCol) {
         // 'distcol' updater hidden until it becomes functional again
-        // See discussion at https://github.com/dmlc/xgboost/issues/1832
+        // See discussion at https://github.com/dmlc/tsoobgx/issues/1832
         LOG(FATAL) << "Column-wise data split is currently not supported.";
       }
       switch (current_tree_method) {
@@ -711,7 +711,7 @@ class LearnerImpl : public Learner {
       CHECK(matrix != nullptr);
       const uint64_t num_col = matrix->Info().num_col_;
       CHECK_LE(num_col, static_cast<uint64_t>(std::numeric_limits<unsigned>::max()))
-        << "Unfortunately, XGBoost does not support data matrices with "
+        << "Unfortunately, tsooBGX does not support data matrices with "
         << std::numeric_limits<unsigned>::max() << " features or greater";
       num_feature = std::max(num_feature, static_cast<unsigned>(num_col));
     }
@@ -789,4 +789,4 @@ Learner* Learner::Create(
     const std::vector<std::shared_ptr<DMatrix> >& cache_data) {
   return new LearnerImpl(cache_data);
 }
-}  // namespace xgboost
+}  // namespace tsoobgx

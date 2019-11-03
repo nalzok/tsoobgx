@@ -4,12 +4,12 @@
  * \brief use quantized feature values to construct a tree
  * \author Philip Cho, Tianqi Chen
  */
-#ifndef XGBOOST_TREE_UPDATER_QUANTILE_HIST_H_
-#define XGBOOST_TREE_UPDATER_QUANTILE_HIST_H_
+#ifndef TSOOBGX_TREE_UPDATER_QUANTILE_HIST_H_
+#define TSOOBGX_TREE_UPDATER_QUANTILE_HIST_H_
 
 #include <dmlc/timer.h>
 #include <rabit/rabit.h>
-#include <xgboost/tree_updater.h>
+#include <tsoobgx/tree_updater.h>
 
 #include <memory>
 #include <vector>
@@ -27,7 +27,7 @@
 #include "../common/row_set.h"
 #include "../common/column_matrix.h"
 
-namespace xgboost {
+namespace tsoobgx {
 
 /*!
  * \brief A C-style array with in-stack allocation. As long as the array is smaller than MaxStackSize, it will be allocated inside the stack. Otherwise, it will be heap-allocated.
@@ -65,16 +65,16 @@ class MemStackAllocator {
 
 namespace tree {
 
-using xgboost::common::HistCutMatrix;
-using xgboost::common::GHistIndexMatrix;
-using xgboost::common::GHistIndexBlockMatrix;
-using xgboost::common::GHistIndexRow;
-using xgboost::common::HistCollection;
-using xgboost::common::RowSetCollection;
-using xgboost::common::GHistRow;
-using xgboost::common::GHistBuilder;
-using xgboost::common::ColumnMatrix;
-using xgboost::common::Column;
+using tsoobgx::common::HistCutMatrix;
+using tsoobgx::common::GHistIndexMatrix;
+using tsoobgx::common::GHistIndexBlockMatrix;
+using tsoobgx::common::GHistIndexRow;
+using tsoobgx::common::HistCollection;
+using tsoobgx::common::RowSetCollection;
+using tsoobgx::common::GHistRow;
+using tsoobgx::common::GHistBuilder;
+using tsoobgx::common::ColumnMatrix;
+using tsoobgx::common::Column;
 
 /*! \brief construct a tree using quantized feature values */
 class QuantileHistMaker: public TreeUpdater {
@@ -321,6 +321,6 @@ class QuantileHistMaker: public TreeUpdater {
 };
 
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace tsoobgx
 
-#endif  // XGBOOST_TREE_UPDATER_QUANTILE_HIST_H_
+#endif  // TSOOBGX_TREE_UPDATER_QUANTILE_HIST_H_

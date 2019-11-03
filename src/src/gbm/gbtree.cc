@@ -7,10 +7,10 @@
 #include <dmlc/omp.h>
 #include <dmlc/parameter.h>
 #include <dmlc/timer.h>
-#include <xgboost/logging.h>
-#include <xgboost/gbm.h>
-#include <xgboost/predictor.h>
-#include <xgboost/tree_updater.h>
+#include <tsoobgx/logging.h>
+#include <tsoobgx/gbm.h>
+#include <tsoobgx/predictor.h>
+#include <tsoobgx/tree_updater.h>
 #include <vector>
 #include <memory>
 #include <utility>
@@ -23,7 +23,7 @@
 #include "gbtree_model.h"
 #include "../common/timer.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace gbm {
 
 DMLC_REGISTRY_FILE_TAG(gbtree);
@@ -609,18 +609,18 @@ DMLC_REGISTER_PARAMETER(GBTreeModelParam);
 DMLC_REGISTER_PARAMETER(GBTreeTrainParam);
 DMLC_REGISTER_PARAMETER(DartTrainParam);
 
-XGBOOST_REGISTER_GBM(GBTree, "gbtree")
+TSOOBGX_REGISTER_GBM(GBTree, "gbtree")
 .describe("Tree booster, gradient boosted trees.")
 .set_body([](const std::vector<std::shared_ptr<DMatrix> >& cached_mats, bst_float base_margin) {
     auto* p = new GBTree(base_margin);
     p->InitCache(cached_mats);
     return p;
   });
-XGBOOST_REGISTER_GBM(Dart, "dart")
+TSOOBGX_REGISTER_GBM(Dart, "dart")
 .describe("Tree booster, dart.")
 .set_body([](const std::vector<std::shared_ptr<DMatrix> >& cached_mats, bst_float base_margin) {
     GBTree* p = new Dart(base_margin);
     return p;
   });
 }  // namespace gbm
-}  // namespace xgboost
+}  // namespace tsoobgx

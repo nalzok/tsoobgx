@@ -19,10 +19,10 @@
 #include "../common/host_device_vector.h"
 
 namespace dmlc {
-DMLC_REGISTRY_ENABLE(::xgboost::tree::SplitEvaluatorReg);
+DMLC_REGISTRY_ENABLE(::tsoobgx::tree::SplitEvaluatorReg);
 }  // namespace dmlc
 
-namespace xgboost {
+namespace tsoobgx {
 namespace tree {
 
 SplitEvaluator* SplitEvaluator::Create(const std::string& name) {
@@ -31,7 +31,7 @@ SplitEvaluator* SplitEvaluator::Create(const std::string& name) {
   SplitEvaluator* eval = nullptr;
   // Construct a chain of SplitEvaluators. This allows one to specify multiple constraints.
   while (std::getline(ss, item, ',')) {
-    auto* e = ::dmlc::Registry< ::xgboost::tree::SplitEvaluatorReg>
+    auto* e = ::dmlc::Registry< ::tsoobgx::tree::SplitEvaluatorReg>
         ::Get()->Find(item);
     if (e == nullptr) {
       LOG(FATAL) << "Unknown SplitEvaluator " << name;
@@ -175,7 +175,7 @@ class ElasticNet final : public SplitEvaluator {
   }
 };
 
-XGBOOST_REGISTER_SPLIT_EVALUATOR(ElasticNet, "elastic_net")
+TSOOBGX_REGISTER_SPLIT_EVALUATOR(ElasticNet, "elastic_net")
 .describe("Use an elastic net regulariser")
 .set_body([](std::unique_ptr<SplitEvaluator> inner) {
     return new ElasticNet(std::move(inner));
@@ -324,7 +324,7 @@ class MonotonicConstraint final : public SplitEvaluator {
   }
 };
 
-XGBOOST_REGISTER_SPLIT_EVALUATOR(MonotonicConstraint, "monotonic")
+TSOOBGX_REGISTER_SPLIT_EVALUATOR(MonotonicConstraint, "monotonic")
 .describe("Enforces that the tree is monotonically increasing/decreasing "
     "w.r.t. specified features")
 .set_body([](std::unique_ptr<SplitEvaluator> inner) {
@@ -520,11 +520,11 @@ class InteractionConstraint final : public SplitEvaluator {
   }
 };
 
-XGBOOST_REGISTER_SPLIT_EVALUATOR(InteractionConstraint, "interaction")
+TSOOBGX_REGISTER_SPLIT_EVALUATOR(InteractionConstraint, "interaction")
 .describe("Enforces interaction constraints on tree features")
 .set_body([](std::unique_ptr<SplitEvaluator> inner) {
     return new InteractionConstraint(std::move(inner));
   });
 
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace tsoobgx

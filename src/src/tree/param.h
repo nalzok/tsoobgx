@@ -4,11 +4,11 @@
  * \brief training parameters, statistics used to support tree construction.
  * \author Tianqi Chen
  */
-#ifndef XGBOOST_TREE_PARAM_H_
-#define XGBOOST_TREE_PARAM_H_
+#ifndef TSOOBGX_TREE_PARAM_H_
+#define TSOOBGX_TREE_PARAM_H_
 
 #include <dmlc/parameter.h>
-#include <xgboost/data.h>
+#include <tsoobgx/data.h>
 #include <cmath>
 #include <cstring>
 #include <limits>
@@ -16,7 +16,7 @@
 #include <vector>
 
 
-namespace xgboost {
+namespace tsoobgx {
 namespace tree {
 
 /*! \brief training parameters for regression tree */
@@ -256,7 +256,7 @@ struct TrainParam : public dmlc::Parameter<TrainParam> {
 
 // functions for L1 cost
 template <typename T1, typename T2>
-XGBOOST_DEVICE inline static T1 ThresholdL1(T1 w, T2 alpha) {
+TSOOBGX_DEVICE inline static T1 ThresholdL1(T1 w, T2 alpha) {
   if (w > + alpha) {
     return w - alpha;
   }
@@ -267,18 +267,18 @@ XGBOOST_DEVICE inline static T1 ThresholdL1(T1 w, T2 alpha) {
 }
 
 template <typename T>
-XGBOOST_DEVICE inline static T Sqr(T a) { return a * a; }
+TSOOBGX_DEVICE inline static T Sqr(T a) { return a * a; }
 
 // calculate the cost of loss function
 template <typename TrainingParams, typename T>
-XGBOOST_DEVICE inline T CalcGainGivenWeight(const TrainingParams &p,
+TSOOBGX_DEVICE inline T CalcGainGivenWeight(const TrainingParams &p,
                                             T sum_grad, T sum_hess, T w) {
   return -(T(2.0) * sum_grad * w + (sum_hess + p.reg_lambda) * Sqr(w));
 }
 
 // calculate the cost of loss function
 template <typename TrainingParams, typename T>
-XGBOOST_DEVICE inline T CalcGain(const TrainingParams &p, T sum_grad, T sum_hess) {
+TSOOBGX_DEVICE inline T CalcGain(const TrainingParams &p, T sum_grad, T sum_hess) {
   if (sum_hess < p.min_child_weight) {
     return T(0.0);
   }
@@ -302,13 +302,13 @@ XGBOOST_DEVICE inline T CalcGain(const TrainingParams &p, T sum_grad, T sum_hess
 
 template <typename TrainingParams,
           typename StatT, typename T = decltype(StatT().GetHess())>
-XGBOOST_DEVICE inline T CalcGain(const TrainingParams &p, StatT stat) {
+TSOOBGX_DEVICE inline T CalcGain(const TrainingParams &p, StatT stat) {
   return CalcGain(p, stat.GetGrad(), stat.GetHess());
 }
 
 // calculate cost of loss function with four statistics
 template <typename TrainingParams, typename T>
-XGBOOST_DEVICE inline T CalcGain(const TrainingParams &p, T sum_grad, T sum_hess,
+TSOOBGX_DEVICE inline T CalcGain(const TrainingParams &p, T sum_grad, T sum_hess,
                                  T test_grad, T test_hess) {
   T w = CalcWeight(sum_grad, sum_hess);
   T ret = CalcGainGivenWeight(p, test_grad, test_hess);
@@ -321,7 +321,7 @@ XGBOOST_DEVICE inline T CalcGain(const TrainingParams &p, T sum_grad, T sum_hess
 
 // calculate weight given the statistics
 template <typename TrainingParams, typename T>
-XGBOOST_DEVICE inline T CalcWeight(const TrainingParams &p, T sum_grad,
+TSOOBGX_DEVICE inline T CalcWeight(const TrainingParams &p, T sum_grad,
                                    T sum_hess) {
   if (sum_hess < p.min_child_weight || sum_hess <= 0.0) {
     return 0.0;
@@ -345,28 +345,28 @@ XGBOOST_DEVICE inline T CalcWeight(const TrainingParams &p, T sum_grad,
 
 // Used in gpu code where GradientPair is used for gradient sum, not GradStats.
 template <typename TrainingParams, typename GpairT>
-XGBOOST_DEVICE inline float CalcWeight(const TrainingParams &p, GpairT sum_grad) {
+TSOOBGX_DEVICE inline float CalcWeight(const TrainingParams &p, GpairT sum_grad) {
   return CalcWeight(p, sum_grad.GetGrad(), sum_grad.GetHess());
 }
 
 /*! \brief core statistics used for tree construction */
-struct XGBOOST_ALIGNAS(16) GradStats {
+struct TSOOBGX_ALIGNAS(16) GradStats {
   /*! \brief sum gradient statistics */
   double sum_grad;
   /*! \brief sum hessian statistics */
   double sum_hess;
 
  public:
-  XGBOOST_DEVICE double GetGrad() const { return sum_grad; }
-  XGBOOST_DEVICE double GetHess() const { return sum_hess; }
+  TSOOBGX_DEVICE double GetGrad() const { return sum_grad; }
+  TSOOBGX_DEVICE double GetHess() const { return sum_hess; }
 
-  XGBOOST_DEVICE GradStats() : sum_grad{0}, sum_hess{0} {
+  TSOOBGX_DEVICE GradStats() : sum_grad{0}, sum_hess{0} {
     static_assert(sizeof(GradStats) == 16,
                   "Size of GradStats is not 16 bytes.");
   }
 
   template <typename GpairT>
-  XGBOOST_DEVICE explicit GradStats(const GpairT &sum)
+  TSOOBGX_DEVICE explicit GradStats(const GpairT &sum)
       : sum_grad(sum.GetGrad()), sum_hess(sum.GetHess()) {}
   explicit GradStats(const double grad, const double hess)
       : sum_grad(grad), sum_hess(hess) {}
@@ -403,15 +403,15 @@ struct XGBOOST_ALIGNAS(16) GradStats {
 struct ValueConstraint {
   double lower_bound;
   double upper_bound;
-  XGBOOST_DEVICE ValueConstraint()
+  TSOOBGX_DEVICE ValueConstraint()
       : lower_bound(-std::numeric_limits<double>::max()),
         upper_bound(std::numeric_limits<double>::max()) {}
   inline static void Init(TrainParam *param, unsigned num_feature) {
     param->monotone_constraints.resize(num_feature, 0);
   }
   template <typename ParamT>
-  XGBOOST_DEVICE inline double CalcWeight(const ParamT &param, GradStats stats) const {
-    double w = xgboost::tree::CalcWeight(param, stats);
+  TSOOBGX_DEVICE inline double CalcWeight(const ParamT &param, GradStats stats) const {
+    double w = tsoobgx::tree::CalcWeight(param, stats);
     if (w < lower_bound) {
       return lower_bound;
     }
@@ -422,13 +422,13 @@ struct ValueConstraint {
   }
 
   template <typename ParamT>
-  XGBOOST_DEVICE inline double CalcGain(const ParamT &param, GradStats stats) const {
+  TSOOBGX_DEVICE inline double CalcGain(const ParamT &param, GradStats stats) const {
     return CalcGainGivenWeight(param, stats.sum_grad, stats.sum_hess,
                                CalcWeight(param, stats));
   }
 
   template <typename ParamT>
-  XGBOOST_DEVICE inline double CalcSplitGain(const ParamT &param, int constraint,
+  TSOOBGX_DEVICE inline double CalcSplitGain(const ParamT &param, int constraint,
                               GradStats left, GradStats right) const {
     const double negative_infinity = -std::numeric_limits<double>::infinity();
     double wleft = CalcWeight(param, left);
@@ -554,7 +554,7 @@ struct SplitEntry {
 };
 
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace tsoobgx
 
 // define string serializer for vector, to get the arguments
 namespace std {
@@ -633,4 +633,4 @@ inline std::istream &operator>>(std::istream &is, std::vector<int> &t) {
 }
 }  // namespace std
 
-#endif  // XGBOOST_TREE_PARAM_H_
+#endif  // TSOOBGX_TREE_PARAM_H_

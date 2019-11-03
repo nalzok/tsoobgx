@@ -5,7 +5,7 @@
  * \author Kailong Chen, Tianqi Chen
  */
 #include <rabit/rabit.h>
-#include <xgboost/metric.h>
+#include <tsoobgx/metric.h>
 #include <dmlc/registry.h>
 #include <cmath>
 
@@ -13,16 +13,16 @@
 #include "../common/math.h"
 #include "../common/common.h"
 
-#if defined(XGBOOST_USE_CUDA)
+#if defined(TSOOBGX_USE_CUDA)
 #include <thrust/execution_policy.h>  // thrust::cuda::par
 #include <thrust/functional.h>        // thrust::plus<>
 #include <thrust/transform_reduce.h>
 #include <thrust/iterator/counting_iterator.h>
 
 #include "../common/device_helpers.cuh"
-#endif  // XGBOOST_USE_CUDA
+#endif  // TSOOBGX_USE_CUDA
 
-namespace xgboost {
+namespace tsoobgx {
 namespace metric {
 // tag the this file, used by force static link later.
 DMLC_REGISTRY_FILE_TAG(elementwise_metric);
@@ -56,7 +56,7 @@ class ElementWiseMetricsReduction {
     return res;
   }
 
-#if defined(XGBOOST_USE_CUDA)
+#if defined(TSOOBGX_USE_CUDA)
 
   PackedReduceResult DeviceReduceMetrics(
       GPUSet::GpuIdType device_id,
@@ -80,7 +80,7 @@ class ElementWiseMetricsReduction {
     PackedReduceResult result = thrust::transform_reduce(
         thrust::cuda::par(allocators_.at(device_index)),
         begin, end,
-        [=] XGBOOST_DEVICE(size_t idx) {
+        [=] TSOOBGX_DEVICE(size_t idx) {
           bst_float weight = is_null_weight ? 1.0f : s_weights[idx];
 
           bst_float residue = d_policy.EvalRow(s_label[idx], s_preds[idx]);
@@ -93,7 +93,7 @@ class ElementWiseMetricsReduction {
     return result;
   }
 
-#endif  // XGBOOST_USE_CUDA
+#endif  // TSOOBGX_USE_CUDA
 
   PackedReduceResult Reduce(
       GPUSet devices,
@@ -105,7 +105,7 @@ class ElementWiseMetricsReduction {
     if (devices.IsEmpty()) {
       result = CpuReduceMetrics(weights, labels, preds);
     }
-#if defined(XGBOOST_USE_CUDA)
+#if defined(TSOOBGX_USE_CUDA)
     else {  // NOLINT
       if (allocators_.size() != devices.Size()) {
         allocators_.clear();
@@ -128,15 +128,15 @@ class ElementWiseMetricsReduction {
         result += res;
       }
     }
-#endif  // defined(XGBOOST_USE_CUDA)
+#endif  // defined(TSOOBGX_USE_CUDA)
     return result;
   }
 
  private:
   EvalRow policy_;
-#if defined(XGBOOST_USE_CUDA)
+#if defined(TSOOBGX_USE_CUDA)
   std::vector<dh::CubMemory> allocators_;
-#endif  // defined(XGBOOST_USE_CUDA)
+#endif  // defined(TSOOBGX_USE_CUDA)
 };
 
 struct EvalRowRMSE {
@@ -144,7 +144,7 @@ struct EvalRowRMSE {
     return "rmse";
   }
 
-  XGBOOST_DEVICE bst_float EvalRow(bst_float label, bst_float pred) const {
+  TSOOBGX_DEVICE bst_float EvalRow(bst_float label, bst_float pred) const {
     bst_float diff = label - pred;
     return diff * diff;
   }
@@ -158,7 +158,7 @@ struct EvalRowMAE {
     return "mae";
   }
 
-  XGBOOST_DEVICE bst_float EvalRow(bst_float label, bst_float pred) const {
+  TSOOBGX_DEVICE bst_float EvalRow(bst_float label, bst_float pred) const {
     return std::abs(label - pred);
   }
   static bst_float GetFinal(bst_float esum, bst_float wsum) {
@@ -171,7 +171,7 @@ struct EvalRowLogLoss {
     return "logloss";
   }
 
-  XGBOOST_DEVICE bst_float EvalRow(bst_float y, bst_float py) const {
+  TSOOBGX_DEVICE bst_float EvalRow(bst_float y, bst_float py) const {
     const bst_float eps = 1e-16f;
     const bst_float pneg = 1.0f - py;
     if (py < eps) {
@@ -212,7 +212,7 @@ struct EvalError {
     }
   }
 
-  XGBOOST_DEVICE bst_float EvalRow(
+  TSOOBGX_DEVICE bst_float EvalRow(
       bst_float label, bst_float pred) const {
     // assume label is in [0,1]
     return pred > threshold_ ? 1.0f - label : label;
@@ -232,7 +232,7 @@ struct EvalPoissonNegLogLik {
     return "poisson-nloglik";
   }
 
-  XGBOOST_DEVICE bst_float EvalRow(bst_float y, bst_float py) const {
+  TSOOBGX_DEVICE bst_float EvalRow(bst_float y, bst_float py) const {
     const bst_float eps = 1e-16f;
     if (py < eps) py = eps;
     return common::LogGamma(y + 1.0f) + py - std::log(py) * y;
@@ -248,7 +248,7 @@ struct EvalGammaDeviance {
     return "gamma-deviance";
   }
 
-  XGBOOST_DEVICE bst_float EvalRow(bst_float label, bst_float pred) const {
+  TSOOBGX_DEVICE bst_float EvalRow(bst_float label, bst_float pred) const {
     bst_float epsilon = 1.0e-9;
     bst_float tmp = label / (pred + epsilon);
     return tmp - std::log(tmp) - 1;
@@ -263,7 +263,7 @@ struct EvalGammaNLogLik {
     return "gamma-nloglik";
   }
 
-  XGBOOST_DEVICE bst_float EvalRow(bst_float y, bst_float py) const {
+  TSOOBGX_DEVICE bst_float EvalRow(bst_float y, bst_float py) const {
     bst_float psi = 1.0;
     bst_float theta = -1. / py;
     bst_float a = psi;
@@ -292,7 +292,7 @@ struct EvalTweedieNLogLik {
     return name.c_str();
   }
 
-  XGBOOST_DEVICE bst_float EvalRow(bst_float y, bst_float p) const {
+  TSOOBGX_DEVICE bst_float EvalRow(bst_float y, bst_float p) const {
     bst_float a = y * std::exp((1 - rho_) * std::log(p)) / (1 - rho_);
     bst_float b = std::exp((2 - rho_) * std::log(p)) / (2 - rho_);
     return -a + b;
@@ -352,39 +352,39 @@ struct EvalEWiseBase : public Metric {
   ElementWiseMetricsReduction<Policy> reducer_;
 };
 
-XGBOOST_REGISTER_METRIC(RMSE, "rmse")
+TSOOBGX_REGISTER_METRIC(RMSE, "rmse")
 .describe("Rooted mean square error.")
 .set_body([](const char* param) { return new EvalEWiseBase<EvalRowRMSE>(); });
 
-XGBOOST_REGISTER_METRIC(MAE, "mae")
+TSOOBGX_REGISTER_METRIC(MAE, "mae")
 .describe("Mean absolute error.")
 .set_body([](const char* param) { return new EvalEWiseBase<EvalRowMAE>(); });
 
-XGBOOST_REGISTER_METRIC(LogLoss, "logloss")
+TSOOBGX_REGISTER_METRIC(LogLoss, "logloss")
 .describe("Negative loglikelihood for logistic regression.")
 .set_body([](const char* param) { return new EvalEWiseBase<EvalRowLogLoss>(); });
 
-XGBOOST_REGISTER_METRIC(PossionNegLoglik, "poisson-nloglik")
+TSOOBGX_REGISTER_METRIC(PossionNegLoglik, "poisson-nloglik")
 .describe("Negative loglikelihood for poisson regression.")
 .set_body([](const char* param) { return new EvalEWiseBase<EvalPoissonNegLogLik>(); });
 
-XGBOOST_REGISTER_METRIC(GammaDeviance, "gamma-deviance")
+TSOOBGX_REGISTER_METRIC(GammaDeviance, "gamma-deviance")
 .describe("Residual deviance for gamma regression.")
 .set_body([](const char* param) { return new EvalEWiseBase<EvalGammaDeviance>(); });
 
-XGBOOST_REGISTER_METRIC(GammaNLogLik, "gamma-nloglik")
+TSOOBGX_REGISTER_METRIC(GammaNLogLik, "gamma-nloglik")
 .describe("Negative log-likelihood for gamma regression.")
 .set_body([](const char* param) { return new EvalEWiseBase<EvalGammaNLogLik>(); });
 
-XGBOOST_REGISTER_METRIC(Error, "error")
+TSOOBGX_REGISTER_METRIC(Error, "error")
 .describe("Binary classification error.")
 .set_body([](const char* param) { return new EvalEWiseBase<EvalError>(param); });
 
-XGBOOST_REGISTER_METRIC(TweedieNLogLik, "tweedie-nloglik")
+TSOOBGX_REGISTER_METRIC(TweedieNLogLik, "tweedie-nloglik")
 .describe("tweedie-nloglik@rho for tweedie regression.")
 .set_body([](const char* param) {
   return new EvalEWiseBase<EvalTweedieNLogLik>(param);
 });
 
 }  // namespace metric
-}  // namespace xgboost
+}  // namespace tsoobgx

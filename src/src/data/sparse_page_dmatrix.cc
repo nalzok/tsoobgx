@@ -6,14 +6,14 @@
  */
 #include <dmlc/base.h>
 #include <dmlc/timer.h>
-#include <xgboost/logging.h>
+#include <tsoobgx/logging.h>
 #include <memory>
 
 #if DMLC_ENABLE_STD_THREAD
 #include "./sparse_page_dmatrix.h"
 #include "../common/random.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace data {
 
 MetaInfo& SparsePageDMatrix::Info() {
@@ -100,5 +100,5 @@ bool SparsePageDMatrix::SingleColBlock() const {
   return false;
 }
 }  // namespace data
-}  // namespace xgboost
+}  // namespace tsoobgx
 #endif  // DMLC_ENABLE_STD_THREAD

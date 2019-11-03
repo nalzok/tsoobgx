@@ -3,11 +3,11 @@
  * \file simple_csr_source.cc
  */
 #include <dmlc/base.h>
-#include <xgboost/logging.h>
+#include <tsoobgx/logging.h>
 #include <limits>
 #include "./simple_csr_source.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace data {
 
 void SimpleCSRSource::Clear() {
@@ -54,8 +54,8 @@ void SimpleCSRSource::CopyFrom(dmlc::Parser<uint32_t>* parser) {
 
     // Remove the assertion on batch.index, which can be null in the case that the data in this
     // batch is entirely sparse. Although it's true that this indicates a likely issue with the
-    // user's data workflows, passing XGBoost entirely sparse data should not cause it to fail.
-    // See https://github.com/dmlc/xgboost/issues/1827 for complete detail.
+    // user's data workflows, passing tsooBGX entirely sparse data should not cause it to fail.
+    // See https://github.com/dmlc/tsoobgx/issues/1827 for complete detail.
     // CHECK(batch.index != nullptr);
 
     // update information
@@ -117,4 +117,4 @@ const SparsePage& SimpleCSRSource::Value() const {
 }
 
 }  // namespace data
-}  // namespace xgboost
+}  // namespace tsoobgx

@@ -1,12 +1,12 @@
 /*!
- * Copyright 2017 XGBoost contributors
+ * Copyright 2017 tsooBGX contributors
  */
 #pragma once
 #include <thrust/device_ptr.h>
 #include <thrust/device_vector.h>
 #include <thrust/system/cuda/error.h>
 #include <thrust/system_error.h>
-#include <xgboost/logging.h>
+#include <tsoobgx/logging.h>
 
 #include "common.h"
 #include "span.h"
@@ -22,17 +22,17 @@
 #include <vector>
 #include "timer.h"
 
-#ifdef XGBOOST_USE_NCCL
+#ifdef TSOOBGX_USE_NCCL
 #include "nccl.h"
 #include "../common/io.h"
 #endif
 
 namespace dh {
 
-#define HOST_DEV_INLINE XGBOOST_DEVICE __forceinline__
+#define HOST_DEV_INLINE TSOOBGX_DEVICE __forceinline__
 #define DEV_INLINE __device__ __forceinline__
 
-#ifdef XGBOOST_USE_NCCL
+#ifdef TSOOBGX_USE_NCCL
 #define safe_nccl(ans) ThrowOnNcclError((ans), __FILE__, __LINE__)
 
 inline ncclResult_t ThrowOnNcclError(ncclResult_t code, const char *file,
@@ -69,8 +69,8 @@ const T *Raw(const thrust::device_vector<T> &v) {  //  NOLINT
 }
 
 // if n_devices=-1, then use all visible devices
-inline void SynchronizeNDevices(xgboost::GPUSet devices) {
-  devices = devices.IsEmpty() ? xgboost::GPUSet::AllVisible() : devices;
+inline void SynchronizeNDevices(tsoobgx::GPUSet devices) {
+  devices = devices.IsEmpty() ? tsoobgx::GPUSet::AllVisible() : devices;
   for (auto const d : devices) {
     safe_cuda(cudaSetDevice(d));
     safe_cuda(cudaDeviceSynchronize());
@@ -78,7 +78,7 @@ inline void SynchronizeNDevices(xgboost::GPUSet devices) {
 }
 
 inline void SynchronizeAll() {
-  for (int device_idx : xgboost::GPUSet::AllVisible()) {
+  for (int device_idx : tsoobgx::GPUSet::AllVisible()) {
     safe_cuda(cudaSetDevice(device_idx));
     safe_cuda(cudaDeviceSynchronize());
   }
@@ -115,7 +115,7 @@ inline size_t MaxSharedMemory(int device_idx) {
 }
 
 inline void CheckComputeCapability() {
-  for (int d_idx : xgboost::GPUSet::AllVisible()) {
+  for (int d_idx : tsoobgx::GPUSet::AllVisible()) {
     cudaDeviceProp prop;
     safe_cuda(cudaGetDeviceProperties(&prop, d_idx));
     std::ostringstream oss;
@@ -157,17 +157,17 @@ DEV_INLINE int UpperBound(const float* __restrict__ cuts, int n, float v) {
 }
 
 template <typename T>
-__device__ xgboost::common::Range GridStrideRange(T begin, T end) {
+__device__ tsoobgx::common::Range GridStrideRange(T begin, T end) {
   begin += blockDim.x * blockIdx.x + threadIdx.x;
-  xgboost::common::Range r(begin, end);
+  tsoobgx::common::Range r(begin, end);
   r.Step(gridDim.x * blockDim.x);
   return r;
 }
 
 template <typename T>
-__device__ xgboost::common::Range BlockStrideRange(T begin, T end) {
+__device__ tsoobgx::common::Range BlockStrideRange(T begin, T end) {
   begin += threadIdx.x;
-  xgboost::common::Range r(begin, end);
+  tsoobgx::common::Range r(begin, end);
   r.Step(blockDim.x);
   return r;
 }
@@ -232,7 +232,7 @@ template <typename T>
 class DoubleBuffer {
  public:
   cub::DoubleBuffer<T> buff;
-  xgboost::common::Span<T> a, b;
+  tsoobgx::common::Span<T> a, b;
   DoubleBuffer() = default;
 
   size_t Size() const {
@@ -242,10 +242,10 @@ class DoubleBuffer {
   cub::DoubleBuffer<T> &CubBuffer() { return buff; }
 
   T *Current() { return buff.Current(); }
-  xgboost::common::Span<T> CurrentSpan() {
-    return xgboost::common::Span<T>{
+  tsoobgx::common::Span<T> CurrentSpan() {
+    return tsoobgx::common::Span<T>{
         buff.Current(),
-        static_cast<typename xgboost::common::Span<T>::index_type>(Size())};
+        static_cast<typename tsoobgx::common::Span<T>::index_type>(Size())};
   }
 
   T *other() { return buff.Alternate(); }
@@ -259,7 +259,7 @@ class DoubleBuffer {
  * \param           src Copy source. Must be device memory.
  */
 template <typename T>
-void CopyDeviceSpanToVector(std::vector<T> *dst, xgboost::common::Span<T> src) {
+void CopyDeviceSpanToVector(std::vector<T> *dst, tsoobgx::common::Span<T> src) {
   CHECK_EQ(dst->size(), src.size());
   dh::safe_cuda(cudaMemcpyAsync(dst->data(), src.data(), dst->size() * sizeof(T),
                                 cudaMemcpyDeviceToHost));
@@ -273,7 +273,7 @@ void CopyDeviceSpanToVector(std::vector<T> *dst, xgboost::common::Span<T> src) {
  * \param src Copy source.
  */
 template <typename T>
-void CopyVectorToDeviceSpan(xgboost::common::Span<T> dst ,const std::vector<T>&src)
+void CopyVectorToDeviceSpan(tsoobgx::common::Span<T> dst ,const std::vector<T>&src)
 {
   CHECK_EQ(dst.size(), src.size());
   dh::safe_cuda(cudaMemcpyAsync(dst.data(), src.data(), dst.size() * sizeof(T),
@@ -289,8 +289,8 @@ void CopyVectorToDeviceSpan(xgboost::common::Span<T> dst ,const std::vector<T>&s
  * \param src Copy source. Must be device memory.
  */
 template <typename T>
-void CopyDeviceSpan(xgboost::common::Span<T> dst,
-                    xgboost::common::Span<T> src) {
+void CopyDeviceSpan(tsoobgx::common::Span<T> dst,
+                    tsoobgx::common::Span<T> src) {
   CHECK_EQ(dst.size(), src.size());
   dh::safe_cuda(cudaMemcpyAsync(dst.data(), src.data(), dst.size() * sizeof(T),
                                 cudaMemcpyDeviceToDevice));
@@ -310,23 +310,23 @@ class BulkAllocator {
   }
 
   template <typename T>
-  size_t GetSizeBytes(xgboost::common::Span<T> *first_vec, size_t first_size) {
+  size_t GetSizeBytes(tsoobgx::common::Span<T> *first_vec, size_t first_size) {
     return AlignRoundUp(first_size * sizeof(T));
   }
 
   template <typename T, typename... Args>
-  size_t GetSizeBytes(xgboost::common::Span<T> *first_vec, size_t first_size, Args... args) {
+  size_t GetSizeBytes(tsoobgx::common::Span<T> *first_vec, size_t first_size, Args... args) {
     return GetSizeBytes<T>(first_vec, first_size) + GetSizeBytes(args...);
   }
 
   template <typename T>
-  void AllocateSpan(int device_idx, char *ptr, xgboost::common::Span<T> *first_vec,
+  void AllocateSpan(int device_idx, char *ptr, tsoobgx::common::Span<T> *first_vec,
     size_t first_size) {
-    *first_vec = xgboost::common::Span<T>(reinterpret_cast<T *>(ptr), first_size);
+    *first_vec = tsoobgx::common::Span<T>(reinterpret_cast<T *>(ptr), first_size);
   }
 
   template <typename T, typename... Args>
-  void AllocateSpan(int device_idx, char *ptr, xgboost::common::Span<T> *first_vec,
+  void AllocateSpan(int device_idx, char *ptr, tsoobgx::common::Span<T> *first_vec,
     size_t first_size, Args... args) {
     AllocateSpan<T>(device_idx, ptr, first_vec, first_size);
     ptr += AlignRoundUp(first_size * sizeof(T));
@@ -355,8 +355,8 @@ class BulkAllocator {
                     size_t first_size) {
     auto ptr1 = reinterpret_cast<T *>(ptr);
     auto ptr2 = ptr1 + first_size;
-    first_vec->a = xgboost::common::Span<T>(ptr1, first_size);
-    first_vec->b = xgboost::common::Span<T>(ptr2, first_size);
+    first_vec->a = tsoobgx::common::Span<T>(ptr1, first_size);
+    first_vec->b = tsoobgx::common::Span<T>(ptr2, first_size);
     first_vec->buff.d_buffers[0] = ptr1;
     first_vec->buff.d_buffers[1] = ptr2;
     first_vec->buff.selector = 0;
@@ -415,14 +415,14 @@ struct PinnedMemory {
   ~PinnedMemory() { Free(); }
 
   template <typename T>
-  xgboost::common::Span<T> GetSpan(size_t size) {
+  tsoobgx::common::Span<T> GetSpan(size_t size) {
     size_t num_bytes = size * sizeof(T);
     if (num_bytes > temp_storage_bytes) {
       Free();
       safe_cuda(cudaMallocHost(&temp_storage, num_bytes));
       temp_storage_bytes = num_bytes;
     }
-    return xgboost::common::Span<T>(static_cast<T *>(temp_storage), size);
+    return tsoobgx::common::Span<T>(static_cast<T *>(temp_storage), size);
   }
 
   void Free() {
@@ -445,9 +445,9 @@ struct CubMemory {
   ~CubMemory() { Free(); }
 
   template <typename T>
-  xgboost::common::Span<T> GetSpan(size_t size) {
+  tsoobgx::common::Span<T> GetSpan(size_t size) {
     this->LazyAllocate(size * sizeof(T));
-    return xgboost::common::Span<T>(static_cast<T*>(d_temp_storage), size);
+    return tsoobgx::common::Span<T>(static_cast<T*>(d_temp_storage), size);
   }
 
   void Free() {
@@ -642,7 +642,7 @@ void TransformLbs(int device_idx, dh::CubMemory *temp_memory, OffsetT count,
 template <typename T1, typename T2>
 void SegmentedSort(dh::CubMemory *tmp_mem, dh::DoubleBuffer<T1> *keys,
                    dh::DoubleBuffer<T2> *vals, int nVals, int nSegs,
-                   xgboost::common::Span<int> offsets, int start = 0,
+                   tsoobgx::common::Span<int> offsets, int start = 0,
                    int end = sizeof(T1) * 8) {
   size_t tmpSize;
   dh::safe_cuda(cub::DeviceSegmentedRadixSort::SortPairs(
@@ -662,7 +662,7 @@ void SegmentedSort(dh::CubMemory *tmp_mem, dh::DoubleBuffer<T1> *keys,
  * @param nVals number of elements in the input array
  */
 template <typename T>
-void SumReduction(dh::CubMemory &tmp_mem, xgboost::common::Span<T> in, xgboost::common::Span<T> out,
+void SumReduction(dh::CubMemory &tmp_mem, tsoobgx::common::Span<T> in, tsoobgx::common::Span<T> out,
                   int nVals) {
   size_t tmpSize;
   dh::safe_cuda(
@@ -776,7 +776,7 @@ class SaveCudaContext {
  * \class AllReducer
  *
  * \brief All reducer class that manages its own communication group and
- * streams. Must be initialised before use. If XGBoost is compiled without NCCL
+ * streams. Must be initialised before use. If tsooBGX is compiled without NCCL
  * this is a dummy class that will error if used with more than one GPU.
  */
 
@@ -784,7 +784,7 @@ class AllReducer {
   bool initialised_;
   size_t allreduce_bytes_;  // Keep statistics of the number of bytes communicated
   size_t allreduce_calls_;  // Keep statistics of the number of reduce calls
-#ifdef XGBOOST_USE_NCCL
+#ifdef TSOOBGX_USE_NCCL
   std::vector<ncclComm_t> comms;
   std::vector<cudaStream_t> streams;
   std::vector<int> device_ordinals;  // device id from CUDA
@@ -800,7 +800,7 @@ class AllReducer {
    * \brief If we are using a single GPU only
    */
   bool IsSingleGPU() {
-#ifdef XGBOOST_USE_NCCL
+#ifdef TSOOBGX_USE_NCCL
     CHECK(device_counts.size() > 0) << "AllReducer not initialised.";
     return device_counts.size() <= 1 && device_counts.at(0) == 1;
 #else
@@ -816,7 +816,7 @@ class AllReducer {
    */
 
   void Init(const std::vector<int> &device_ordinals) {
-#ifdef XGBOOST_USE_NCCL
+#ifdef TSOOBGX_USE_NCCL
     /** \brief this >monitor . init. */
     this->device_ordinals = device_ordinals;
     this->device_counts.resize(rabit::GetWorldSize());
@@ -858,11 +858,11 @@ class AllReducer {
     initialised_ = true;
 #else
     CHECK_EQ(device_ordinals.size(), 1)
-        << "XGBoost must be compiled with NCCL to use more than one GPU.";
+        << "tsooBGX must be compiled with NCCL to use more than one GPU.";
 #endif
   }
   ~AllReducer() {
-#ifdef XGBOOST_USE_NCCL
+#ifdef TSOOBGX_USE_NCCL
     if (initialised_) {
       for (auto &stream : streams) {
         dh::safe_cuda(cudaStreamDestroy(stream));
@@ -871,7 +871,7 @@ class AllReducer {
         ncclCommDestroy(comm);
       }
     }
-    if (xgboost::ConsoleLogger::ShouldLog(xgboost::ConsoleLogger::LV::kDebug)) {
+    if (tsoobgx::ConsoleLogger::ShouldLog(tsoobgx::ConsoleLogger::LV::kDebug)) {
       LOG(CONSOLE) << "======== NCCL Statistics========";
       LOG(CONSOLE) << "AllReduce calls: " << allreduce_calls_;
       LOG(CONSOLE) << "AllReduce total MB communicated: " << allreduce_bytes_/1000000;
@@ -883,7 +883,7 @@ class AllReducer {
    * \brief Use in exactly the same way as ncclGroupStart
    */
   void GroupStart() {
-#ifdef XGBOOST_USE_NCCL
+#ifdef TSOOBGX_USE_NCCL
     dh::safe_nccl(ncclGroupStart());
 #endif
   }
@@ -892,7 +892,7 @@ class AllReducer {
    * \brief Use in exactly the same way as ncclGroupEnd
    */
   void GroupEnd() {
-#ifdef XGBOOST_USE_NCCL
+#ifdef TSOOBGX_USE_NCCL
     dh::safe_nccl(ncclGroupEnd());
 #endif
   }
@@ -909,7 +909,7 @@ class AllReducer {
 
   void AllReduceSum(int communication_group_idx, const double *sendbuff,
                     double *recvbuff, int count) {
-#ifdef XGBOOST_USE_NCCL
+#ifdef TSOOBGX_USE_NCCL
     CHECK(initialised_);
     dh::safe_cuda(cudaSetDevice(device_ordinals.at(communication_group_idx)));
     dh::safe_nccl(ncclAllReduce(sendbuff, recvbuff, count, ncclDouble, ncclSum,
@@ -935,7 +935,7 @@ class AllReducer {
 
   void AllReduceSum(int communication_group_idx, const float *sendbuff,
                     float *recvbuff, int count) {
-#ifdef XGBOOST_USE_NCCL
+#ifdef TSOOBGX_USE_NCCL
     CHECK(initialised_);
     dh::safe_cuda(cudaSetDevice(device_ordinals.at(communication_group_idx)));
     dh::safe_nccl(ncclAllReduce(sendbuff, recvbuff, count, ncclFloat, ncclSum,
@@ -962,7 +962,7 @@ class AllReducer {
 
   void AllReduceSum(int communication_group_idx, const int64_t *sendbuff,
                     int64_t *recvbuff, int count) {
-#ifdef XGBOOST_USE_NCCL
+#ifdef TSOOBGX_USE_NCCL
     CHECK(initialised_);
 
     dh::safe_cuda(cudaSetDevice(device_ordinals[communication_group_idx]));
@@ -978,7 +978,7 @@ class AllReducer {
    * \brief Synchronizes the entire communication group.
    */
   void Synchronize() {
-#ifdef XGBOOST_USE_NCCL
+#ifdef TSOOBGX_USE_NCCL
     for (size_t i = 0; i < device_ordinals.size(); i++) {
       dh::safe_cuda(cudaSetDevice(device_ordinals[i]));
       dh::safe_cuda(cudaStreamSynchronize(streams[i]));
@@ -992,7 +992,7 @@ class AllReducer {
    * \param device_id Identifier for the device.
    */
   void Synchronize(int device_id) {
-#ifdef XGBOOST_USE_NCCL
+#ifdef TSOOBGX_USE_NCCL
     SaveCudaContext([&]() {
       dh::safe_cuda(cudaSetDevice(device_id));
       int idx = std::find(device_ordinals.begin(), device_ordinals.end(), device_id) - device_ordinals.begin();
@@ -1002,7 +1002,7 @@ class AllReducer {
 #endif
   };
 
-#ifdef XGBOOST_USE_NCCL
+#ifdef TSOOBGX_USE_NCCL
   /**
    * \fn  ncclUniqueId GetUniqueId()
    *
@@ -1079,8 +1079,8 @@ ReduceT ReduceShards(std::vector<ShardT> *shards, FunctionT f) {
 }
 
 template <typename T,
-  typename IndexT = typename xgboost::common::Span<T>::index_type>
-xgboost::common::Span<T> ToSpan(
+  typename IndexT = typename tsoobgx::common::Span<T>::index_type>
+tsoobgx::common::Span<T> ToSpan(
     thrust::device_vector<T>& vec,
     IndexT offset = 0,
     IndexT size = -1) {
@@ -1090,9 +1090,9 @@ xgboost::common::Span<T> ToSpan(
 }
 
 template <typename T>
-xgboost::common::Span<T> ToSpan(thrust::device_vector<T>& vec,
+tsoobgx::common::Span<T> ToSpan(thrust::device_vector<T>& vec,
                                 size_t offset, size_t size) {
-  using IndexT = typename xgboost::common::Span<T>::index_type;
+  using IndexT = typename tsoobgx::common::Span<T>::index_type;
   return ToSpan(vec, static_cast<IndexT>(offset), static_cast<IndexT>(size));
 }
 
@@ -1101,9 +1101,9 @@ class LauncherItr {
 public:
   int idx;
   FunctionT f;
-  XGBOOST_DEVICE LauncherItr() : idx(0) {}
-  XGBOOST_DEVICE LauncherItr(int idx, FunctionT f) : idx(idx), f(f) {}
-  XGBOOST_DEVICE LauncherItr &operator=(int output) {
+  TSOOBGX_DEVICE LauncherItr() : idx(0) {}
+  TSOOBGX_DEVICE LauncherItr(int idx, FunctionT f) : idx(idx), f(f) {}
+  TSOOBGX_DEVICE LauncherItr &operator=(int output) {
     f(idx, output);
     return *this;
   }
@@ -1134,29 +1134,29 @@ private:
   difference_type offset_;
   FunctionT f_;
 public:
- XGBOOST_DEVICE explicit DiscardLambdaItr(FunctionT f) : offset_(0), f_(f) {}
- XGBOOST_DEVICE DiscardLambdaItr(difference_type offset, FunctionT f)
+ TSOOBGX_DEVICE explicit DiscardLambdaItr(FunctionT f) : offset_(0), f_(f) {}
+ TSOOBGX_DEVICE DiscardLambdaItr(difference_type offset, FunctionT f)
      : offset_(offset), f_(f) {}
- XGBOOST_DEVICE self_type operator+(const int &b) const {
+ TSOOBGX_DEVICE self_type operator+(const int &b) const {
    return DiscardLambdaItr(offset_ + b, f_);
   }
-  XGBOOST_DEVICE self_type operator++() {
+  TSOOBGX_DEVICE self_type operator++() {
     offset_++;
     return *this;
   }
-  XGBOOST_DEVICE self_type operator++(int) {
+  TSOOBGX_DEVICE self_type operator++(int) {
     self_type retval = *this;
     offset_++;
     return retval;
   }
-  XGBOOST_DEVICE self_type &operator+=(const int &b) {
+  TSOOBGX_DEVICE self_type &operator+=(const int &b) {
     offset_ += b;
     return *this;
   }
-  XGBOOST_DEVICE reference operator*() const {
+  TSOOBGX_DEVICE reference operator*() const {
     return LauncherItr<FunctionT>(offset_, f_);
   }
-  XGBOOST_DEVICE reference operator[](int idx) {
+  TSOOBGX_DEVICE reference operator[](int idx) {
     self_type offset = (*this) + idx;
     return *offset;
   }

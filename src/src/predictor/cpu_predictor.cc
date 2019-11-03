@@ -1,13 +1,13 @@
 /*!
  * Copyright by Contributors 2017
  */
-#include <xgboost/predictor.h>
-#include <xgboost/tree_model.h>
-#include <xgboost/tree_updater.h>
+#include <tsoobgx/predictor.h>
+#include <tsoobgx/tree_model.h>
+#include <tsoobgx/tree_updater.h>
 #include "dmlc/logging.h"
 #include "../common/host_device_vector.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace predictor {
 
 DMLC_REGISTRY_FILE_TAG(cpu_predictor);
@@ -359,8 +359,8 @@ class CPUPredictor : public Predictor {
   std::vector<RegTree::FVec> thread_temp;
 };
 
-XGBOOST_REGISTER_PREDICTOR(CPUPredictor, "cpu_predictor")
+TSOOBGX_REGISTER_PREDICTOR(CPUPredictor, "cpu_predictor")
     .describe("Make predictions using CPU.")
     .set_body([]() { return new CPUPredictor(); });
 }  // namespace predictor
-}  // namespace xgboost
+}  // namespace tsoobgx

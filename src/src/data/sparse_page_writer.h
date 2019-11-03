@@ -3,10 +3,10 @@
  * \file sparse_page_writer.h
  * \author Tianqi Chen
  */
-#ifndef XGBOOST_DATA_SPARSE_PAGE_WRITER_H_
-#define XGBOOST_DATA_SPARSE_PAGE_WRITER_H_
+#ifndef TSOOBGX_DATA_SPARSE_PAGE_WRITER_H_
+#define TSOOBGX_DATA_SPARSE_PAGE_WRITER_H_
 
-#include <xgboost/data.h>
+#include <tsoobgx/data.h>
 #include <dmlc/io.h>
 #include <vector>
 #include <algorithm>
@@ -21,7 +21,7 @@
 #include <thread>
 #endif  // DMLC_ENABLE_STD_THREAD
 
-namespace xgboost {
+namespace tsoobgx {
 namespace data {
 /*!
  * \brief Format specification of SparsePage.
@@ -124,16 +124,16 @@ struct SparsePageFormatReg
  *
  * \code
  * // example of registering a objective
- * XGBOOST_REGISTER_SPARSE_PAGE_FORMAT(raw)
+ * TSOOBGX_REGISTER_SPARSE_PAGE_FORMAT(raw)
  * .describe("Raw binary data format.")
  * .set_body([]() {
  *     return new RawFormat();
  *   });
  * \endcode
  */
-#define XGBOOST_REGISTER_SPARSE_PAGE_FORMAT(Name)                       \
-  DMLC_REGISTRY_REGISTER(::xgboost::data::SparsePageFormatReg, SparsePageFormat, Name)
+#define TSOOBGX_REGISTER_SPARSE_PAGE_FORMAT(Name)                       \
+  DMLC_REGISTRY_REGISTER(::tsoobgx::data::SparsePageFormatReg, SparsePageFormat, Name)
 
 }  // namespace data
-}  // namespace xgboost
-#endif  // XGBOOST_DATA_SPARSE_PAGE_WRITER_H_
+}  // namespace tsoobgx
+#endif  // TSOOBGX_DATA_SPARSE_PAGE_WRITER_H_

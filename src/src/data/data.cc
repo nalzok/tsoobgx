@@ -2,8 +2,8 @@
  * Copyright 2015 by Contributors
  * \file data.cc
  */
-#include <xgboost/data.h>
-#include <xgboost/logging.h>
+#include <tsoobgx/data.h>
+#include <tsoobgx/logging.h>
 #include <dmlc/registry.h>
 #include <cstring>
 #include "./sparse_page_writer.h"
@@ -18,10 +18,10 @@
 #endif  // DMLC_ENABLE_STD_THREAD
 
 namespace dmlc {
-DMLC_REGISTRY_ENABLE(::xgboost::data::SparsePageFormatReg);
+DMLC_REGISTRY_ENABLE(::tsoobgx::data::SparsePageFormatReg);
 }  // namespace dmlc
 
-namespace xgboost {
+namespace tsoobgx {
 // implementation of inline functions
 void MetaInfo::Clear() {
   num_row_ = num_col_ = num_nonzero_ = 0;
@@ -189,7 +189,7 @@ DMatrix* DMatrix::Load(const std::string& uri,
     npart = rabit::GetWorldSize();
   } else {
     // test option to load in part
-    npart = dmlc::GetEnv("XGBOOST_TEST_NPART", 1);
+    npart = dmlc::GetEnv("TSOOBGX_TEST_NPART", 1);
   }
 
   if (npart != 1) {
@@ -290,11 +290,11 @@ DMatrix* DMatrix::Create(std::unique_ptr<DataSource>&& source,
 #endif  // DMLC_ENABLE_STD_THREAD
   }
 }
-}  // namespace xgboost
+}  // namespace tsoobgx
 
-namespace xgboost {
+namespace tsoobgx {
   data::SparsePageFormat* data::SparsePageFormat::Create(const std::string& name) {
-  auto *e = ::dmlc::Registry< ::xgboost::data::SparsePageFormatReg>::Get()->Find(name);
+  auto *e = ::dmlc::Registry< ::tsoobgx::data::SparsePageFormatReg>::Get()->Find(name);
   if (e == nullptr) {
     LOG(FATAL) << "Unknown format type " << name;
   }
@@ -354,7 +354,7 @@ void SparsePage::Push(const dmlc::RowBlock<uint32_t>& batch) {
 }
 
 void SparsePage::PushCSC(const SparsePage &batch) {
-  std::vector<xgboost::Entry>& self_data = data.HostVector();
+  std::vector<tsoobgx::Entry>& self_data = data.HostVector();
   std::vector<size_t>& self_offset = offset.HostVector();
 
   auto const& other_data = batch.data.ConstHostVector();
@@ -376,7 +376,7 @@ void SparsePage::PushCSC(const SparsePage &batch) {
   std::vector<size_t> offset(other_offset.size());
   offset[0] = 0;
 
-  std::vector<xgboost::Entry> data(self_data.size() + batch.data.Size());
+  std::vector<tsoobgx::Entry> data(self_data.size() + batch.data.Size());
 
   // n_cols in original csr data matrix, here in csc is n_rows
   size_t const n_features = other_offset.size() - 1;
@@ -412,4 +412,4 @@ namespace data {
 // List of files that will be force linked in static links.
 DMLC_REGISTRY_LINK_TAG(sparse_page_raw_format);
 }  // namespace data
-}  // namespace xgboost
+}  // namespace tsoobgx

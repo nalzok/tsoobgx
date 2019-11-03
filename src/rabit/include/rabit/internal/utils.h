@@ -178,7 +178,7 @@ inline std::FILE *FopenCheck(const char *fname, const char *flag) {
   return fp;
 }
 }  // namespace utils
-// easy utils that can be directly accessed in xgboost
+// easy utils that can be directly accessed in tsoobgx
 /*! \brief get the beginning address of a vector */
 template<typename T>
 inline T *BeginPtr(std::vector<T> &vec) {  // NOLINT(*)

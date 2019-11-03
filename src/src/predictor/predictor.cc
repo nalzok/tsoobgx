@@ -2,12 +2,12 @@
  * Copyright by Contributors 2017
  */
 #include <dmlc/registry.h>
-#include <xgboost/predictor.h>
+#include <tsoobgx/predictor.h>
 
 namespace dmlc {
-DMLC_REGISTRY_ENABLE(::xgboost::PredictorReg);
+DMLC_REGISTRY_ENABLE(::tsoobgx::PredictorReg);
 }  // namespace dmlc
-namespace xgboost {
+namespace tsoobgx {
 void Predictor::Init(
     const std::vector<std::pair<std::string, std::string>>& cfg,
     const std::vector<std::shared_ptr<DMatrix>>& cache) {
@@ -22,14 +22,14 @@ Predictor* Predictor::Create(std::string name) {
   }
   return (e->body)();
 }
-}  // namespace xgboost
+}  // namespace tsoobgx
 
-namespace xgboost {
+namespace tsoobgx {
 namespace predictor {
 // List of files that will be force linked in static links.
-#ifdef XGBOOST_USE_CUDA
+#ifdef TSOOBGX_USE_CUDA
 DMLC_REGISTRY_LINK_TAG(gpu_predictor);
-#endif  // XGBOOST_USE_CUDA
+#endif  // TSOOBGX_USE_CUDA
 DMLC_REGISTRY_LINK_TAG(cpu_predictor);
 }  // namespace predictor
-}  // namespace xgboost
+}  // namespace tsoobgx

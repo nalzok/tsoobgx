@@ -4,14 +4,14 @@
 #pragma once
 #include <dmlc/parameter.h>
 #include <dmlc/io.h>
-#include <xgboost/tree_model.h>
+#include <tsoobgx/tree_model.h>
 
 #include <memory>
 #include <utility>
 #include <string>
 #include <vector>
 
-namespace xgboost {
+namespace tsoobgx {
 namespace gbm {
 /*! \brief model parameters */
 struct GBTreeModelParam : public dmlc::Parameter<GBTreeModelParam> {
@@ -139,4 +139,4 @@ struct GBTreeModel {
   std::vector<int> tree_info;
 };
 }  // namespace gbm
-}  // namespace xgboost
+}  // namespace tsoobgx

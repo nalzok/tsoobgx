@@ -6,8 +6,8 @@
  */
 #include <dmlc/timer.h>
 #include <rabit/rabit.h>
-#include <xgboost/logging.h>
-#include <xgboost/tree_updater.h>
+#include <tsoobgx/logging.h>
+#include <tsoobgx/tree_updater.h>
 
 #include <cmath>
 #include <memory>
@@ -27,7 +27,7 @@
 #include "../common/row_set.h"
 #include "../common/column_matrix.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace tree {
 
 DMLC_REGISTRY_FILE_TAG(updater_quantile_hist);
@@ -636,7 +636,7 @@ void QuantileHistMaker::Builder::ApplySplit(int nid,
   const auto& rowset = row_set_collection_[nid];
 
   Column column = column_matrix.GetColumn(fid);
-  if (column.GetType() == xgboost::common::kDenseColumn) {
+  if (column.GetType() == tsoobgx::common::kDenseColumn) {
     ApplySplitDenseData(rowset, gmat, &row_split_tloc_, column, split_cond,
                         default_left);
   } else {
@@ -906,7 +906,7 @@ void QuantileHistMaker::Builder::EnumerateSplit(int d_step,
   p_best->Update(best);
 }
 
-XGBOOST_REGISTER_TREE_UPDATER(FastHistMaker, "grow_fast_histmaker")
+TSOOBGX_REGISTER_TREE_UPDATER(FastHistMaker, "grow_fast_histmaker")
 .describe("(Deprecated, use grow_quantile_histmaker instead.)"
           " Grow tree using quantized histogram.")
 .set_body(
@@ -916,7 +916,7 @@ XGBOOST_REGISTER_TREE_UPDATER(FastHistMaker, "grow_fast_histmaker")
       return new QuantileHistMaker();
     });
 
-XGBOOST_REGISTER_TREE_UPDATER(QuantileHistMaker, "grow_quantile_histmaker")
+TSOOBGX_REGISTER_TREE_UPDATER(QuantileHistMaker, "grow_quantile_histmaker")
 .describe("Grow tree using quantized histogram.")
 .set_body(
     []() {
@@ -924,4 +924,4 @@ XGBOOST_REGISTER_TREE_UPDATER(QuantileHistMaker, "grow_quantile_histmaker")
     });
 
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace tsoobgx

@@ -4,7 +4,7 @@
 \alias{cb.save.model}
 \title{Callback closure for saving a model file.}
 \usage{
-cb.save.model(save_period = 0, save_name = "xgboost.model")
+cb.save.model(save_period = 0, save_name = "tsoobgx.model")
 }
 \arguments{
 \item{save_period}{save the model to disk after every
@@ -13,14 +13,14 @@ cb.save.model(save_period = 0, save_name = "xgboost.model")
 \item{save_name}{the name or path for the saved model file.
 It can contain a \code{\link[base]{sprintf}} formatting specifier
 to include the integer iteration number in the file name.
-E.g., with \code{save_name} = 'xgboost_%04d.model',
-the file saved at iteration 50 would be named "xgboost_0050.model".}
+E.g., with \code{save_name} = 'tsoobgx_%04d.model',
+the file saved at iteration 50 would be named "tsoobgx_0050.model".}
 }
 \description{
 Callback closure for saving a model file.
 }
 \details{
-This callback function allows to save an xgb-model file, either periodically after each \code{save_period}'s or at the end.
+This callback function allows to save an bgx-model file, either periodically after each \code{save_period}'s or at the end.
 
 Callback function expects the following values to be set in its calling frame:
 \code{bst},

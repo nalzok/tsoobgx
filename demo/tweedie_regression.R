@@ -1,4 +1,4 @@
-library(xgboost)
+library(tsoobgx)
 library(data.table)
 library(cplm)
 
@@ -19,7 +19,7 @@ options(na.action = 'na.omit')
 # response
 y <- dt[, CLM_AMT5]
 
-d_train <- xgb.DMatrix(data = x, label = y, missing = NA)
+d_train <- bgx.DMatrix(data = x, label = y, missing = NA)
 
 # the tweedie_variance_power parameter determines the shape of 
 # distribution
@@ -35,14 +35,14 @@ params <- list(
   max_depth = 6,
   eta = 1)
 
-bst <- xgb.train(
+bst <- bgx.train(
   data = d_train, 
   params = params, 
   maximize = FALSE,
   watchlist = list(train = d_train), 
   nrounds = 20)
 
-var_imp <- xgb.importance(attr(x, 'Dimnames')[[2]], model = bst)
+var_imp <- bgx.importance(attr(x, 'Dimnames')[[2]], model = bst)
 
 preds <- predict(bst, d_train)
 

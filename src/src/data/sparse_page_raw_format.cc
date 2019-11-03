@@ -3,11 +3,11 @@
  * \file sparse_page_raw_format.cc
  *  Raw binary format of sparse page.
  */
-#include <xgboost/data.h>
+#include <tsoobgx/data.h>
 #include <dmlc/registry.h>
 #include "./sparse_page_writer.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace data {
 
 DMLC_REGISTRY_FILE_TAG(sparse_page_raw_format);
@@ -95,10 +95,10 @@ class SparsePageRawFormat : public SparsePageFormat {
   std::vector<size_t> disk_offset_;
 };
 
-XGBOOST_REGISTER_SPARSE_PAGE_FORMAT(raw)
+TSOOBGX_REGISTER_SPARSE_PAGE_FORMAT(raw)
 .describe("Raw binary data format.")
 .set_body([]() {
     return new SparsePageRawFormat();
   });
 }  // namespace data
-}  // namespace xgboost
+}  // namespace tsoobgx

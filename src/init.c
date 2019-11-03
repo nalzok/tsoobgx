@@ -2,7 +2,7 @@
  *
  * This file was initially generated using the following R command:
  * tools::package_native_routine_registration_skeleton('.', con = 'src/init.c', character_only = F)
- * and edited to conform to xgboost C linter requirements. For details, see
+ * and edited to conform to tsoobgx C linter requirements. For details, see
  * https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Registering-native-routines
  */
 #include <R.h>
@@ -15,20 +15,20 @@ Check these declarations against the C/Fortran source code.
 */
 
 /* .Call calls */
-extern SEXP XGBoosterBoostOneIter_R(SEXP, SEXP, SEXP, SEXP);
-extern SEXP XGBoosterCreate_R(SEXP);
-extern SEXP XGBoosterDumpModel_R(SEXP, SEXP, SEXP, SEXP);
-extern SEXP XGBoosterEvalOneIter_R(SEXP, SEXP, SEXP, SEXP);
-extern SEXP XGBoosterGetAttrNames_R(SEXP);
-extern SEXP XGBoosterGetAttr_R(SEXP, SEXP);
-extern SEXP XGBoosterLoadModelFromRaw_R(SEXP, SEXP);
-extern SEXP XGBoosterLoadModel_R(SEXP, SEXP);
-extern SEXP XGBoosterModelToRaw_R(SEXP);
-extern SEXP XGBoosterPredict_R(SEXP, SEXP, SEXP, SEXP);
-extern SEXP XGBoosterSaveModel_R(SEXP, SEXP);
-extern SEXP XGBoosterSetAttr_R(SEXP, SEXP, SEXP);
-extern SEXP XGBoosterSetParam_R(SEXP, SEXP, SEXP);
-extern SEXP XGBoosterUpdateOneIter_R(SEXP, SEXP, SEXP);
+extern SEXP tsooBGXerBoostOneIter_R(SEXP, SEXP, SEXP, SEXP);
+extern SEXP tsooBGXerCreate_R(SEXP);
+extern SEXP tsooBGXerDumpModel_R(SEXP, SEXP, SEXP, SEXP);
+extern SEXP tsooBGXerEvalOneIter_R(SEXP, SEXP, SEXP, SEXP);
+extern SEXP tsooBGXerGetAttrNames_R(SEXP);
+extern SEXP tsooBGXerGetAttr_R(SEXP, SEXP);
+extern SEXP tsooBGXerLoadModelFromRaw_R(SEXP, SEXP);
+extern SEXP tsooBGXerLoadModel_R(SEXP, SEXP);
+extern SEXP tsooBGXerModelToRaw_R(SEXP);
+extern SEXP tsooBGXerPredict_R(SEXP, SEXP, SEXP, SEXP);
+extern SEXP tsooBGXerSaveModel_R(SEXP, SEXP);
+extern SEXP tsooBGXerSetAttr_R(SEXP, SEXP, SEXP);
+extern SEXP tsooBGXerSetParam_R(SEXP, SEXP, SEXP);
+extern SEXP tsooBGXerUpdateOneIter_R(SEXP, SEXP, SEXP);
 extern SEXP XGCheckNullPtr_R(SEXP);
 extern SEXP XGDMatrixCreateFromCSC_R(SEXP, SEXP, SEXP, SEXP);
 extern SEXP XGDMatrixCreateFromFile_R(SEXP, SEXP);
@@ -41,20 +41,20 @@ extern SEXP XGDMatrixSetInfo_R(SEXP, SEXP, SEXP);
 extern SEXP XGDMatrixSliceDMatrix_R(SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-  {"XGBoosterBoostOneIter_R",     (DL_FUNC) &XGBoosterBoostOneIter_R,     4},
-  {"XGBoosterCreate_R",           (DL_FUNC) &XGBoosterCreate_R,           1},
-  {"XGBoosterDumpModel_R",        (DL_FUNC) &XGBoosterDumpModel_R,        4},
-  {"XGBoosterEvalOneIter_R",      (DL_FUNC) &XGBoosterEvalOneIter_R,      4},
-  {"XGBoosterGetAttrNames_R",     (DL_FUNC) &XGBoosterGetAttrNames_R,     1},
-  {"XGBoosterGetAttr_R",          (DL_FUNC) &XGBoosterGetAttr_R,          2},
-  {"XGBoosterLoadModelFromRaw_R", (DL_FUNC) &XGBoosterLoadModelFromRaw_R, 2},
-  {"XGBoosterLoadModel_R",        (DL_FUNC) &XGBoosterLoadModel_R,        2},
-  {"XGBoosterModelToRaw_R",       (DL_FUNC) &XGBoosterModelToRaw_R,       1},
-  {"XGBoosterPredict_R",          (DL_FUNC) &XGBoosterPredict_R,          4},
-  {"XGBoosterSaveModel_R",        (DL_FUNC) &XGBoosterSaveModel_R,        2},
-  {"XGBoosterSetAttr_R",          (DL_FUNC) &XGBoosterSetAttr_R,          3},
-  {"XGBoosterSetParam_R",         (DL_FUNC) &XGBoosterSetParam_R,         3},
-  {"XGBoosterUpdateOneIter_R",    (DL_FUNC) &XGBoosterUpdateOneIter_R,    3},
+  {"tsooBGXerBoostOneIter_R",     (DL_FUNC) &tsooBGXerBoostOneIter_R,     4},
+  {"tsooBGXerCreate_R",           (DL_FUNC) &tsooBGXerCreate_R,           1},
+  {"tsooBGXerDumpModel_R",        (DL_FUNC) &tsooBGXerDumpModel_R,        4},
+  {"tsooBGXerEvalOneIter_R",      (DL_FUNC) &tsooBGXerEvalOneIter_R,      4},
+  {"tsooBGXerGetAttrNames_R",     (DL_FUNC) &tsooBGXerGetAttrNames_R,     1},
+  {"tsooBGXerGetAttr_R",          (DL_FUNC) &tsooBGXerGetAttr_R,          2},
+  {"tsooBGXerLoadModelFromRaw_R", (DL_FUNC) &tsooBGXerLoadModelFromRaw_R, 2},
+  {"tsooBGXerLoadModel_R",        (DL_FUNC) &tsooBGXerLoadModel_R,        2},
+  {"tsooBGXerModelToRaw_R",       (DL_FUNC) &tsooBGXerModelToRaw_R,       1},
+  {"tsooBGXerPredict_R",          (DL_FUNC) &tsooBGXerPredict_R,          4},
+  {"tsooBGXerSaveModel_R",        (DL_FUNC) &tsooBGXerSaveModel_R,        2},
+  {"tsooBGXerSetAttr_R",          (DL_FUNC) &tsooBGXerSetAttr_R,          3},
+  {"tsooBGXerSetParam_R",         (DL_FUNC) &tsooBGXerSetParam_R,         3},
+  {"tsooBGXerUpdateOneIter_R",    (DL_FUNC) &tsooBGXerUpdateOneIter_R,    3},
   {"XGCheckNullPtr_R",            (DL_FUNC) &XGCheckNullPtr_R,            1},
   {"XGDMatrixCreateFromCSC_R",    (DL_FUNC) &XGDMatrixCreateFromCSC_R,    4},
   {"XGDMatrixCreateFromFile_R",   (DL_FUNC) &XGDMatrixCreateFromFile_R,   2},
@@ -71,7 +71,7 @@ static const R_CallMethodDef CallEntries[] = {
 #if defined(_WIN32)
 __declspec(dllexport)
 #endif  // defined(_WIN32)
-void R_init_xgboost(DllInfo *dll) {
+void R_init_tsoobgx(DllInfo *dll) {
   R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
 }

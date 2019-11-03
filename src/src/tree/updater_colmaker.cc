@@ -5,7 +5,7 @@
  * \author Tianqi Chen
  */
 #include <rabit/rabit.h>
-#include <xgboost/tree_updater.h>
+#include <tsoobgx/tree_updater.h>
 #include <memory>
 #include <vector>
 #include <cmath>
@@ -16,7 +16,7 @@
 #include "../common/bitmap.h"
 #include "split_evaluator.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace tree {
 
 DMLC_REGISTRY_FILE_TAG(updater_colmaker);
@@ -906,16 +906,16 @@ class DistColMaker : public ColMaker {
   std::unique_ptr<SplitEvaluator> spliteval_;
 };
 
-XGBOOST_REGISTER_TREE_UPDATER(ColMaker, "grow_colmaker")
+TSOOBGX_REGISTER_TREE_UPDATER(ColMaker, "grow_colmaker")
 .describe("Grow tree with parallelization over columns.")
 .set_body([]() {
     return new ColMaker();
   });
 
-XGBOOST_REGISTER_TREE_UPDATER(DistColMaker, "distcol")
+TSOOBGX_REGISTER_TREE_UPDATER(DistColMaker, "distcol")
 .describe("Distributed column split version of tree maker.")
 .set_body([]() {
     return new DistColMaker();
   });
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace tsoobgx

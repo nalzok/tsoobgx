@@ -12,7 +12,7 @@
 #include "./param.h"
 #include "../common/random.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace linear {
 
 struct CoordinateParam : public dmlc::Parameter<CoordinateParam> {
@@ -474,4 +474,4 @@ inline FeatureSelector *FeatureSelector::Create(int choice) {
 }
 
 }  // namespace linear
-}  // namespace xgboost
+}  // namespace tsoobgx

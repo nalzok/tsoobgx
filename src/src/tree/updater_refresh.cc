@@ -5,7 +5,7 @@
  * \author Tianqi Chen
  */
 #include <rabit/rabit.h>
-#include <xgboost/tree_updater.h>
+#include <tsoobgx/tree_updater.h>
 
 #include <vector>
 #include <limits>
@@ -13,7 +13,7 @@
 #include "./param.h"
 #include "../common/io.h"
 
-namespace xgboost {
+namespace tsoobgx {
 namespace tree {
 
 DMLC_REGISTRY_FILE_TAG(updater_refresh);
@@ -125,9 +125,9 @@ class TreeRefresher: public TreeUpdater {
       }
     } else {
       tree.Stat(nid).loss_chg = static_cast<bst_float>(
-          xgboost::tree::CalcGain(param_, gstats[tree[nid].LeftChild()]) +
-          xgboost::tree::CalcGain(param_, gstats[tree[nid].RightChild()]) -
-          xgboost::tree::CalcGain(param_, gstats[nid]));
+          tsoobgx::tree::CalcGain(param_, gstats[tree[nid].LeftChild()]) +
+          tsoobgx::tree::CalcGain(param_, gstats[tree[nid].RightChild()]) -
+          tsoobgx::tree::CalcGain(param_, gstats[nid]));
       this->Refresh(gstats, tree[nid].LeftChild(), p_tree);
       this->Refresh(gstats, tree[nid].RightChild(), p_tree);
     }
@@ -138,10 +138,10 @@ class TreeRefresher: public TreeUpdater {
   rabit::Reducer<GradStats, GradStats::Reduce> reducer_;
 };
 
-XGBOOST_REGISTER_TREE_UPDATER(TreeRefresher, "refresh")
+TSOOBGX_REGISTER_TREE_UPDATER(TreeRefresher, "refresh")
 .describe("Refresher that refreshes the weight and statistics according to data.")
 .set_body([]() {
     return new TreeRefresher();
   });
 }  // namespace tree
-}  // namespace xgboost
+}  // namespace tsoobgx
