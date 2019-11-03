@@ -5,15 +5,17 @@
 \alias{tsoobgx}
 \title{eXtreme Gradient Boosting Training}
 \usage{
-bgx.train(params = list(), data, nrounds, watchlist = list(), obj = NULL,
-  feval = NULL, verbose = 1, print_every_n = 1L,
+bgx.train(params = list(), data, nrounds, watchlist = list(),
+  obj = NULL, feval = NULL, verbose = 1, print_every_n = 1L,
   early_stopping_rounds = NULL, maximize = NULL, save_period = NULL,
-  save_name = "tsoobgx.model", bgx_model = NULL, callbacks = list(), ...)
+  save_name = "tsoobgx.model", bgx_model = NULL, callbacks = list(),
+  ...)
 
 tsoobgx(data = NULL, label = NULL, missing = NA, weight = NULL,
   params = list(), nrounds, verbose = 1, print_every_n = 1L,
   early_stopping_rounds = NULL, maximize = NULL, save_period = NULL,
-  save_name = "tsoobgx.model", bgx_model = NULL, callbacks = list(), ...)
+  save_name = "tsoobgx.model", bgx_model = NULL, callbacks = list(),
+  ...)
 }
 \arguments{
 \item{params}{the list of parameters.

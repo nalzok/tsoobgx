@@ -9,8 +9,8 @@ bgx.ggplot.importance(importance_matrix = NULL, top_n = NULL,
   measure = NULL, rel_to_first = FALSE, n_clusters = c(1:10), ...)
 
 bgx.plot.importance(importance_matrix = NULL, top_n = NULL,
-  measure = NULL, rel_to_first = FALSE, left_margin = 10, cex = NULL,
-  plot = TRUE, ...)
+  measure = NULL, rel_to_first = FALSE, left_margin = 10,
+  cex = NULL, plot = TRUE, ...)
 }
 \arguments{
 \item{importance_matrix}{a \code{data.table} returned by \code{\link{bgx.importance}}.}
