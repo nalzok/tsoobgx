@@ -984,6 +984,17 @@ BGX_DLL int retsooBGXLoadModelFromBuffer(BoosterHandle handle,
   API_END();
 }
 
+BGX_DLL int retsooBGXLoadIndividualModelFromBuffer(BoosterHandle handle,
+                                 const void* buf,
+                                 tsoobgx::bst_ulong len,
+                                 int k) {
+  API_BEGIN();
+  CHECK_HANDLE();
+  common::MemoryFixSizeBuffer fs((void*)buf, len);  // NOLINT(*)
+  static_cast<Booster*>(handle)->LoadModel(&fs);
+  API_END();
+}
+
 BGX_DLL int retsooBGXGetModelRaw(BoosterHandle handle,
                          tsoobgx::bst_ulong* out_len,
                          const char** out_dptr) {

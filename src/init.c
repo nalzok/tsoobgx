@@ -22,6 +22,7 @@ extern SEXP retsooBGXEvalOneIter_R(SEXP, SEXP, SEXP, SEXP);
 extern SEXP retsooBGXGetAttrNames_R(SEXP);
 extern SEXP retsooBGXGetAttr_R(SEXP, SEXP);
 extern SEXP retsooBGXLoadModelFromRaw_R(SEXP, SEXP);
+extern SEXP retsooBGXLoadIndividualModelFromRaw_R(SEXP, SEXP, SEXP);
 extern SEXP retsooBGXLoadModel_R(SEXP, SEXP);
 extern SEXP retsooBGXModelToRaw_R(SEXP);
 extern SEXP retsooBGXPredict_R(SEXP, SEXP, SEXP, SEXP);
@@ -48,6 +49,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"retsooBGXGetAttrNames_R",     (DL_FUNC) &retsooBGXGetAttrNames_R,     1},
   {"retsooBGXGetAttr_R",          (DL_FUNC) &retsooBGXGetAttr_R,          2},
   {"retsooBGXLoadModelFromRaw_R", (DL_FUNC) &retsooBGXLoadModelFromRaw_R, 2},
+  {"retsooBGXLoadIndividualModelFromRaw_R", (DL_FUNC) &retsooBGXLoadIndividualModelFromRaw_R, 3},
   {"retsooBGXLoadModel_R",        (DL_FUNC) &retsooBGXLoadModel_R,        2},
   {"retsooBGXModelToRaw_R",       (DL_FUNC) &retsooBGXModelToRaw_R,       1},
   {"retsooBGXPredict_R",          (DL_FUNC) &retsooBGXPredict_R,          4},

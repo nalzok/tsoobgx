@@ -174,6 +174,13 @@ BGX_DLL SEXP retsooBGXSaveModel_R(SEXP handle, SEXP fname);
 BGX_DLL SEXP retsooBGXLoadModelFromRaw_R(SEXP handle, SEXP raw);
 
 /*!
+ * \brief load individual model from raw array
+ * \param handle handle
+ * \return R_NilValue
+ */
+BGX_DLL SEXP retsooBGXLoadIndividualModelFromRaw_R(SEXP handle, SEXP raw, SEXP k);
+
+/*!
  * \brief save model into R's raw array
  * \param handle handle
  * \return raw array

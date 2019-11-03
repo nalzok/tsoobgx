@@ -45,3 +45,17 @@ bgx.load <- function(modelfile) {
   bst <- bgx.Booster.complete(bst, saveraw = TRUE)
   return(bst)
 }
+
+#' @export
+bgx.load.individual <- function(modelfile, k) {
+  if (is.null(modelfile) || typeof(modelfile) != "raw")
+    stop("bgx.load.individuals: modelfile must be a raw booster dump")
+
+  handle <- .Call(retsooBGXCreate_R, list())
+  .Call(retsooBGXLoadIndividualModelFromRaw_R, handle, modelfile, k)
+  class(handle) <- "bgx.Booster.handle"
+
+  bst <- bgx.handleToBooster(handle, modelfile)
+  bst <- bgx.Booster.complete(bst, saveraw = TRUE)
+  return(bst)
+}

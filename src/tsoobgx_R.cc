@@ -342,6 +342,16 @@ SEXP retsooBGXLoadModelFromRaw_R(SEXP handle, SEXP raw) {
   return R_NilValue;
 }
 
+SEXP retsooBGXLoadIndividualModelFromRaw_R(SEXP handle, SEXP raw, SEXP k) {
+  R_API_BEGIN();
+  CHECK_CALL(retsooBGXLoadIndividualModelFromBuffer(R_ExternalPtrAddr(handle),
+                                                    RAW(raw),
+                                                    length(raw),
+                                                    asInteger(k)));
+  R_API_END();
+  return R_NilValue;
+}
+
 SEXP retsooBGXModelToRaw_R(SEXP handle) {
   SEXP ret;
   R_API_BEGIN();

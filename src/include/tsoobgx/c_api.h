@@ -428,6 +428,18 @@ BGX_DLL int retsooBGXLoadModelFromBuffer(BoosterHandle handle,
                                          const void *buf,
                                          bst_ulong len);
 /*!
+ * \brief load individual model from in memory buffer
+ * \param handle handle
+ * \param buf pointer to the buffer
+ * \param len the length of the buffer
+ * \param k the number of tree to extract
+ * \return 0 when success, -1 when failure happens
+ */
+BGX_DLL int retsooBGXLoadIndividualModelFromBuffer(BoosterHandle handle,
+                                                   const void *buf,
+                                                   bst_ulong len,
+                                                   int k);
+/*!
  * \brief save model into binary raw bytes, return header of the array
  * user must copy the result out, before next tsoobgx call
  * \param handle handle
